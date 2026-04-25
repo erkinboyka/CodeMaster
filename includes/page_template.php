@@ -1,65 +1,62 @@
 <?php
 /**
- * CodeMaster Platform - Modern Page Template
- * LeetCode/ElectiCode Style with Dark/Light Theme Support
- * 
- * Usage: Include this file in any template to get modern UI
+ * CodeMaster Modern Page Template
+ * LeetCode/ElectiCode Style
  */
 
-if (!defined('APP_INIT')) {
-    die('Direct access not allowed');
-}
-
 $pageTitle = $pageTitle ?? 'CodeMaster';
-$pageDescription = $pageDescription ?? 'Платформа для изучения программирования';
-$showHeader = $showHeader ?? true;
-$showFooter = $showFooter ?? true;
-$containerClass = $containerClass ?? '';
+$pageDescription = $pageDescription ?? 'Современная платформа для обучения программированию';
+$hideHeader = $hideHeader ?? false;
+$hideFooter = $hideFooter ?? false;
 ?>
 <!DOCTYPE html>
-<html lang="<?= currentLang() ?>" data-theme="dark">
+<html lang="<?= currentLang() ?? 'ru' ?>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
-    <title><?= htmlspecialchars($pageTitle) ?> - CodeMaster</title>
     
-    <?php include __DIR__ . '/head_meta.php'; ?>
+    <?php require_once __DIR__ . '/head_meta.php'; ?>
     
-    <!-- Alpine.js -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Additional page styles -->
+    <style>
+        .cm-block-tablet { display: none; }
+        .cm-block-desktop { display: none; }
+        
+        @media (min-width: 768px) {
+            .cm-block-tablet { display: flex; }
+            .cm-block-tablet-none { display: none !important; }
+        }
+        
+        @media (min-width: 1024px) {
+            .cm-block-desktop { display: inline-flex; }
+        }
+        
+        .hidden { display: none !important; }
+        
+        .cm-nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(0, 191, 165, 0.1);
+        }
+        
+        .cm-sidebar-link.active {
+            color: var(--accent-primary);
+            background: rgba(0, 191, 165, 0.1);
+        }
+    </style>
 </head>
-<body class="cm-body">
-    <!-- Skip Link for Accessibility -->
-    <a href="#main-content" class="cm-skip-link">Перейти к основному контенту</a>
-
-    <?php if ($showHeader): ?>
-        <!-- Modern Header -->
-        <?php include __DIR__ . '/header_modern.php'; ?>
+<body>
+    <?php if (!$hideHeader): ?>
+        <?php require_once __DIR__ . '/header_modern.php'; ?>
     <?php endif; ?>
-
-    <!-- Main Content -->
-    <main id="main-content" class="cm-main <?= htmlspecialchars($containerClass) ?>">
-        <div class="cm-container">
-            <?= $content ?? '' ?>
-        </div>
+    
+    <main class="cm-main-content" style="padding-top:var(--header-height);min-height:100vh;">
+        <?= $content ?? '' ?>
     </main>
-
-    <?php if ($showFooter): ?>
-        <!-- Modern Footer -->
-        <?php include __DIR__ . '/footer_modern.php'; ?>
+    
+    <?php if (!$hideFooter): ?>
+        <?php require_once __DIR__ . '/footer_modern.php'; ?>
     <?php endif; ?>
-
-    <!-- Notifications Container -->
-    <div id="cm-notifications"></div>
-
-    <!-- CSRF Token -->
-    <?php include __DIR__ . '/csrf.php'; ?>
-
-    <!-- AI Tutor Modal -->
-    <?php include __DIR__ . '/ai_tutor_modal.php'; ?>
 </body>
 </html>

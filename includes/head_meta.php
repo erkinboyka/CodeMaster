@@ -9,6 +9,7 @@ $tfFaviconIcoHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/favicon.ico') .
 $tfAnimationsCssFile = __DIR__ . '/animations.css';
 $tfAnimationsJsFile = __DIR__ . '/animations.js';
 $tfThemeCssFile = __DIR__ . '/theme.css';
+$tfModernUiFile = __DIR__ . '/modern-ui.css';
 $tfUiTokensFile = __DIR__ . '/../ui/tokens.css';
 $tfUiLayoutFile = __DIR__ . '/../layout/layout.css';
 $tfUiComponentsFile = __DIR__ . '/../components/components.css';
@@ -20,6 +21,7 @@ $tfAnimationsJsVersion = (is_file($tfAnimationsJsFile) && is_readable($tfAnimati
 $tfAnimationsCssHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/animations.css') . '?v=' . $tfAnimationsCssVersion;
 $tfAnimationsJsHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/animations.js') . '?v=' . $tfAnimationsJsVersion;
 $tfThemeCssVersion = (is_file($tfThemeCssFile) && is_readable($tfThemeCssFile)) ? (string) filemtime($tfThemeCssFile) : '1';
+$tfModernUiVersion = (is_file($tfModernUiFile) && is_readable($tfModernUiFile)) ? (string) filemtime($tfModernUiFile) : '1';
 $tfUiControllerJsFile = __DIR__ . '/ui-controller.js';
 $tfUiControllerJsVersion = (is_file($tfUiControllerJsFile) && is_readable($tfUiControllerJsFile)) ? (string) filemtime($tfUiControllerJsFile) : '1';
 $tfUiControllerJsHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/ui-controller.js') . '?v=' . $tfUiControllerJsVersion;
@@ -30,6 +32,7 @@ $tfUiFormsVersion = (is_file($tfUiFormsFile) && is_readable($tfUiFormsFile)) ? (
 $tfUiTablesVersion = (is_file($tfUiTablesFile) && is_readable($tfUiTablesFile)) ? (string) filemtime($tfUiTablesFile) : '1';
 $tfUiA11yVersion = (is_file($tfUiA11yFile) && is_readable($tfUiA11yFile)) ? (string) filemtime($tfUiA11yFile) : '1';
 $tfThemeCssHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/theme.css') . '?v=' . $tfThemeCssVersion;
+$tfModernUiHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/modern-ui.css') . '?v=' . $tfModernUiVersion;
 $tfUiTokensHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/ui/tokens.css') . '?v=' . $tfUiTokensVersion;
 $tfUiLayoutHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/layout/layout.css') . '?v=' . $tfUiLayoutVersion;
 $tfUiComponentsHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/components/components.css') . '?v=' . $tfUiComponentsVersion;
@@ -50,6 +53,9 @@ $preferredTheme = isset($_COOKIE['cm-theme']) ? $_COOKIE['cm-theme'] : 'dark';
 <meta name="msapplication-TileColor" content="<?= $preferredTheme === 'light' ? '#f8fafc' : '#0f172a' ?>">
 <meta name="color-scheme" content="<?= $preferredTheme ?>">
 
+<!-- Modern UI/UX System - LeetCode/ElectiCode Style -->
+<link rel="stylesheet" href="<?= htmlspecialchars($tfModernUiHref) ?>">
+
 <link rel="dns-prefetch" href="//fonts.googleapis.com">
 <link rel="dns-prefetch" href="//fonts.gstatic.com">
 <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
@@ -59,13 +65,14 @@ $preferredTheme = isset($_COOKIE['cm-theme']) ? $_COOKIE['cm-theme'] : 'dark';
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="<?= htmlspecialchars($tfModernUiHref) ?>" as="style">
 <link rel="preload" href="<?= htmlspecialchars($tfUiTokensHref) ?>" as="style">
 <link rel="preload" href="<?= htmlspecialchars($tfUiLayoutHref) ?>" as="style">
 <link rel="preload" href="<?= htmlspecialchars($tfUiComponentsHref) ?>" as="style">
 <link rel="preload" href="<?= htmlspecialchars($tfThemeCssHref) ?>" as="style">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 </noscript>
 <link rel="stylesheet" href="<?= htmlspecialchars($tfUiTokensHref) ?>">
 <link rel="stylesheet" href="<?= htmlspecialchars($tfUiLayoutHref) ?>">
