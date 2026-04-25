@@ -1,1 +1,0 @@
-Nothing needs to be added to .gitignore since the changes only include PHP and CSS source files which should be tracked in version control.
