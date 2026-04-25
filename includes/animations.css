@@ -1,0 +1,314 @@
+:root {
+    --tf-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --tf-motion-fast: 180ms;
+    --tf-motion-base: 260ms;
+    --tf-motion-slow: 520ms;
+    --tf-preloader-brand: #6366f1;
+    --tf-preloader-brand-strong: #4f46e5;
+    --tf-preloader-dark: #020617;
+    --tf-preloader-glow: rgba(99, 102, 241, 0.26);
+}
+
+body.tf-loading {
+    overflow: hidden;
+}
+
+.tf-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(circle at top, rgba(99, 102, 241, 0.18), transparent 34%),
+        radial-gradient(circle at 50% 35%, rgba(129, 140, 248, 0.12), transparent 42%),
+        linear-gradient(180deg, #050816 0%, #020617 52%, #000 100%);
+    color: #e0e7ff;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.tf-preloader.is-hidden {
+    opacity: 0;
+    transform: translateY(-18px);
+    pointer-events: none;
+}
+
+.tf-preloader-shell {
+    position: relative;
+    width: min(900px, calc(100vw - 24px));
+    min-height: 260px;
+    overflow: hidden;
+    border-radius: 28px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    background: rgba(2, 6, 23, 0.62);
+    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.55), inset 0 0 0 1px rgba(99, 102, 241, 0.08);
+    backdrop-filter: blur(14px);
+}
+
+.tf-preloader-shell::before,
+.tf-preloader-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.tf-preloader-shell::before {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18%),
+        radial-gradient(circle at 50% 18%, rgba(99, 102, 241, 0.16), transparent 35%);
+    opacity: 0.9;
+}
+
+.tf-preloader-shell::after {
+    background-image:
+        linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    background-size: 100% 24px, 24px 100%;
+    opacity: 0.55;
+    mix-blend-mode: screen;
+}
+
+.tf-preloader-rain {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(28, 1fr);
+    gap: 2px;
+    padding: 14px;
+    opacity: 0.9;
+}
+
+.tf-preloader-column {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.tf-preloader-stream {
+    position: absolute;
+    inset: -40% 0 auto 0;
+    display: grid;
+    gap: 6px;
+    animation: tf-preloader-drop linear infinite;
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.34));
+}
+
+.tf-preloader-char {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1;
+    color: rgba(224, 231, 255, 0.94);
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.58);
+    letter-spacing: 0.04em;
+    opacity: 0.94;
+}
+
+.tf-preloader-core {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 32px 24px;
+}
+
+.tf-preloader-title {
+    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c7d2fe;
+}
+
+.tf-preloader-subtitle {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: rgba(224, 231, 255, 0.76);
+}
+
+.tf-preloader-bar {
+    width: min(320px, 80vw);
+    height: 4px;
+    margin: 18px auto 0;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.12);
+    overflow: hidden;
+}
+
+.tf-preloader-bar::before {
+    content: "";
+    display: block;
+    width: 40%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, transparent, var(--tf-preloader-brand), transparent);
+    animation: tf-preloader-scan 1.25s ease-in-out infinite;
+}
+
+.tf-motion-target {
+    will-change: transform, opacity;
+}
+
+.tf-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+}
+
+.tf-reveal.is-visible,
+.tf-motion-target.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+.tf-reveal[data-animate="fade-left"] {
+    transform: translateX(-22px);
+}
+
+.tf-reveal[data-animate="fade-right"] {
+    transform: translateX(22px);
+}
+
+.tf-reveal[data-animate="zoom-in"] {
+    transform: scale(0.96);
+}
+
+.tf-reveal[data-animate="tilt-up"] {
+    transform: translateY(22px) rotateX(10deg);
+    transform-origin: center bottom;
+}
+
+.tf-reveal[data-animate="blur-up"] {
+    transform: translateY(22px);
+}
+
+.tf-reveal.is-visible {
+    transition:
+        opacity var(--tf-motion-slow) var(--tf-motion-ease),
+        transform var(--tf-motion-slow) var(--tf-motion-ease);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+main .card,
+main .section-card,
+main .timeline-item,
+main .portfolio-card,
+main .viz-card,
+main .gh-actions,
+main .gh-heatmap-card,
+main .vacancy-card,
+main .tg-vacancy-card,
+main .glass-card,
+main .post-card,
+main .side-card,
+main .event-card,
+main .community-card,
+main .roadmap-card,
+main .profile-mobile-tab,
+main .action-icon,
+main .skill-tag {
+    transition:
+        transform var(--tf-motion-base) var(--tf-motion-ease),
+        box-shadow var(--tf-motion-base) var(--tf-motion-ease),
+        border-color var(--tf-motion-base) ease,
+        background-color var(--tf-motion-base) ease,
+        opacity var(--tf-motion-base) ease;
+}
+
+[id$="Modal"],
+[role="dialog"],
+.modal,
+.modal-backdrop,
+.tf-ai-modal {
+    transition:
+        opacity var(--tf-motion-base) ease,
+        transform var(--tf-motion-base) var(--tf-motion-ease),
+        filter var(--tf-motion-base) ease;
+}
+
+[id$="Modal"] .tf-modal-panel,
+[role="dialog"] .tf-modal-panel,
+.modal .tf-modal-panel,
+.tf-ai-modal .tf-modal-panel {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+    filter: blur(8px);
+}
+
+[id$="Modal"].tf-modal-open .tf-modal-panel,
+[role="dialog"].tf-modal-open .tf-modal-panel,
+.modal.open .tf-modal-panel,
+.modal.active .tf-modal-panel,
+.tf-ai-modal.is-open .tf-modal-panel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: none;
+}
+
+.admin-table-pagination {
+    transition: opacity var(--tf-motion-base) ease, transform var(--tf-motion-base) var(--tf-motion-ease);
+}
+
+.admin-table-pagination.is-loading {
+    opacity: 0.65;
+    transform: translateY(2px);
+    pointer-events: none;
+}
+
+@keyframes tf-preloader-drop {
+    0% {
+        transform: translateY(-115%);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(115%);
+        opacity: 0;
+    }
+}
+
+@keyframes tf-preloader-scan {
+    0% {
+        transform: translateX(-80%);
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(180%);
+        opacity: 0.4;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tf-preloader,
+    .tf-preloader-stream,
+    .tf-preloader-bar::before,
+    .tf-reveal,
+    .tf-reveal.is-visible,
+    .tf-motion-target,
+    [id$="Modal"],
+    [role="dialog"],
+    .modal,
+    .modal-backdrop,
+    .tf-ai-modal,
+    .admin-table-pagination {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+        filter: none !important;
+    }
+}
