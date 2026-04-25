@@ -11,6 +11,7 @@
   // ============================================
   const ThemeManager = {
     STORAGE_KEY: 'cm-theme-preference',
+    COOKIE_NAME: 'cm-theme',
     DEFAULT_THEME: 'dark',
 
     init() {
@@ -27,9 +28,20 @@
     setTheme(theme, save = true) {
       if (save) {
         localStorage.setItem(this.STORAGE_KEY, theme);
+        // Set cookie for server-side detection
+        document.cookie = `${this.COOKIE_NAME}=${theme};path=/;max-age=31536000;samesite=lax`;
       }
       document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-color-scheme', theme);
       this.updateToggleState(theme);
+      this.updateMetaThemeColor(theme);
+    },
+
+    updateMetaThemeColor(theme) {
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', theme === 'light' ? '#f8fafc' : '#0f172a');
+      }
     },
 
     toggle() {

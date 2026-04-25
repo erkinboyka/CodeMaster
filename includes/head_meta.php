@@ -38,14 +38,17 @@ $tfUiTablesHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/tables/tables.css
 $tfUiA11yHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/ui/accessibility.css') . '?v=' . $tfUiA11yVersion;
 $tfAction = trim((string) ($_GET['action'] ?? 'home'));
 $tfNeedsTinyMce = in_array($tfAction, ['admin'], true);
+
+// Theme detection - support both dark and light themes
+$preferredTheme = isset($_COOKIE['cm-theme']) ? $_COOKIE['cm-theme'] : 'dark';
 ?>
 <link rel="icon" href="<?= htmlspecialchars($tfFaviconHref) ?>" type="image/svg+xml" sizes="any">
 <link rel="icon" href="<?= htmlspecialchars($tfFaviconIcoHref) ?>" type="image/x-icon">
 <link rel="shortcut icon" href="<?= htmlspecialchars($tfFaviconIcoHref) ?>">
 <link rel="apple-touch-icon" href="<?= htmlspecialchars($tfFaviconHref) ?>">
-<meta name="theme-color" content="#4f46e5">
-<meta name="msapplication-TileColor" content="#4f46e5">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="<?= $preferredTheme === 'light' ? '#f8fafc' : '#0f172a' ?>">
+<meta name="msapplication-TileColor" content="<?= $preferredTheme === 'light' ? '#f8fafc' : '#0f172a' ?>">
+<meta name="color-scheme" content="<?= $preferredTheme ?>">
 
 <link rel="dns-prefetch" href="//fonts.googleapis.com">
 <link rel="dns-prefetch" href="//fonts.gstatic.com">
