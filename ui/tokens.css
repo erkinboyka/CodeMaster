@@ -1,0 +1,190 @@
+/* ============================================
+   CODEMASTER - DESIGN TOKENS
+   LeetCode / ElectiCode Style System
+   ============================================ */
+
+:root {
+  /* Color Palette - Dark Theme (Default) */
+  --cm-color-bg-primary: #0f172a;
+  --cm-color-bg-secondary: #1e293b;
+  --cm-color-bg-tertiary: #334155;
+  --cm-color-bg-card: #1e293b;
+  --cm-color-bg-hover: #334155;
+  --cm-color-bg-elevated: #1e293b;
+  
+  --cm-color-border-primary: #334155;
+  --cm-color-border-secondary: #475569;
+  --cm-color-border-light: #64748b;
+  
+  --cm-color-text-primary: #f8fafc;
+  --cm-color-text-secondary: #94a3b8;
+  --cm-color-text-muted: #64748b;
+  --cm-color-text-inverse: #0f172a;
+  
+  /* Accent Colors */
+  --cm-color-accent-primary: #00bfa5;
+  --cm-color-accent-primary-hover: #00a894;
+  --cm-color-accent-secondary: #2962ff;
+  --cm-color-accent-secondary-hover: #1e4bd1;
+  --cm-color-accent-tertiary: #7c3aed;
+  --cm-color-accent-warning: #f59e0b;
+  --cm-color-accent-danger: #ef4444;
+  --cm-color-accent-success: #10b981;
+  --cm-color-accent-info: #3b82f6;
+  
+  /* Status Colors */
+  --cm-color-success: #10b981;
+  --cm-color-success-bg: rgba(16, 185, 129, 0.15);
+  --cm-color-warning: #f59e0b;
+  --cm-color-warning-bg: rgba(245, 158, 11, 0.15);
+  --cm-color-error: #ef4444;
+  --cm-color-error-bg: rgba(239, 68, 68, 0.15);
+  --cm-color-info: #3b82f6;
+  --cm-color-info-bg: rgba(59, 130, 246, 0.15);
+  
+  /* Difficulty Colors */
+  --cm-color-easy: #10b981;
+  --cm-color-easy-bg: rgba(16, 185, 129, 0.15);
+  --cm-color-medium: #f59e0b;
+  --cm-color-medium-bg: rgba(245, 158, 11, 0.15);
+  --cm-color-hard: #ef4444;
+  --cm-color-hard-bg: rgba(239, 68, 68, 0.15);
+  
+  /* Typography */
+  --cm-font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --cm-font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  
+  --cm-font-size-xs: 0.75rem;    /* 12px */
+  --cm-font-size-sm: 0.875rem;   /* 14px */
+  --cm-font-size-base: 1rem;     /* 16px */
+  --cm-font-size-lg: 1.125rem;   /* 18px */
+  --cm-font-size-xl: 1.25rem;    /* 20px */
+  --cm-font-size-2xl: 1.5rem;    /* 24px */
+  --cm-font-size-3xl: 1.875rem;  /* 30px */
+  --cm-font-size-4xl: 2.25rem;   /* 36px */
+  --cm-font-size-5xl: 3rem;      /* 48px */
+  
+  --cm-font-weight-normal: 400;
+  --cm-font-weight-medium: 500;
+  --cm-font-weight-semibold: 600;
+  --cm-font-weight-bold: 700;
+  --cm-font-weight-extrabold: 800;
+  
+  /* Spacing */
+  --cm-spacing-0: 0;
+  --cm-spacing-1: 0.25rem;   /* 4px */
+  --cm-spacing-2: 0.5rem;    /* 8px */
+  --cm-spacing-3: 0.75rem;   /* 12px */
+  --cm-spacing-4: 1rem;      /* 16px */
+  --cm-spacing-5: 1.25rem;   /* 20px */
+  --cm-spacing-6: 1.5rem;    /* 24px */
+  --cm-spacing-8: 2rem;      /* 32px */
+  --cm-spacing-10: 2.5rem;   /* 40px */
+  --cm-spacing-12: 3rem;     /* 48px */
+  --cm-spacing-16: 4rem;     /* 64px */
+  --cm-spacing-20: 5rem;     /* 80px */
+  
+  /* Border Radius */
+  --cm-radius-none: 0;
+  --cm-radius-sm: 0.375rem;   /* 6px */
+  --cm-radius-md: 0.625rem;   /* 10px */
+  --cm-radius-lg: 0.875rem;   /* 14px */
+  --cm-radius-xl: 1.25rem;    /* 20px */
+  --cm-radius-2xl: 1.5rem;    /* 24px */
+  --cm-radius-full: 9999px;
+  
+  /* Shadows */
+  --cm-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --cm-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --cm-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --cm-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --cm-shadow-glow: 0 0 20px rgba(0, 191, 165, 0.3);
+  --cm-shadow-glow-blue: 0 0 20px rgba(41, 98, 255, 0.3);
+  
+  /* Transitions */
+  --cm-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --cm-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --cm-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Layout */
+  --cm-header-height: 64px;
+  --cm-sidebar-width: 280px;
+  --cm-container-max: 1400px;
+  --cm-container-narrow: 800px;
+  --cm-container-wide: 1200px;
+  
+  /* Z-index layers */
+  --cm-z-dropdown: 100;
+  --cm-z-sticky: 200;
+  --cm-z-fixed: 300;
+  --cm-z-modal-backdrop: 400;
+  --cm-z-modal: 500;
+  --cm-z-popover: 600;
+  --cm-z-tooltip: 700;
+  --cm-z-toast: 800;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --cm-color-bg-primary: #f8fafc;
+  --cm-color-bg-secondary: #ffffff;
+  --cm-color-bg-tertiary: #f1f5f9;
+  --cm-color-bg-card: #ffffff;
+  --cm-color-bg-hover: #e2e8f0;
+  --cm-color-bg-elevated: #ffffff;
+  
+  --cm-color-border-primary: #e2e8f0;
+  --cm-color-border-secondary: #cbd5e1;
+  --cm-color-border-light: #94a3b8;
+  
+  --cm-color-text-primary: #0f172a;
+  --cm-color-text-secondary: #475569;
+  --cm-color-text-muted: #94a3b8;
+  --cm-color-text-inverse: #ffffff;
+  
+  --cm-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --cm-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  --cm-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
+  --cm-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+}
+
+/* Animation Keyframes */
+@keyframes cm-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cm-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cm-slide-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cm-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes cm-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes cm-pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 191, 165, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(0, 191, 165, 0.5); }
+}
+
+@keyframes cm-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes cm-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

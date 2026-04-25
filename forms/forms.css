@@ -1,0 +1,362 @@
+/* ============================================
+   CODEMASTER - FORMS
+   LeetCode / ElectiCode Style
+   ============================================ */
+
+/* ============================================
+   INPUT FIELDS
+   ============================================ */
+.cm-input {
+  width: 100%;
+  padding: var(--cm-spacing-3) var(--cm-spacing-4);
+  min-height: 44px;
+  background: var(--cm-color-bg-secondary);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-md);
+  font-family: var(--cm-font-family-sans);
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+  transition: all var(--cm-transition-fast);
+}
+
+.cm-input:focus {
+  outline: none;
+  border-color: var(--cm-color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+}
+
+.cm-input::placeholder {
+  color: var(--cm-color-text-muted);
+}
+
+.cm-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--cm-color-bg-tertiary);
+}
+
+.cm-input-error {
+  border-color: var(--cm-color-accent-danger);
+}
+
+.cm-input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.cm-input-success {
+  border-color: var(--cm-color-accent-success);
+}
+
+.cm-input-success:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.cm-input-sm {
+  min-height: 36px;
+  padding: var(--cm-spacing-2) var(--cm-spacing-3);
+  font-size: var(--cm-font-size-xs);
+}
+
+.cm-input-lg {
+  min-height: 52px;
+  padding: var(--cm-spacing-4) var(--cm-spacing-5);
+  font-size: var(--cm-font-size-base);
+}
+
+/* ============================================
+   TEXTAREA
+   ============================================ */
+.cm-textarea {
+  width: 100%;
+  padding: var(--cm-spacing-3) var(--cm-spacing-4);
+  min-height: 120px;
+  background: var(--cm-color-bg-secondary);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-md);
+  font-family: var(--cm-font-family-sans);
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+  transition: all var(--cm-transition-fast);
+  resize: vertical;
+}
+
+.cm-textarea:focus {
+  outline: none;
+  border-color: var(--cm-color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+}
+
+.cm-textarea::placeholder {
+  color: var(--cm-color-text-muted);
+}
+
+/* ============================================
+   SELECT
+   ============================================ */
+.cm-select {
+  width: 100%;
+  padding: var(--cm-spacing-3) var(--cm-spacing-4);
+  min-height: 44px;
+  background: var(--cm-color-bg-secondary);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-md);
+  font-family: var(--cm-font-family-sans);
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+  transition: all var(--cm-transition-fast);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--cm-spacing-3) center;
+  padding-right: var(--cm-spacing-10);
+}
+
+.cm-select:focus {
+  outline: none;
+  border-color: var(--cm-color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+}
+
+.cm-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   CHECKBOX & RADIO
+   ============================================ */
+.cm-checkbox,
+.cm-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cm-spacing-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.cm-checkbox input,
+.cm-radio input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--cm-color-accent-primary);
+}
+
+.cm-checkbox-label,
+.cm-radio-label {
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+}
+
+/* ============================================
+   FORM GROUP
+   ============================================ */
+.cm-form-group {
+  margin-bottom: var(--cm-spacing-5);
+}
+
+.cm-form-label {
+  display: block;
+  font-size: var(--cm-font-size-sm);
+  font-weight: var(--cm-font-weight-medium);
+  color: var(--cm-color-text-primary);
+  margin-bottom: var(--cm-spacing-2);
+}
+
+.cm-form-label-required::after {
+  content: ' *';
+  color: var(--cm-color-accent-danger);
+}
+
+.cm-form-hint {
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-muted);
+  margin-top: var(--cm-spacing-2);
+}
+
+.cm-form-error {
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-accent-danger);
+  margin-top: var(--cm-spacing-2);
+}
+
+/* ============================================
+   INPUT GROUP
+   ============================================ */
+.cm-input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.cm-input-group .cm-input,
+.cm-input-group .cm-btn {
+  border-radius: 0;
+}
+
+.cm-input-group .cm-input:first-child,
+.cm-input-group .cm-btn:first-child {
+  border-radius: var(--cm-radius-md) 0 0 var(--cm-radius-md);
+}
+
+.cm-input-group .cm-input:last-child,
+.cm-input-group .cm-btn:last-child {
+  border-radius: 0 var(--cm-radius-md) var(--cm-radius-md) 0;
+}
+
+.cm-input-group .cm-input:not(:first-child),
+.cm-input-group .cm-btn:not(:first-child) {
+  margin-left: -1px;
+}
+
+/* ============================================
+   SEARCH INPUT
+   ============================================ */
+.cm-search {
+  position: relative;
+}
+
+.cm-search-input {
+  width: 100%;
+  padding: var(--cm-spacing-3) var(--cm-spacing-4);
+  padding-left: var(--cm-spacing-10);
+  min-height: 44px;
+  background: var(--cm-color-bg-secondary);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-full);
+  font-family: var(--cm-font-family-sans);
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+  transition: all var(--cm-transition-fast);
+}
+
+.cm-search-input:focus {
+  outline: none;
+  border-color: var(--cm-color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+}
+
+.cm-search-icon {
+  position: absolute;
+  left: var(--cm-spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--cm-color-text-muted);
+  pointer-events: none;
+}
+
+/* ============================================
+   FILE UPLOAD
+   ============================================ */
+.cm-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--cm-spacing-10);
+  background: var(--cm-color-bg-secondary);
+  border: 2px dashed var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-lg);
+  cursor: pointer;
+  transition: all var(--cm-transition-base);
+}
+
+.cm-file-upload:hover {
+  border-color: var(--cm-color-accent-secondary);
+  background: var(--cm-color-bg-hover);
+}
+
+.cm-file-upload-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--cm-spacing-4);
+  color: var(--cm-color-text-muted);
+}
+
+.cm-file-upload-text {
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-secondary);
+  text-align: center;
+}
+
+.cm-file-upload input[type="file"] {
+  display: none;
+}
+
+/* ============================================
+   TOGGLE SWITCH
+   ============================================ */
+.cm-toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.cm-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.cm-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--cm-color-bg-tertiary);
+  border-radius: var(--cm-radius-full);
+  transition: all var(--cm-transition-base);
+}
+
+.cm-toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all var(--cm-transition-base);
+}
+
+.cm-toggle input:checked + .cm-toggle-slider {
+  background: var(--cm-color-accent-primary);
+}
+
+.cm-toggle input:checked + .cm-toggle-slider::before {
+  transform: translateX(22px);
+}
+
+.cm-toggle input:focus + .cm-toggle-slider {
+  box-shadow: 0 0 0 3px rgba(0, 191, 165, 0.3);
+}
+
+/* ============================================
+   FORM LAYOUTS
+   ============================================ */
+.cm-form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cm-spacing-4);
+  align-items: flex-end;
+}
+
+.cm-form-horizontal {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--cm-spacing-5);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .cm-form-horizontal {
+    grid-template-columns: 1fr;
+  }
+}

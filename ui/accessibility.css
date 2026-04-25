@@ -1,0 +1,259 @@
+/* ============================================
+   CODEMASTER - ACCESSIBILITY
+   LeetCode / ElectiCode Style
+   ============================================ */
+
+/* ============================================
+   FOCUS STYLES
+   ============================================ */
+*:focus-visible {
+  outline: 2px solid var(--cm-color-accent-secondary);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--cm-color-accent-secondary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   SKIP LINK
+   ============================================ */
+.cm-skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--cm-spacing-3) var(--cm-spacing-6);
+  background: var(--cm-color-accent-secondary);
+  color: #fff;
+  font-weight: var(--cm-font-weight-semibold);
+  border-radius: var(--cm-radius-md);
+  z-index: var(--cm-z-toast);
+  transition: top var(--cm-transition-fast);
+}
+
+.cm-skip-link:focus {
+  top: var(--cm-spacing-4);
+}
+
+/* ============================================
+   SCREEN READER ONLY
+   ============================================ */
+.cm-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+@media (prefers-contrast: high) {
+  :root {
+    --cm-color-border-primary: #fff;
+    --cm-color-text-secondary: #e2e8f0;
+  }
+  
+  .cm-btn {
+    border: 2px solid currentColor;
+  }
+  
+  .cm-card {
+    border-width: 2px;
+  }
+}
+
+/* ============================================
+   LARGE TEXT MODE
+   ============================================ */
+@media (prefers-reduced-size) {
+  html {
+    font-size: 20px;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  
+  .cm-header,
+  .cm-sidebar,
+  .cm-btn,
+  .cm-nav,
+  .cm-tooltip,
+  .cm-toast,
+  .cm-modal-backdrop {
+    display: none !important;
+  }
+  
+  .cm-main {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .cm-card {
+    break-inside: avoid;
+    border: 1px solid #000;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+}
+
+/* ============================================
+   DYSLEXIA FRIENDLY
+   ============================================ */
+.cm-dyslexia-font {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+  line-height: 1.8 !important;
+}
+
+/* ============================================
+   COLOR BLINDNESS SUPPORT
+   ============================================ */
+.cm-colorblind-protanopia .cm-badge-easy,
+.cm-colorblind-protanopia .cm-solved-indicator.cm-solved-easy {
+  background: #0077bb;
+  color: #fff;
+}
+
+.cm-colorblind-protanopia .cm-badge-medium,
+.cm-colorblind-protanopia .cm-solved-indicator.cm-solved-medium {
+  background: #ee7733;
+  color: #fff;
+}
+
+.cm-colorblind-protanopia .cm-badge-hard,
+.cm-colorblind-protanopia .cm-solved-indicator.cm-solved-hard {
+  background: #cc3311;
+  color: #fff;
+}
+
+.cm-colorblind-deuteranopia .cm-badge-easy,
+.cm-colorblind-deuteranopia .cm-solved-indicator.cm-solved-easy {
+  background: #0077bb;
+  color: #fff;
+}
+
+.cm-colorblind-deuteranopia .cm-badge-medium,
+.cm-colorblind-deuteranopia .cm-solved-indicator.cm-solved-medium {
+  background: #ee7733;
+  color: #fff;
+}
+
+.cm-colorblind-deuteranopia .cm-badge-hard,
+.cm-colorblind-deuteranopia .cm-solved-indicator.cm-solved-hard {
+  background: #cc3311;
+  color: #fff;
+}
+
+.cm-colorblind-tritanopia .cm-badge-easy,
+.cm-colorblind-tritanopia .cm-solved-indicator.cm-solved-easy {
+  background: #009981;
+  color: #fff;
+}
+
+.cm-colorblind-tritanopia .cm-badge-medium,
+.cm-colorblind-tritanopia .cm-solved-indicator.cm-solved-medium {
+  background: #ee7733;
+  color: #fff;
+}
+
+.cm-colorblind-tritanopia .cm-badge-hard,
+.cm-colorblind-tritanopia .cm-solved-indicator.cm-solved-hard {
+  background: #cc3311;
+  color: #fff;
+}
+
+/* ============================================
+   KEYBOARD NAVIGATION HINTS
+   ============================================ */
+.cm-keyboard-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cm-spacing-1);
+  padding: var(--cm-spacing-1) var(--cm-spacing-2);
+  background: var(--cm-color-bg-tertiary);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-sm);
+  font-family: var(--cm-font-family-mono);
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-secondary);
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+.cm-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.cm-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cm-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--cm-color-bg-tertiary);
+  border-top-color: var(--cm-color-accent-primary);
+  border-radius: 50%;
+  animation: cm-spin 0.8s linear infinite;
+}
+
+.cm-spinner-sm {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.cm-spinner-lg {
+  width: 60px;
+  height: 60px;
+  border-width: 4px;
+}

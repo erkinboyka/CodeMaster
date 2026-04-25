@@ -20,6 +20,9 @@ $tfAnimationsJsVersion = (is_file($tfAnimationsJsFile) && is_readable($tfAnimati
 $tfAnimationsCssHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/animations.css') . '?v=' . $tfAnimationsCssVersion;
 $tfAnimationsJsHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/animations.js') . '?v=' . $tfAnimationsJsVersion;
 $tfThemeCssVersion = (is_file($tfThemeCssFile) && is_readable($tfThemeCssFile)) ? (string) filemtime($tfThemeCssFile) : '1';
+$tfUiControllerJsFile = __DIR__ . '/ui-controller.js';
+$tfUiControllerJsVersion = (is_file($tfUiControllerJsFile) && is_readable($tfUiControllerJsFile)) ? (string) filemtime($tfUiControllerJsFile) : '1';
+$tfUiControllerJsHref = (($tfBasePath === '' ? '' : $tfBasePath) . '/includes/ui-controller.js') . '?v=' . $tfUiControllerJsVersion;
 $tfUiTokensVersion = (is_file($tfUiTokensFile) && is_readable($tfUiTokensFile)) ? (string) filemtime($tfUiTokensFile) : '1';
 $tfUiLayoutVersion = (is_file($tfUiLayoutFile) && is_readable($tfUiLayoutFile)) ? (string) filemtime($tfUiLayoutFile) : '1';
 $tfUiComponentsVersion = (is_file($tfUiComponentsFile) && is_readable($tfUiComponentsFile)) ? (string) filemtime($tfUiComponentsFile) : '1';
@@ -70,6 +73,7 @@ $tfNeedsTinyMce = in_array($tfAction, ['admin'], true);
 <link rel="stylesheet" href="<?= htmlspecialchars($tfThemeCssHref) ?>">
 <link rel='stylesheet' href='<?= htmlspecialchars($tfAnimationsCssHref) ?>'>
 <script src='<?= htmlspecialchars($tfAnimationsJsHref) ?>' defer></script>
+<script src='<?= htmlspecialchars($tfUiControllerJsHref) ?>' defer></script>
 <?php if ($tfNeedsTinyMce): ?>
     <link rel="preconnect" href="https://cdn.tiny.cloud" crossorigin>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin" defer></script>

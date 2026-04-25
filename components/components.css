@@ -1,0 +1,467 @@
+/* ============================================
+   CODEMASTER - UI COMPONENTS
+   LeetCode / ElectiCode Style
+   ============================================ */
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.cm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cm-spacing-2);
+  padding: var(--cm-spacing-3) var(--cm-spacing-6);
+  min-height: 40px;
+  border-radius: var(--cm-radius-md);
+  border: none;
+  font-family: var(--cm-font-family-sans);
+  font-weight: var(--cm-font-weight-semibold);
+  font-size: var(--cm-font-size-sm);
+  cursor: pointer;
+  transition: all var(--cm-transition-base);
+  white-space: nowrap;
+}
+
+.cm-btn-primary {
+  background: linear-gradient(135deg, var(--cm-color-accent-primary), var(--cm-color-accent-primary-hover));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3);
+}
+
+.cm-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 191, 165, 0.4);
+}
+
+.cm-btn-secondary {
+  background: var(--cm-color-bg-tertiary);
+  color: var(--cm-color-text-primary);
+  border: 1px solid var(--cm-color-border-primary);
+}
+
+.cm-btn-secondary:hover {
+  background: var(--cm-color-bg-hover);
+  border-color: var(--cm-color-border-light);
+}
+
+.cm-btn-outline {
+  background: transparent;
+  color: var(--cm-color-accent-secondary);
+  border: 1px solid var(--cm-color-accent-secondary);
+}
+
+.cm-btn-outline:hover {
+  background: var(--cm-color-accent-secondary);
+  color: #fff;
+}
+
+.cm-btn-ghost {
+  background: transparent;
+  color: var(--cm-color-text-secondary);
+}
+
+.cm-btn-ghost:hover {
+  background: var(--cm-color-bg-hover);
+  color: var(--cm-color-text-primary);
+}
+
+.cm-btn-danger {
+  background: var(--cm-color-accent-danger);
+  color: #fff;
+}
+
+.cm-btn-danger:hover {
+  background: #dc2626;
+}
+
+.cm-btn-sm {
+  padding: var(--cm-spacing-2) var(--cm-spacing-4);
+  min-height: 32px;
+  font-size: var(--cm-font-size-xs);
+}
+
+.cm-btn-lg {
+  padding: var(--cm-spacing-4) var(--cm-spacing-8);
+  min-height: 48px;
+  font-size: var(--cm-font-size-base);
+}
+
+.cm-btn-icon {
+  padding: var(--cm-spacing-2);
+  min-height: auto;
+  width: 40px;
+  height: 40px;
+}
+
+.cm-btn-block {
+  width: 100%;
+}
+
+.cm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.cm-card {
+  background: var(--cm-color-bg-card);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-lg);
+  padding: var(--cm-spacing-6);
+  transition: all var(--cm-transition-base);
+}
+
+.cm-card:hover {
+  border-color: var(--cm-color-border-light);
+  box-shadow: var(--cm-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.cm-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--cm-spacing-4);
+  padding-bottom: var(--cm-spacing-4);
+  border-bottom: 1px solid var(--cm-color-border-primary);
+}
+
+.cm-card-title {
+  font-size: var(--cm-font-size-lg);
+  font-weight: var(--cm-font-weight-bold);
+  color: var(--cm-color-text-primary);
+}
+
+.cm-card-subtitle {
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-secondary);
+  margin-top: var(--cm-spacing-1);
+}
+
+.cm-card-body {
+  margin-bottom: var(--cm-spacing-4);
+}
+
+.cm-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--cm-spacing-4);
+  border-top: 1px solid var(--cm-color-border-primary);
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.cm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cm-spacing-1);
+  padding: var(--cm-spacing-1) var(--cm-spacing-3);
+  border-radius: var(--cm-radius-full);
+  font-size: var(--cm-font-size-xs);
+  font-weight: var(--cm-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.cm-badge-easy {
+  background: var(--cm-color-easy-bg);
+  color: var(--cm-color-easy);
+}
+
+.cm-badge-medium {
+  background: var(--cm-color-medium-bg);
+  color: var(--cm-color-medium);
+}
+
+.cm-badge-hard {
+  background: var(--cm-color-hard-bg);
+  color: var(--cm-color-hard);
+}
+
+.cm-badge-new {
+  background: var(--cm-color-info-bg);
+  color: var(--cm-color-info);
+}
+
+.cm-badge-success {
+  background: var(--cm-color-success-bg);
+  color: var(--cm-color-success);
+}
+
+.cm-badge-warning {
+  background: var(--cm-color-warning-bg);
+  color: var(--cm-color-warning);
+}
+
+.cm-badge-error {
+  background: var(--cm-color-error-bg);
+  color: var(--cm-color-error);
+}
+
+/* ============================================
+   TAGS
+   ============================================ */
+.cm-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--cm-spacing-1) var(--cm-spacing-3);
+  background: var(--cm-color-bg-tertiary);
+  border-radius: var(--cm-radius-full);
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-secondary);
+  transition: all var(--cm-transition-fast);
+}
+
+.cm-tag:hover {
+  background: var(--cm-color-bg-hover);
+  color: var(--cm-color-text-primary);
+}
+
+/* ============================================
+   AVATAR
+   ============================================ */
+.cm-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cm-radius-full);
+  background: var(--cm-color-bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--cm-font-weight-bold);
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.cm-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cm-avatar-sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--cm-font-size-xs);
+}
+
+.cm-avatar-lg {
+  width: 56px;
+  height: 56px;
+  font-size: var(--cm-font-size-lg);
+}
+
+.cm-avatar-xl {
+  width: 80px;
+  height: 80px;
+  font-size: var(--cm-font-size-2xl);
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.cm-progress {
+  width: 100%;
+  height: 8px;
+  background: var(--cm-color-bg-tertiary);
+  border-radius: var(--cm-radius-full);
+  overflow: hidden;
+}
+
+.cm-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cm-color-accent-primary), var(--cm-color-accent-secondary));
+  border-radius: var(--cm-radius-full);
+  transition: width var(--cm-transition-slow);
+}
+
+.cm-progress-sm {
+  height: 4px;
+}
+
+.cm-progress-lg {
+  height: 12px;
+}
+
+/* ============================================
+   STATS CARD
+   ============================================ */
+.cm-stat-card {
+  background: var(--cm-color-bg-card);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-lg);
+  padding: var(--cm-spacing-6);
+  text-align: center;
+  transition: all var(--cm-transition-base);
+}
+
+.cm-stat-card:hover {
+  border-color: var(--cm-color-border-light);
+  box-shadow: var(--cm-shadow-lg);
+}
+
+.cm-stat-value {
+  font-size: var(--cm-font-size-3xl);
+  font-weight: var(--cm-font-weight-extrabold);
+  color: var(--cm-color-accent-primary);
+  margin-bottom: var(--cm-spacing-2);
+}
+
+.cm-stat-label {
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-secondary);
+}
+
+/* ============================================
+   SKELETON LOADER
+   ============================================ */
+.cm-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--cm-color-bg-card) 0%,
+    var(--cm-color-bg-hover) 50%,
+    var(--cm-color-bg-card) 100%
+  );
+  background-size: 200% 100%;
+  animation: cm-shimmer 1.5s infinite;
+  border-radius: var(--cm-radius-md);
+}
+
+@keyframes cm-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.cm-skeleton-text {
+  height: 16px;
+  margin-bottom: var(--cm-spacing-2);
+}
+
+.cm-skeleton-title {
+  height: 24px;
+  margin-bottom: var(--cm-spacing-4);
+}
+
+.cm-skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cm-radius-full);
+}
+
+.cm-skeleton-card {
+  height: 200px;
+}
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+.cm-divider {
+  height: 1px;
+  background: var(--cm-color-border-primary);
+  border: none;
+  margin: var(--cm-spacing-6) 0;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.cm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--cm-spacing-16);
+  text-align: center;
+}
+
+.cm-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--cm-spacing-4);
+  color: var(--cm-color-text-muted);
+}
+
+.cm-empty-title {
+  font-size: var(--cm-font-size-xl);
+  font-weight: var(--cm-font-weight-bold);
+  color: var(--cm-color-text-primary);
+  margin-bottom: var(--cm-spacing-2);
+}
+
+.cm-empty-text {
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-secondary);
+  max-width: 400px;
+}
+
+/* ============================================
+   TOOLTIP
+   ============================================ */
+.cm-tooltip {
+  position: relative;
+}
+
+.cm-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  padding: var(--cm-spacing-2) var(--cm-spacing-3);
+  background: var(--cm-color-bg-elevated);
+  border: 1px solid var(--cm-color-border-primary);
+  border-radius: var(--cm-radius-md);
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-primary);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--cm-transition-fast);
+  z-index: var(--cm-z-tooltip);
+  box-shadow: var(--cm-shadow-lg);
+}
+
+.cm-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* ============================================
+   ANIMATION UTILITIES
+   ============================================ */
+.cm-animate-fade {
+  animation: cm-fade-in 0.3s ease-out;
+}
+
+.cm-animate-slide-up {
+  animation: cm-slide-up 0.4s ease-out;
+}
+
+.cm-animate-slide-down {
+  animation: cm-slide-down 0.4s ease-out;
+}
+
+.cm-animate-scale {
+  animation: cm-scale-in 0.3s ease-out;
+}
+
+.cm-animate-pulse {
+  animation: cm-pulse-glow 2s infinite;
+}
+
+.cm-animate-bounce {
+  animation: cm-bounce 1s infinite;
+}
+
+.cm-animate-spin {
+  animation: cm-spin 1s linear infinite;
+}

@@ -1,0 +1,276 @@
+/* ============================================
+   CODEMASTER - TABLES
+   LeetCode / ElectiCode Style
+   ============================================ */
+
+/* ============================================
+   BASE TABLE
+   ============================================ */
+.cm-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--cm-radius-lg);
+  border: 1px solid var(--cm-color-border-primary);
+}
+
+.cm-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--cm-color-bg-card);
+}
+
+.cm-table thead {
+  background: var(--cm-color-bg-tertiary);
+}
+
+.cm-table th {
+  padding: var(--cm-spacing-4) var(--cm-spacing-5);
+  text-align: left;
+  font-size: var(--cm-font-size-xs);
+  font-weight: var(--cm-font-weight-bold);
+  color: var(--cm-color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.cm-table td {
+  padding: var(--cm-spacing-4) var(--cm-spacing-5);
+  border-bottom: 1px solid var(--cm-color-border-primary);
+  font-size: var(--cm-font-size-sm);
+  color: var(--cm-color-text-primary);
+}
+
+.cm-table tbody tr {
+  transition: background var(--cm-transition-fast);
+}
+
+.cm-table tbody tr:hover {
+  background: var(--cm-color-bg-hover);
+}
+
+.cm-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============================================
+   TABLE VARIANTS
+   ============================================ */
+.cm-table-compact th,
+.cm-table-compact td {
+  padding: var(--cm-spacing-2) var(--cm-spacing-3);
+}
+
+.cm-table-comfortable th,
+.cm-table-comfortable td {
+  padding: var(--cm-spacing-5) var(--cm-spacing-6);
+}
+
+.cm-table-striped tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cm-table-bordered {
+  border: 1px solid var(--cm-color-border-primary);
+}
+
+.cm-table-bordered th,
+.cm-table-bordered td {
+  border: 1px solid var(--cm-color-border-primary);
+}
+
+/* ============================================
+   TABLE ALIGNMENT
+   ============================================ */
+.cm-table th.cm-text-center,
+.cm-table td.cm-text-center {
+  text-align: center;
+}
+
+.cm-table th.cm-text-right,
+.cm-table td.cm-text-right {
+  text-align: right;
+}
+
+/* ============================================
+   PROBLEM LIST TABLE (LeetCode Style)
+   ============================================ */
+.cm-problem-table .cm-problem-status {
+  width: 40px;
+  text-align: center;
+}
+
+.cm-problem-table .cm-problem-id {
+  width: 60px;
+  font-family: var(--cm-font-family-mono);
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-muted);
+}
+
+.cm-problem-table .cm-problem-title {
+  min-width: 300px;
+}
+
+.cm-problem-table .cm-problem-title-link {
+  display: flex;
+  align-items: center;
+  gap: var(--cm-spacing-2);
+  color: var(--cm-color-text-primary);
+  font-weight: var(--cm-font-weight-medium);
+}
+
+.cm-problem-table .cm-problem-title-link:hover {
+  color: var(--cm-color-accent-secondary);
+}
+
+.cm-problem-table .cm-problem-acceptance {
+  width: 100px;
+  color: var(--cm-color-text-secondary);
+}
+
+.cm-problem-table .cm-problem-difficulty {
+  width: 100px;
+}
+
+.cm-problem-table .cm-solved-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--cm-radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cm-problem-table .cm-solved-indicator.cm-solved-easy {
+  background: var(--cm-color-easy);
+}
+
+.cm-problem-table .cm-solved-indicator.cm-solved-medium {
+  background: var(--cm-color-medium);
+}
+
+.cm-problem-table .cm-solved-indicator.cm-solved-hard {
+  background: var(--cm-color-hard);
+}
+
+/* ============================================
+   COURSE LIST TABLE
+   ============================================ */
+.cm-course-table .cm-course-thumbnail {
+  width: 80px;
+  height: 60px;
+  border-radius: var(--cm-radius-md);
+  object-fit: cover;
+}
+
+.cm-course-table .cm-course-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cm-spacing-1);
+}
+
+.cm-course-table .cm-course-title {
+  font-weight: var(--cm-font-weight-semibold);
+  color: var(--cm-color-text-primary);
+}
+
+.cm-course-table .cm-course-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--cm-spacing-3);
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-secondary);
+}
+
+.cm-course-table .cm-course-progress {
+  width: 150px;
+}
+
+/* ============================================
+   VACANCY TABLE
+   ============================================ */
+.cm-vacancy-table .cm-company-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cm-radius-md);
+  object-fit: contain;
+  background: var(--cm-color-bg-secondary);
+}
+
+.cm-vacancy-table .cm-vacancy-title {
+  font-weight: var(--cm-font-weight-semibold);
+  color: var(--cm-color-text-primary);
+}
+
+.cm-vacancy-table .cm-salary {
+  font-family: var(--cm-font-family-mono);
+  font-weight: var(--cm-font-weight-semibold);
+  color: var(--cm-color-accent-success);
+}
+
+/* ============================================
+   USER TABLE
+   ============================================ */
+.cm-user-table .cm-user-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--cm-spacing-3);
+}
+
+.cm-user-table .cm-user-name {
+  font-weight: var(--cm-font-weight-medium);
+  color: var(--cm-color-text-primary);
+}
+
+.cm-user-table .cm-user-handle {
+  font-size: var(--cm-font-size-xs);
+  color: var(--cm-color-text-muted);
+}
+
+/* ============================================
+   RESPONSIVE TABLE
+   ============================================ */
+@media (max-width: 768px) {
+  .cm-table-container {
+    border: none;
+  }
+  
+  .cm-table,
+  .cm-table thead,
+  .cm-table tbody,
+  .cm-table th,
+  .cm-table td,
+  .cm-table tr {
+    display: block;
+  }
+  
+  .cm-table thead {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  .cm-table tbody tr {
+    margin-bottom: var(--cm-spacing-4);
+    background: var(--cm-color-bg-card);
+    border: 1px solid var(--cm-color-border-primary);
+    border-radius: var(--cm-radius-lg);
+    padding: var(--cm-spacing-4);
+  }
+  
+  .cm-table td {
+    border: none;
+    padding: var(--cm-spacing-2) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .cm-table td::before {
+    content: attr(data-label);
+    font-weight: var(--cm-font-weight-semibold);
+    color: var(--cm-color-text-secondary);
+    font-size: var(--cm-font-size-xs);
+    text-transform: uppercase;
+  }
+}
