@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', ($interview->title ?? 'Комната собеседования') . ' - CodeMaster')
+@section('title', ($interview->title ?? __('interview_room_title')) . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -161,7 +161,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
     elseif ($itype === 'coding') $typeIcon = 'fa-code';
     elseif ($itype === 'system_design') $typeIcon = 'fa-network-wired';
 
-    $qText = $question['question'] ?? 'Вопрос собеседования';
+    $qText = $question['question'] ?? __('interview_question_default');
     if (is_string($qText)) {
         $decoded = json_decode($qText, true);
         if (!is_array($decoded) && preg_match('/\{[\s\S]*\}/', $qText, $m)) {
@@ -214,24 +214,24 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                 <div>
                     <div class="ir-hdr-title">{{ $interview->title }}</div>
                     <div class="ir-hdr-sub">
-                        <span class="ir-live"><span class="ir-live-dot"></span> Прямой эфир</span>
+                        <span class="ir-live"><span class="ir-live-dot"></span> {{ __('interview_live') }}</span>
                         <span x-text="(qi+1) + '/5'"></span>
                     </div>
                 </div>
             </div>
             <div class="ir-hdr-r">
                 <div class="ir-tmr"><i class="fas fa-clock"></i><span class="ir-tmr-v" x-text="fmt(timer)"></span></div>
-                <button class="ir-end" @click="sbHide = !sbHide; mobChat = !sbHide ? false : mobChat" :title="sbHide ? 'Показать чат' : 'Скрыть чат'">
+                <button class="ir-end" @click="sbHide = !sbHide; mobChat = !sbHide ? false : mobChat" :title="sbHide ? '{{ __('interview_show_chat') }}' : '{{ __('interview_hide_chat') }}'">
                     <i class="fas" :class="sbHide ? 'fa-angles-left' : 'fa-angles-right'"></i>
                 </button>
-                <button class="ir-end" @click="end()"><i class="fas fa-stop"></i> Завершить</button>
+                <button class="ir-end" @click="end()"><i class="fas fa-stop"></i> {{ __('interview_finish') }}</button>
             </div>
         </div>
 
         <div class="ir-tabs">
-            <button class="ir-tab" :class="tab==='q' && 'on'" @click="tab='q'"><i class="fas fa-circle-question"></i> Вопрос</button>
-            <button class="ir-tab" :class="tab==='c' && 'on'" @click="tab='c'"><i class="fas fa-code"></i> Код</button>
-            <button class="ir-tab" :class="tab==='a' && 'on'" @click="tab='a'"><i class="fas fa-pen"></i> Ответ</button>
+            <button class="ir-tab" :class="tab==='q' && 'on'" @click="tab='q'"><i class="fas fa-circle-question"></i> {{ __('interview_tab_question') }}</button>
+            <button class="ir-tab" :class="tab==='c' && 'on'" @click="tab='c'"><i class="fas fa-code"></i> {{ __('interview_tab_code') }}</button>
+            <button class="ir-tab" :class="tab==='a' && 'on'" @click="tab='a'"><i class="fas fa-pen"></i> {{ __('interview_tab_answer') }}</button>
         </div>
 
         <div class="ir-prog">
@@ -246,10 +246,10 @@ html,body{background:var(--bg)!important;color-scheme:dark}
             {{-- QUESTION --}}
             <div x-show="tab==='q'" x-cloak class="ir-q">
                 <div class="ir-q-tags">
-                    <span class="ir-tag {{ $diffClass }}"><i class="fas {{ $diffIcon }}"></i> {{ match($interview->difficulty) { 'easy' => 'Лёгкий', 'medium' => 'Средний', 'hard' => 'Сложный', default => ucfirst($interview->difficulty) } }}</span>
-                    <span class="ir-tag ir-tag-t"><i class="fas {{ $typeIcon }}"></i> {{ match($interview->type) { 'technical' => 'Техническое', 'behavioral' => 'Поведенческое', 'coding' => 'Кодинг', 'system_design' => 'Проектирование систем', default => ucfirst(str_replace('_', ' ', $interview->type)) } }}</span>
+                    <span class="ir-tag {{ $diffClass }}"><i class="fas {{ $diffIcon }}"></i> {{ match($interview->difficulty) { 'easy' => __('interview_diff_easy'), 'medium' => __('interview_diff_medium'), 'hard' => __('interview_diff_hard'), default => ucfirst($interview->difficulty) } }}</span>
+                    <span class="ir-tag ir-tag-t"><i class="fas {{ $typeIcon }}"></i> {{ match($interview->type) { 'technical' => __('interview_type_technical'), 'behavioral' => __('interview_type_behavioral'), 'coding' => __('interview_type_coding'), 'system_design' => __('interview_type_system_design'), default => ucfirst(str_replace('_', ' ', $interview->type)) } }}</span>
                     <span class="ir-tag ir-tag-n"><i class="fas fa-hashtag"></i> #{{ $questionIndex + 1 }}</span>
-                    <span class="ir-tag ir-tag-n"><i class="fas fa-list"></i> {{ match(str_replace('_', ' ', $qType)) { 'multiple choice' => 'Множественный выбор', 'code writing' => 'Написание кода', 'open ended' => 'Развёрнутый ответ', default => ucfirst(str_replace('_', ' ', $qType)) } }}</span>
+                    <span class="ir-tag ir-tag-n"><i class="fas fa-list"></i> {{ match(str_replace('_', ' ', $qType)) { 'multiple choice' => __('interview_qtype_multiple_choice'), 'code writing' => __('interview_qtype_code_writing'), 'open ended' => __('interview_qtype_open_ended'), default => ucfirst(str_replace('_', ' ', $qType)) } }}</span>
                 </div>
                 <h3>{{ $qText }}</h3>
                 @if($qDesc)<div class="ir-q-desc">{!! nl2br(e($qDesc)) !!}</div>@endif
@@ -265,7 +265,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                             <option value="cpp">C++</option>
                         </select>
                     </div>
-                    <textarea x-model="code" spellcheck="false" placeholder="Напишите ваше решение здесь..." class="ir-q-editor-ta"></textarea>
+                    <textarea x-model="code" spellcheck="false" placeholder="{{ __('interview.write_solution_placeholder') }}" class="ir-q-editor-ta"></textarea>
                 </div>
                 @elseif($qStarter)
                 <div class="ir-q-code">{{ $qStarter }}</div>
@@ -307,7 +307,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                         <option value="cpp">C++</option>
                     </select>
                 </div>
-                <textarea x-model="code" spellcheck="false" placeholder="Напишите ваше решение здесь..."></textarea>
+                <textarea x-model="code" spellcheck="false" placeholder="{{ __('interview_write_solution_here') }}"></textarea>
             </div>
 
             {{-- ANSWER --}}
@@ -316,11 +316,11 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                 <div class="ir-q" style="text-align:center">
                     <i class="fas fa-hand-pointer" style="font-size:36px;color:var(--accent);margin-bottom:12px;display:block"></i>
                     <div style="color:var(--text-secondary);font-size:13px;line-height:1.7">
-                        Выбери ответ на вкладке <strong style="color:var(--text)">Вопрос</strong>, затем нажми <strong style="color:var(--accent-2)">Отправить</strong>.
+                        {{ __('interview_select_answer_hint') }}.
                     </div>
                     @if(!empty($qOptions))
                     <div style="margin-top:14px;padding:10px 16px;border-radius:8px;background:var(--accent-glow);border:1px solid rgba(99,102,241,.2);color:var(--accent-2);font-size:13px">
-                        Выбрано: <strong x-text="ans"></strong>
+                        {{ __('interview_selected') }} <strong x-text="ans"></strong>
                     </div>
                     @endif
                 </div>
@@ -328,7 +328,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                 <div class="ir-q">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
                         <i class="fas fa-code" style="color:var(--accent)"></i>
-                        <strong style="color:var(--text)">Решение</strong>
+                        <strong style="color:var(--text)">{{ __('interview_solution') }}</strong>
                     </div>
                     <div class="ir-q-editor" style="margin-top:0">
                         <div class="ir-ed-bar">
@@ -341,21 +341,21 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                                 <option value="cpp">C++</option>
                             </select>
                         </div>
-                        <textarea x-model="code" spellcheck="false" placeholder="Напишите ваше решение здесь..." class="ir-q-editor-ta"></textarea>
+<textarea x-model="code" spellcheck="false" placeholder="{{ __('interview_write_solution_here') }}" class="ir-q-editor-ta"></textarea>
                     </div>
                     <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">
-                        <i class="fas fa-info-circle"></i> Напишите решение и нажмите «Отправить». Или опишите подход текстом.
+                        <i class="fas fa-info-circle"></i> {{ __('interview_submit_hint') }}
                     </div>
                 </div>
                 @else
                 <div class="ir-q">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
                         <i class="fas fa-pen" style="color:var(--accent)"></i>
-                        <strong style="color:var(--text)">Развёрнутый ответ</strong>
+                        <strong style="color:var(--text)">{{ __('interview_qtype_open_ended') }}</strong>
                     </div>
                     @if(!empty($qExpected))
                     <div style="margin-bottom:12px;padding:12px;border-radius:8px;background:var(--bg);border:1px solid var(--border)">
-                        <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ключевые моменты для раскрытия:</div>
+                        <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">{{ __('interview_key_points') }}</div>
                         @foreach($qExpected as $kp)
                         <div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;color:var(--text-secondary)">
                             <i class="fas fa-check-circle" style="color:var(--success);font-size:10px"></i> {{ $kp }}
@@ -363,9 +363,9 @@ html,body{background:var(--bg)!important;color-scheme:dark}
                         @endforeach
                     </div>
                     @endif
-                    <textarea class="ir-ans" x-model="ans" placeholder="Напиши развёрнутый ответ здесь..." rows="8"></textarea>
+                    <textarea class="ir-ans" x-model="ans" placeholder="{{ __('interview_placeholder_detailed') }}" rows="8"></textarea>
                     <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">
-                        <i class="fas fa-info-circle"></i> Подробно опишите ваш подход, используя примеры и конкретные детали.
+                        <i class="fas fa-info-circle"></i> {{ __('interview_describe_approach') }}
                     </div>
                 </div>
                 @endif
@@ -375,10 +375,10 @@ html,body{background:var(--bg)!important;color-scheme:dark}
         <div class="ir-acts">
             <div class="ir-acts-l">
                 <button class="ir-btn" @click="prev()" :disabled="qi <= 0">
-                    <i class="fas fa-chevron-left"></i> Назад
+                    <i class="fas fa-chevron-left"></i> {{ __('interview_back') }}
                 </button>
                 <button class="ir-btn" @click="next()" :disabled="qi >= 4">
-                    Далее <i class="fas fa-chevron-right"></i>
+                    {{ __('interview_next') }} <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
             <form id="irSubmitForm" action="{{ route('interview.answer', $interview->id) }}" method="POST" style="display:none">
@@ -387,7 +387,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
             </form>
             <button class="ir-btn pri" @click="qi >= 4 ? end() : submit()" :disabled="qi < 4 && (!ans || !ans.trim())">
                 <i class="fas" :class="qi >= 4 ? 'fa-flag-checkered' : 'fa-paper-plane'"></i>
-                <span x-text="qi >= 4 ? 'Завершить' : 'Отправить'"></span>
+                <span x-text="qi >= 4 ? '{{ __('interview_finish') }}' : '{{ __('interview_submit') }}'"></span>
             </button>
         </div>
     </div>
@@ -395,12 +395,12 @@ html,body{background:var(--bg)!important;color-scheme:dark}
     {{-- ========== SIDEBAR ========== --}}
     <div class="ir-sb" :class="[sbHide && 'hide', mobChat && 'mob-open']">
         <div class="ir-sb-hdr">
-            <div class="ir-sb-t"><i class="fas fa-robot"></i> AI Интервьюер</div>
+            <div class="ir-sb-t"><i class="fas fa-robot"></i> {{ __('interview_ai_interviewer') }}</div>
             <div class="ir-cam" :class="camStream && 'show'">
                 <video x-ref="camVideo" autoplay muted playsinline x-show="camStream"></video>
                 <div class="ir-cam-off" x-show="!camStream">
                     <i class="fas fa-video-slash"></i>
-                    <span>Камера выключена</span>
+                    <span>{{ __('interview_camera_off') }}</span>
                 </div>
                 <div class="ir-cam-label" x-show="camStream">LIVE</div>
             </div>
@@ -423,7 +423,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
         <canvas x-ref="frameCanvas" style="display:none" width="320" height="180"></canvas>
         <div class="ir-ch" id="irChat">
             <template x-for="(m, i) in msgs" :key="i">
-                <div :class="m.s === 'Ты' && 'me'">
+                <div :class="m.s === '{{ __('interview_you') }}' && 'me'">
                     <div class="ir-ch-s" x-text="m.s"></div>
                     <div class="ir-ch-b" x-text="m.t"></div>
                 </div>
@@ -431,7 +431,7 @@ html,body{background:var(--bg)!important;color-scheme:dark}
         </div>
         <div class="ir-ch-in">
             <form @submit.prevent="send()" class="ir-ch-f">
-                <input x-model="nMsg" type="text" class="ir-ch-fi" placeholder="Напиши сообщение...">
+                <input x-model="nMsg" type="text" class="ir-ch-fi" placeholder="{{ __('interview_placeholder_message') }}">
                 <button type="submit" class="ir-ch-sd"><i class="fas fa-paper-plane"></i></button>
             </form>
         </div>
@@ -467,7 +467,7 @@ function irRoom(){
         sbHide: false,
         mobChat: false,
         nMsg: '',
-        msgs: [{s:'Interviewer',t:'Добро пожаловать! Внимательно прочитай вопрос. Ты можешь задать мне любой вопрос по теме.'}],
+        msgs: [{s:'Interviewer',t:'{{ __("interview_welcome") }}'}],
         t: {on:false,m:'',i:'',c:''},
         qi: {{ $questionIndex }},
         sending: false,
@@ -482,7 +482,7 @@ function irRoom(){
 
         sendMsg(msg, withImage){
             if(this.sending) return;
-            this.msgs.push({s:'Ты',t:msg});
+            this.msgs.push({s:'{{ __("interview_you") }}',t:msg});
             this.sending = true;
             this.$nextTick(()=>{const c=document.getElementById('irChat');if(c)c.scrollTop=c.scrollHeight;});
 
@@ -512,11 +512,11 @@ function irRoom(){
             })
             .then(r => r.json())
             .then(d => {
-                this.msgs.push({s:'Interviewer', t: d.reply || 'Извините, не удалось сгенерировать ответ.'});
+                this.msgs.push({s:'Interviewer', t: d.reply || '{{ __("interview_ai_error_response") }}'});
                 this.$nextTick(()=>{const c=document.getElementById('irChat');if(c)c.scrollTop=c.scrollHeight;});
             })
             .catch(() => {
-                this.msgs.push({s:'Interviewer', t:'Ошибка соединения. Пожалуйста, попробуйте снова.'});
+                this.msgs.push({s:'Interviewer', t:'{{ __("interview_connection_error") }}'});
             })
             .finally(()=>{ this.sending = false; });
         },
@@ -538,9 +538,9 @@ function irRoom(){
                 this.mic = true;
                 this.startAudioLevel();
                 this.startListening();
-                this.toast('Микрофон включён — говорите в чат','fas fa-microphone','#22c55e');
+                this.toast('{{ __("interview_mic_on") }}','fas fa-microphone','#22c55e');
             }catch(e){
-                this.toast('Доступ к микрофону запрещён','fas fa-microphone-slash','#ef4444');
+                this.toast('{{ __("interview_mic_denied") }}','fas fa-microphone-slash','#ef4444');
                 this.mic = false;
             }
         },
@@ -553,7 +553,7 @@ function irRoom(){
             this.audioLevel = 0;
             if(this.audioAnim) cancelAnimationFrame(this.audioAnim);
             if(this.audioCtx){ this.audioCtx.close(); this.audioCtx=null; }
-                this.toast('Микрофон выключен','fas fa-microphone-slash','#ef4444');
+                this.toast('{{ __("interview_mic_off") }}','fas fa-microphone-slash','#ef4444');
         },
 
         startAudioLevel(){
@@ -578,7 +578,7 @@ function irRoom(){
         startListening(){
             const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
             if(!SR){
-                this.toast('Распознавание речи требует HTTPS или localhost. Вводите ответы вручную.','fas fa-exclamation-triangle','#eab308');
+                this.toast('{{ __('interview.speech_requires_https') }}','fas fa-exclamation-triangle','#eab308');
                 return;
             }
 
@@ -619,11 +619,11 @@ function irRoom(){
 
             this.recognition.onerror = (e)=>{
                 if(e.error === 'not-allowed'){
-                    this.toast('Разрешение на микрофон отклонено','fas fa-microphone-slash','#ef4444');
+                    this.toast('{{ __('interview.mic_permission_denied') }}','fas fa-microphone-slash','#ef4444');
                     this.mic = false;
                     this.listening = false;
                 } else if(e.error !== 'no-speech' && e.error !== 'aborted'){
-                    this.toast('Ошибка распознавания: '+e.error,'fas fa-exclamation-triangle','#eab308');
+                    this.toast('{{ __('interview.recognition_error') }}: '+e.error,'fas fa-exclamation-triangle','#eab308');
                 }
             };
 
@@ -636,7 +636,7 @@ function irRoom(){
             };
 
             try{ this.recognition.start(); }catch(e){
-                this.toast('Не удалось запустить распознавание речи','fas fa-exclamation-triangle','#eab308');
+                this.toast('{{ __('interview.speech_recognition_failed') }}','fas fa-exclamation-triangle','#eab308');
             }
         },
 
@@ -645,7 +645,7 @@ function irRoom(){
                 if(this.camStream){ this.camStream.getTracks().forEach(t=>t.stop()); this.camStream=null; }
                 this.cam = false;
                 this.stopFrameCapture();
-                this.toast('Камера выключена','fas fa-video-slash','#ef4444');
+                this.toast('{{ __('interview.camera_off') }}','fas fa-video-slash','#ef4444');
                 return;
             }
             try{
@@ -656,9 +656,9 @@ function irRoom(){
                     if(v) v.srcObject = this.camStream;
                 });
                 this.startFrameCapture();
-                this.toast('Камера включена — AI видит ваш экран','fas fa-video','#22c55e');
+                this.toast('{{ __('interview.camera_on') }}','fas fa-video','#22c55e');
             }catch(e){
-                this.toast('Доступ к камере запрещён','fas fa-video-slash','#ef4444');
+                this.toast('{{ __('interview.camera_denied') }}','fas fa-video-slash','#ef4444');
                 this.cam = false;
             }
         },
@@ -667,7 +667,7 @@ function irRoom(){
             this.stopFrameCapture();
             this.frameInterval = setInterval(()=>{
                 if(!this.cam || !this.camStream || this.sending) return;
-                this.sendMsg('[Камера: Кандидат работает над вопросом собеседования. Проанализируй его прогресс и предложи помощь при необходимости.]', true);
+                this.sendMsg('{{ __('interview.camera_ai_prompt') }}', true);
             }, 15000);
         },
 

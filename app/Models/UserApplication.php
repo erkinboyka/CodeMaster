@@ -41,11 +41,11 @@ class UserApplication extends Model
 
     public function chats(): HasMany
     {
-        return $this->hasMany(VacancyChat::class);
+        return $this->hasMany(VacancyChat::class, 'application_id');
     }
 
     public function documents(): HasMany
     {
-        return $this->hasMany(VacancyDocument::class);
+        return $this->hasMany(VacancyDocument::class, 'application_id');
     }
 }

@@ -1,6 +1,6 @@
 ﻿@extends('layouts.app')
 
-@section('title', 'Контакты' . ' - CodeMaster')
+@section('title', __('page_contacts_title') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -408,10 +408,10 @@
     <div class="sp-hero__content">
         <div class="sp-badge">
             <i class="fas fa-paper-plane"></i>
-            {{ __('Связаться') }}
+            {{ __('page_contacts_badge') }}
         </div>
-        <h1 class="sp-hero__title">{{ __('Контакты') }}</h1>
-        <p class="sp-hero__subtitle">{{ __('Мы всегда рады помочь вам. Свяжитесь с нами любым удобным способом, и мы ответим в ближайшее время.') }}</p>
+        <h1 class="sp-hero__title">{{ __('page_contacts_heading') }}</h1>
+        <p class="sp-hero__subtitle">{{ __('page_contacts_subtitle') }}</p>
     </div>
 </section>
 
@@ -425,10 +425,10 @@
                 <div class="sp-section-header reveal-up">
                     <div class="sp-section-label">
                         <i class="fas fa-address-card"></i>
-                        {{ __('Контактная информация') }}
+                        {{ __('page_contacts_info_label') }}
                     </div>
-                    <h2 class="sp-section-title">{{ __('Свяжитесь с нами') }}</h2>
-                    <p class="sp-section-desc">{{ __('Выберите удобный способ связи, и мы ответим вам в кратчайшие сроки.') }}</p>
+                    <h2 class="sp-section-title">{{ __('page_contacts_info_title') }}</h2>
+                    <p class="sp-section-desc">{{ __('page_contacts_info_desc') }}</p>
                 </div>
 
                 <div class="sp-contact-list stagger">
@@ -437,14 +437,14 @@
                             <i class="fas fa-envelope"></i>
                         </div>
                         <div class="sp-contact-card__body">
-                            <h3 class="sp-contact-card__title">{{ __('Электронная почта') }}</h3>
+                            <h3 class="sp-contact-card__title">{{ __('page_contacts_email_title') }}</h3>
                             <p class="sp-contact-card__detail">
                                 <a href="mailto:support@codemaster.tj">support@codemaster.tj</a>
                             </p>
                             <p class="sp-contact-card__detail">
                                 <a href="mailto:info@codemaster.tj">info@codemaster.tj</a>
                             </p>
-                            <span class="sp-contact-card__label">{{ __('Ответим за 24 часа') }}</span>
+                            <span class="sp-contact-card__label">{{ __('page_contacts_email_label') }}</span>
                         </div>
                     </div>
 
@@ -453,10 +453,10 @@
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div class="sp-contact-card__body">
-                            <h3 class="sp-contact-card__title">{{ __('Адрес офиса') }}</h3>
-                            <p class="sp-contact-card__detail">{{ __('проспект Рудаки 45, офис 12') }}</p>
-                            <p class="sp-contact-card__detail">{{ __('Душанбе, Таджикистан 734000') }}</p>
-                            <span class="sp-contact-card__label">{{ __('Приходите в гости') }}</span>
+                            <h3 class="sp-contact-card__title">{{ __('page_contacts_address_title') }}</h3>
+                            <p class="sp-contact-card__detail">{{ __('page_contacts_address_line1') }}</p>
+                            <p class="sp-contact-card__detail">{{ __('page_contacts_address_line2') }}</p>
+                            <span class="sp-contact-card__label">{{ __('page_contacts_address_label') }}</span>
                         </div>
                     </div>
 
@@ -465,12 +465,12 @@
                             <i class="fas fa-phone-alt"></i>
                         </div>
                         <div class="sp-contact-card__body">
-                            <h3 class="sp-contact-card__title">{{ __('Телефон') }}</h3>
+                            <h3 class="sp-contact-card__title">{{ __('page_contacts_phone_title') }}</h3>
                             <p class="sp-contact-card__detail">
                                 <a href="tel:+992372345678">+992 (37) 234-5678</a>
                             </p>
-                            <p class="sp-contact-card__detail">{{ __('Пн-Пт, 9:00 - 18:00') }}</p>
-                            <span class="sp-contact-card__label">{{ __('Звоните нам') }}</span>
+                            <p class="sp-contact-card__detail">{{ __('page_contacts_phone_hours') }}</p>
+                            <span class="sp-contact-card__label">{{ __('page_contacts_phone_label') }}</span>
                         </div>
                     </div>
 
@@ -483,7 +483,7 @@
                             <p class="sp-contact-card__detail">
                                 <a href="https://t.me/codemaster_tj" target="_blank" rel="noopener">@codemaster_tj</a>
                             </p>
-                            <span class="sp-contact-card__label">{{ __('Быстрая связь') }}</span>
+                            <span class="sp-contact-card__label">{{ __('page_contacts_telegram_label') }}</span>
                         </div>
                     </div>
                 </div>
@@ -508,31 +508,31 @@
                 <div class="sp-form-card">
                     <h2 class="sp-form-card__title">
                         <i class="fas fa-pen-fancy"></i>
-                        {{ __('Отправить сообщение') }}
+                        {{ __('page_contacts_form_title') }}
                     </h2>
                     <form class="sp-form" action="#" method="POST">
                         @csrf
                         <div class="sp-form-row">
                             <div class="sp-form-group">
-                                <label class="sp-form-label" for="sp-name">{{ __('Ваше имя') }}</label>
-                                <input type="text" id="sp-name" name="name" class="sp-form-input" placeholder="{{ __('Иван Иванов') }}" required>
+                                <label class="sp-form-label" for="sp-name">{{ __('page_contacts_form_name') }}</label>
+                                <input type="text" id="sp-name" name="name" class="sp-form-input" placeholder="{{ __('page_contacts_form_name_placeholder') }}" required>
                             </div>
                             <div class="sp-form-group">
-                                <label class="sp-form-label" for="sp-email">{{ __('Электронная почта') }}</label>
+                                <label class="sp-form-label" for="sp-email">{{ __('page_contacts_form_email') }}</label>
                                 <input type="email" id="sp-email" name="email" class="sp-form-input" placeholder="you@example.com" required>
                             </div>
                         </div>
                         <div class="sp-form-group">
-                            <label class="sp-form-label" for="sp-subject">{{ __('Тема') }}</label>
-                            <input type="text" id="sp-subject" name="subject" class="sp-form-input" placeholder="{{ __('Чем мы можем помочь?') }}" required>
+                            <label class="sp-form-label" for="sp-subject">{{ __('page_contacts_form_subject') }}</label>
+                            <input type="text" id="sp-subject" name="subject" class="sp-form-input" placeholder="{{ __('page_contacts_form_subject_placeholder') }}" required>
                         </div>
                         <div class="sp-form-group">
-                            <label class="sp-form-label" for="sp-message">{{ __('Сообщение') }}</label>
-                            <textarea id="sp-message" name="message" class="sp-form-textarea" placeholder="{{ __('Расскажите подробнее...') }}" rows="6" required></textarea>
+                            <label class="sp-form-label" for="sp-message">{{ __('page_contacts_form_message') }}</label>
+                            <textarea id="sp-message" name="message" class="sp-form-textarea" placeholder="{{ __('page_contacts_form_message_placeholder') }}" rows="6" required></textarea>
                         </div>
                         <button type="submit" class="sp-form-btn">
                             <i class="fas fa-paper-plane"></i>
-                            {{ __('Отправить сообщение') }}
+                            {{ __('page_contacts_form_submit') }}
                         </button>
                     </form>
                 </div>
@@ -551,36 +551,36 @@
             <div class="sp-hours-card" style="align-self:start">
                 <h3 class="sp-hours-card__title">
                     <i class="fas fa-clock"></i>
-                    {{ __('Часы работы') }}
+                    {{ __('page_contacts_hours_title') }}
                 </h3>
                 <div class="sp-hours-list">
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Понедельник') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_monday') }}</span>
                         <span class="sp-hours-time sp-hours-time--active">09:00 - 18:00</span>
                     </div>
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Вторник') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_tuesday') }}</span>
                         <span class="sp-hours-time sp-hours-time--active">09:00 - 18:00</span>
                     </div>
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Среда') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_wednesday') }}</span>
                         <span class="sp-hours-time sp-hours-time--active">09:00 - 18:00</span>
                     </div>
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Четверг') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_thursday') }}</span>
                         <span class="sp-hours-time sp-hours-time--active">09:00 - 18:00</span>
                     </div>
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Пятница') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_friday') }}</span>
                         <span class="sp-hours-time sp-hours-time--active">09:00 - 18:00</span>
                     </div>
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Суббота') }}</span>
-                        <span class="sp-hours-time sp-hours-time--closed">{{ __('Выходной') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_saturday') }}</span>
+                        <span class="sp-hours-time sp-hours-time--closed">{{ __('page_contacts_hours_closed') }}</span>
                     </div>
                     <div class="sp-hours-row">
-                        <span class="sp-hours-day">{{ __('Воскресенье') }}</span>
-                        <span class="sp-hours-time sp-hours-time--closed">{{ __('Выходной') }}</span>
+                        <span class="sp-hours-day">{{ __('page_contacts_hours_sunday') }}</span>
+                        <span class="sp-hours-time sp-hours-time--closed">{{ __('page_contacts_hours_closed') }}</span>
                     </div>
                 </div>
             </div>
@@ -591,7 +591,7 @@
                     style="width:100%;height:100%;border:0;border-radius:var(--radius-lg);min-height:340px" 
                     loading="lazy" 
                     referrerpolicy="no-referrer-when-downgrade"
-                    title="{{ __('Наш офис') }}">
+                    title="{{ __('page_contacts_map_title') }}">
                 </iframe>
             </div>
 
@@ -602,11 +602,11 @@
 <section class="sp-section">
     <div class="sp-section__inner">
         <div class="sp-cta reveal-scale">
-            <h2 class="sp-cta__title">{{ __('Готовы начать?') }}</h2>
-            <p class="sp-cta__desc">{{ __('Присоединяйтесь к тысячам студентов, которые уже учатся вместе с CodeMaster. Начните свой путь в IT-карьеру уже сегодня.') }}</p>
+            <h2 class="sp-cta__title">{{ __('page_contacts_cta_title_new') }}</h2>
+            <p class="sp-cta__desc">{{ __('page_contacts_cta_desc') }}</p>
             <a href="{{ route('courses.index') }}" class="sp-cta__btn">
                 <i class="fas fa-arrow-right"></i>
-                {{ __('Начать обучение') }}
+                {{ __('page_contacts_cta_button') }}
             </a>
         </div>
     </div>

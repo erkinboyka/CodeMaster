@@ -121,7 +121,7 @@
                             </div>
                             <div class="flex-1">
                                 <h4 class="font-semibold text-gray-900 text-sm group-hover:text-indigo-600 transition">{{ $course->title }}</h4>
-                                <p class="text-xs text-gray-500 mt-1">{{ $course->lessons->count() }} {{ __('lessons') }} • {{ $course->level }}</p>
+                                <p class="text-xs text-gray-500 mt-1">{{ $course->lessons->count() }} {{ __('lessons') }} • {{ __('courses_level_' . mb_strtolower($course->level)) }}</p>
                             </div>
                         </div>
                     </a>
@@ -199,14 +199,14 @@
             <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
                 <div class="flex items-center space-x-3 mb-3">
                     <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-robot"></i>
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity=".7"/><path d="M12 2v7M12 15v7M4 7l6 3M14 12l6 3M4 17l6-3M14 12l6-3" stroke="currentColor" stroke-width="1" opacity=".5"/></svg>
                     </div>
                     <h3 class="font-bold">{{ __('AI Tutor') }}</h3>
                 </div>
                 <p class="text-sm text-white/80 mb-4">{{ __('Need help? Ask our AI tutor anything about programming.') }}</p>
-                <button onclick="document.querySelector('[x-data*=\"open: false\"] button').click()" class="w-full py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition">
-                    {{ __('Start Chat') }} <i class="fas fa-arrow-right ml-1"></i>
-                </button>
+                <a href="{{ route('courses.index') }}" class="block w-full py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition text-center">
+                    {{ __('Start Learning') }} <i class="fas fa-arrow-right ml-1"></i>
+                </a>
             </div>
         </div>
     </div>

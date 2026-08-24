@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserSkill;
+use App\Services\RecaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,6 +13,13 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
+    protected $recaptchaService;
+
+    public function __construct(RecaptchaService $recaptchaService)
+    {
+        $this->recaptchaService = $recaptchaService;
+    }
+
     public function showRegistrationForm()
     {
         return view('auth.register');
@@ -19,6 +27,12 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+        if ($request->has('g-recaptcha-response')) {
+            if (!$this->recaptchaService->verify($request->g-recaptcha-response, $request->ip())) {
+                return back()->withErrors(['email' => 'reCAPTCHA verification failed. Please try again.'])->onlyInput('email');
+            }
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -49,8 +63,11 @@ class RegisterController extends Controller
             }
         }
 
-        Auth::login($user);
+        $user->sendEmailVerificationNotification();
 
-        return redirect()->route('dashboard');
+        Auth::login($user);
+        $user->recordActivity();
+
+        return redirect()->route('verification.notice');
     }
 }

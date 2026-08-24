@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="lesson-page">
-    <!-- Breadcrumb -->
     <div class="lesson-breadcrumb">
         <div class="lesson-breadcrumb-inner">
             <a href="{{ route('courses.show', $course->id) }}" class="lesson-breadcrumb-back">
@@ -27,7 +26,6 @@
     </div>
 
     <div class="lesson-layout">
-        <!-- Sidebar -->
         <aside class="lesson-sidebar reveal-left">
             <div class="lesson-sidebar-header">
                 <i class="fas fa-folder-open"></i>
@@ -49,25 +47,11 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="lesson-main reveal-right" x-data="lessonApp()">
-            <!-- Tabs -->
             <div class="lesson-tabs">
-                @if($lesson->video_url)
-                <button @click="activeTab = 'video'" :class="activeTab === 'video' ? 'active' : ''" class="lesson-tab">
-                    <i class="fas fa-play"></i>
-                    <span>{{ __('Video') }}</span>
-                </button>
-                @endif
-                @if($lesson->audio_url)
-                <button @click="activeTab = 'audio'" :class="activeTab === 'audio' ? 'active' : ''" class="lesson-tab">
-                    <i class="fas fa-headphones"></i>
-                    <span>{{ __('Audio') }}</span>
-                </button>
-                @endif
                 @if($lesson->presentation_url)
-                <button @click="activeTab = 'presentation'" :class="activeTab === 'presentation' ? 'active' : ''" class="lesson-tab">
-                    <i class="fas fa-file-powerpoint"></i>
+                <button @click="activeTab = 'slides'" :class="activeTab === 'slides' ? 'active' : ''" class="lesson-tab">
+                    <i class="fas fa-desktop"></i>
                     <span>{{ __('Slides') }}</span>
                 </button>
                 @endif
@@ -75,6 +59,12 @@
                 <button @click="activeTab = 'content'" :class="activeTab === 'content' ? 'active' : ''" class="lesson-tab">
                     <i class="fas fa-book-open"></i>
                     <span>{{ __('Theory') }}</span>
+                </button>
+                @endif
+                @if($lesson->materials_url)
+                <button @click="activeTab = 'materials'" :class="activeTab === 'materials' ? 'active' : ''" class="lesson-tab">
+                    <i class="fas fa-link"></i>
+                    <span>{{ __('Materials') }}</span>
                 </button>
                 @endif
                 @if($lesson->practiceTasks->count())
@@ -93,43 +83,29 @@
                 @endif
             </div>
 
-            <!-- Tab Content -->
             <div class="lesson-content">
-                {{-- Video --}}
-                <div x-show="activeTab === 'video'" x-cloak>
-                    @if($lesson->video_url)
-                    <div class="lesson-video">
-                        @if(str_contains($lesson->video_url, 'youtube') || str_contains($lesson->video_url, 'youtu.be'))
-                        <iframe src="{{ str_replace('watch?v=', 'embed/', $lesson->video_url) }}" class="lesson-video-iframe" frameborder="0" allowfullscreen></iframe>
-                        @else
-                        <video src="{{ $lesson->video_url }}" controls class="lesson-video-player"></video>
-                        @endif
-                    </div>
-                    @endif
-                </div>
-
-                {{-- Audio --}}
-                <div x-show="activeTab === 'audio'" x-cloak>
-                    @if($lesson->audio_url)
-                    <div class="lesson-audio">
-                        <div class="lesson-audio-icon"><i class="fas fa-headphones"></i></div>
-                        <div class="lesson-audio-waves"><span></span><span></span><span></span><span></span><span></span></div>
-                        <h3 class="lesson-audio-title">{{ $lesson->title }}</h3>
-                        <audio src="{{ $lesson->audio_url }}" controls class="lesson-audio-player"></audio>
-                    </div>
-                    @endif
-                </div>
-
-                {{-- Presentation --}}
-                <div x-show="activeTab === 'presentation'" x-cloak>
+                <div x-show="activeTab === 'slides'" x-cloak>
                     @if($lesson->presentation_url)
-                    <div class="lesson-presentation">
-                        <iframe src="{{ $lesson->presentation_url }}" class="lesson-presentation-iframe" frameborder="0"></iframe>
+                    @php $presUrl = str_replace('.pdf', '.html', $lesson->presentation_url); @endphp
+                    <div class="ls-wrap">
+                        <div class="ls-toolbar">
+                            <div class="ls-toolbar-title"><i class="fas fa-desktop"></i> {{ __('Presentation') }}</div>
+                            <div class="ls-toolbar-btns">
+                                <button onclick="slidePrev()" class="ls-btn" title="←"><i class="fas fa-chevron-left"></i></button>
+                                <span id="slideCounter" class="ls-counter">1 / 1</span>
+                                <button onclick="slideNext()" class="ls-btn" title="→"><i class="fas fa-chevron-right"></i></button>
+                                <button onclick="slideFullscreen()" class="ls-btn" title="F"><i class="fas fa-expand"></i></button>
+                            </div>
+                        </div>
+                        <iframe id="slideFrame" src="{{ $presUrl }}" class="ls-iframe" frameborder="0" onload="initSlideCounter()"></iframe>
+                        <div class="ls-hint">
+                            <span><kbd>←</kbd> <kbd>→</kbd> {{ __('Navigate') }}</span>
+                            <span><kbd>F</kbd> {{ __('Fullscreen') }}</span>
+                        </div>
                     </div>
                     @endif
                 </div>
 
-                {{-- Theory --}}
                 <div x-show="activeTab === 'content'" x-cloak>
                     @if($lesson->content)
                     <div class="lesson-theory-header"><i class="fas fa-file-alt"></i> {{ __('Theory') }}</div>
@@ -137,7 +113,44 @@
                     @endif
                 </div>
 
-                {{-- Practice --}}
+                <div x-show="activeTab === 'materials'" x-cloak>
+                    @if($lesson->materials_url)
+                    <div class="lm-section">
+                        <div class="lm-header">
+                            <i class="fas fa-link"></i>
+                            <span>{{ $lesson->materials_title ?: __('Useful Materials') }}</span>
+                        </div>
+                        <div class="lm-list">
+                            @php $urls = array_filter(array_map('trim', explode("\n", $lesson->materials_url))); @endphp
+                            @foreach($urls as $url)
+                                @if(strlen($url) > 0)
+                                <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="lm-card">
+                                    <div class="lm-icon">
+                                        @if(str_contains($url, 'youtube.com') || str_contains($url, 'youtu.be'))
+                                            <i class="fab fa-youtube" style="color:#ef4444"></i>
+                                        @elseif(str_contains($url, 'github.com'))
+                                            <i class="fab fa-github" style="color:var(--text)"></i>
+                                        @elseif(str_contains($url, 'medium.com') || str_contains($url, 'dev.to'))
+                                            <i class="fab fa-medium" style="color:#22c55e"></i>
+                                        @elseif(str_contains($url, 'docs.') || str_contains($url, 'documentation'))
+                                            <i class="fas fa-book" style="color:var(--accent)"></i>
+                                        @else
+                                            <i class="fas fa-external-link-alt" style="color:var(--accent)"></i>
+                                        @endif
+                                    </div>
+                                    <div class="lm-info">
+                                        <div class="lm-host">{{ parse_url($url, PHP_URL_HOST) ?? $url }}</div>
+                                        <div class="lm-path">{{ parse_url($url, PHP_URL_PATH) ?? '/' }}</div>
+                                    </div>
+                                    <i class="fas fa-arrow-up-right-from-square lm-arrow"></i>
+                                </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                </div>
+
                 <div x-show="activeTab === 'practice'" x-cloak>
                     @if($lesson->practiceTasks->count())
                     <div class="lesson-section-header"><i class="fas fa-terminal"></i> {{ __('Practice') }} <span class="lesson-section-count">{{ $lesson->practiceTasks->count() }}</span></div>
@@ -150,7 +163,7 @@
                                     <h4>{{ $task->title }}</h4>
                                     <p>{{ Str::limit($task->prompt, 150) }}</p>
                                 </div>
-                                <span class="lesson-difficulty lesson-difficulty--{{ $task->difficulty }}">{{ $task->difficulty }}</span>
+                                <span class="lesson-difficulty lesson-difficulty--{{ $task->difficulty }}">{{ __('difficulty_' . $task->difficulty) }}</span>
                             </div>
                             <div class="lesson-practice-bottom">
                                 @if($practiceResults[$task->id])<span class="lesson-passed-badge"><i class="fas fa-check"></i> {{ __('Passed') }}</span>@endif
@@ -164,12 +177,10 @@
                     @endif
                 </div>
 
-                {{-- Quiz --}}
                 <div x-show="activeTab === 'quiz'" x-cloak>
                     @if($lesson->lessonQuizzes->count())
                     <div class="lesson-quiz" x-data="quizApp()">
                         <div class="lesson-section-header"><i class="fas fa-question-circle"></i> {{ __('Quiz') }} <span class="lesson-section-count">{{ $lesson->lessonQuizzes->count() }}</span></div>
-
                         <div x-show="!quizSubmitted" x-cloak>
                             <div class="lesson-quiz-list">
                                 @foreach($lesson->lessonQuizzes->sortBy('order_num') as $index => $quiz)
@@ -194,7 +205,6 @@
                                 <span x-show="quizSubmitting"><i class="fas fa-spinner fa-spin"></i> {{ __('Checking...') }}</span>
                             </button>
                         </div>
-
                         <div x-show="quizSubmitted" x-cloak class="lesson-quiz-result">
                             <div class="lesson-quiz-score" :class="quizScore >= 70 ? 'passed' : 'failed'"><span x-text="quizScore + '%'"></span></div>
                             <h3 :class="quizScore >= 70 ? 'text-green-500' : 'text-red-500'" x-text="quizScore >= 70 ? '{{ __('Passed!') }}' : '{{ __('Not Passed') }}'"></h3>
@@ -206,7 +216,6 @@
                 </div>
             </div>
 
-            <!-- Bottom Nav -->
             <div class="lesson-bottom-nav">
                 @if($prevLesson)
                 <a href="{{ route('courses.lesson', [$course->id, $prevLesson->id]) }}" class="lesson-nav-btn">
@@ -229,12 +238,13 @@
         </main>
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
 function lessonApp() {
     return {
-        activeTab: '{{ $lesson->type === "quiz" ? "quiz" : ($lesson->video_url ? "video" : ($lesson->audio_url ? "audio" : ($lesson->presentation_url ? "presentation" : ($lesson->content ? "content" : "practice")))) }}',
+        activeTab: '{{ $lesson->type === "quiz" ? "quiz" : ($lesson->presentation_url ? "slides" : ($lesson->content ? "content" : ($lesson->materials_url ? "materials" : "practice"))) }}',
     }
 }
 function quizApp() {
@@ -257,6 +267,28 @@ function quizApp() {
         resetQuiz() { this.answers = {}; this.quizSubmitted = false; }
     }
 }
+function getSlideFrame() { return document.getElementById('slideFrame'); }
+function slideNext() { var f = getSlideFrame(); if (f && f.contentWindow) f.contentWindow.postMessage('slide-next', '*'); }
+function slidePrev() { var f = getSlideFrame(); if (f && f.contentWindow) f.contentWindow.postMessage('slide-prev', '*'); }
+function slideFullscreen() {
+    var f = getSlideFrame();
+    if (f) { if (f.requestFullscreen) f.requestFullscreen(); else if (f.webkitRequestFullscreen) f.webkitRequestFullscreen(); }
+}
+function initSlideCounter() {
+    var f = getSlideFrame();
+    if (f && f.contentWindow) f.contentWindow.postMessage('slide-get-info', '*');
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); slideNext(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); slidePrev(); }
+    if (e.key === 'f' || e.key === 'F') slideFullscreen();
+});
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'slide-info') {
+        var el = document.getElementById('slideCounter');
+        if (el) el.textContent = e.data.current + ' / ' + e.data.total;
+    }
+});
 </script>
+@include('components.ai-assistant', ['context' => 'lesson', 'contextTitle' => $lesson->title])
 @endpush
-@endsection

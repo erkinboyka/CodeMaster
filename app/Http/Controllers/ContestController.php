@@ -6,16 +6,20 @@ use App\Models\Contest;
 use App\Models\ContestProblem;
 use App\Models\ContestSubmission;
 use App\Services\Judge0Service;
+use App\Services\GamificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ContestController extends Controller
 {
     protected $judge0Service;
+    protected $gamificationService;
 
-    public function __construct(Judge0Service $judge0Service)
+    public function __construct(Judge0Service $judge0Service, GamificationService $gamificationService)
     {
         $this->judge0Service = $judge0Service;
+        $this->gamificationService = $gamificationService;
     }
 
     public function index()
@@ -237,13 +241,46 @@ class ContestController extends Controller
             $problem->tests_json ?? []
         );
 
+        $rawStatus = $result['status'] ?? 'error';
+        if (is_array($rawStatus)) {
+            $statusMap = [
+                'Accepted' => 'accepted',
+                'Wrong Answer' => 'wrong_answer',
+                'Time Limit Exceeded' => 'time_limit_exceeded',
+                'Memory Limit Exceeded' => 'memory_limit_exceeded',
+                'Runtime Error (NZEC)' => 'runtime_error',
+                'Runtime Error (SIGSEGV)' => 'runtime_error',
+                'Compilation Error' => 'compilation_error',
+                'Internal Error' => 'error',
+            ];
+            $statusDesc = $rawStatus['description'] ?? 'error';
+            $normalizedStatus = $statusMap[$statusDesc] ?? strtolower(str_replace(' ', '_', $statusDesc));
+        } else {
+            $normalizedStatus = is_string($rawStatus) ? strtolower(str_replace(' ', '_', $rawStatus)) : 'error';
+        }
+
         $submission = ContestSubmission::create([
             'contest_id' => $validated['contest_id'],
             'task_id' => $validated['problem_id'],
             'user_id' => Auth::id(),
             'code' => $validated['code'],
-            'status' => $result['status'] ?? 'error',
+            'status' => $normalizedStatus,
         ]);
+
+        if ($normalizedStatus === 'accepted') {
+            $xpEarned = DB::transaction(function () use ($user, $contest, $validated) {
+                $alreadySolved = ContestSubmission::where('user_id', $user->id)
+                    ->where('contest_id', $validated['contest_id'])
+                    ->where('task_id', $validated['problem_id'])
+                    ->where('status', 'accepted')
+                    ->exists();
+
+                if (!$alreadySolved) {
+                    return $this->gamificationService->awardContestXp($user, $contest->title);
+                }
+                return 0;
+            });
+        }
 
         return response()->json([
             'submission' => $submission,

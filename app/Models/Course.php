@@ -13,7 +13,6 @@ class Course extends Model
         'description',
         'category',
         'level',
-        'progress',
         'image_url',
         'materials_title',
         'materials_url',
@@ -21,9 +20,7 @@ class Course extends Model
 
     protected function casts(): array
     {
-        return [
-            'progress' => 'integer',
-        ];
+        return [];
     }
 
     public function lessons(): HasMany

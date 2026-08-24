@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Профиль') . ' - CodeMaster')
+@section('title', __('profile_heading') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -261,7 +261,7 @@
 <div class="pf-hero">
     <div class="pf-hero__content" x-data="{ showAvatarModal: false }">
         <div class="pf-avatar-wrap">
-            <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'User') . '&background=fff&color=6366f1&size=128' }}" class="pf-avatar" alt="{{ $user->name }}">
+            <img src="{{ $user->avatar_url }}" class="pf-avatar" alt="{{ $user->name }}">
             <button @click="showAvatarModal = true" class="pf-avatar-btn">
                 <i class="fas fa-camera" style="font-size:0.7rem"></i>
             </button>
@@ -269,7 +269,7 @@
                 <div class="pf-overlay__bg" @click="showAvatarModal = false"></div>
                 <div class="pf-modal" x-data="{ fileName: '', preview: '' }">
                     <div class="pf-modal__head">
-                        <h3 class="pf-modal__title">{{ __('Загрузить аватар') }}</h3>
+                        <h3 class="pf-modal__title">{{ __('profile_upload_avatar') }}</h3>
                         <button @click="showAvatarModal = false" class="pf-modal__close"><i class="fas fa-times"></i></button>
                     </div>
                     <form action="{{ route('profile.avatar') }}" method="POST" enctype="multipart/form-data">
@@ -282,8 +282,8 @@
                                 <input type="file" name="avatar" accept="image/*"
                                        @change="const f = $event.target.files[0]; if(f){ fileName = f.name; preview = URL.createObjectURL(f); }">
                                 <div class="pf-file__icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="pf-file__text">{{ __('Нажмите или перетащите файл') }}</p>
-                                <p class="pf-file__hint">PNG, JPG, GIF &bull; {{ __('максимум 2 МБ') }}</p>
+                                <p class="pf-file__text">{{ __('profile_click_or_drag') }}</p>
+                                <p class="pf-file__hint">PNG, JPG, GIF &bull; {{ __('profile_max_2mb') }}</p>
                                 <div class="pf-file__preview" :style="preview ? 'display:block' : ''">
                                     <img :src="preview" alt="preview">
                                     <p class="pf-file__preview-name" x-text="fileName"></p>
@@ -291,23 +291,23 @@
                             </div>
                         </div>
                         <div class="pf-form-actions">
-                            <button type="button" @click="showAvatarModal = false" class="pf-btn pf-btn--ghost">{{ __('Отмена') }}</button>
-                            <button type="submit" class="pf-btn pf-btn--primary">{{ __('Сохранить') }}</button>
+                            <button type="button" @click="showAvatarModal = false" class="pf-btn pf-btn--ghost">{{ __('profile_cancel') }}</button>
+                            <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_save') }}</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <h1 class="pf-hero__name">{{ $user->name }}</h1>
+        <h1 class="pf-hero__name">{{ $user->name }} @if($user->country)<span style="font-size:20px;margin-left:8px" title="{{ country_name($user->country) }}">{!! country_flag($user->country) !!}</span>@endif</h1>
         <p class="pf-hero__sub">{{ $user->title ?? '' }}{{ $user->title && $user->location ? ' &bull; ' : '' }}{{ $user->location ?? '' }}</p>
         <div class="pf-hero__stats">
             <span><i class="fas fa-star"></i>Lv.{{ $user->level }} {{ $user->level_title }}</span>
             <span><i class="fas fa-trophy"></i>{{ number_format($user->total_xp) }} XP</span>
-            <span><i class="fas fa-certificate"></i>{{ $user->certificates_count ?? 0 }} {{ __('сертификатов') }}</span>
+            <span><i class="fas fa-certificate"></i>{{ $user->certificates_count ?? 0 }} {{ __('profile_certificates_count') }}</span>
         </div>
         <div class="pf-hero__links">
             <a href="{{ route('profile.show', $user->id) }}" class="pf-hero__link">
-                <i class="fas fa-eye" style="margin-right:0.3rem"></i>{{ __('Публичный профиль') }}
+                <i class="fas fa-eye" style="margin-right:0.3rem"></i>{{ __('profile_public_profile') }}
             </a>
         </div>
     </div>
@@ -320,7 +320,7 @@
         @endif
 
         <div class="pf-tabs">
-            @foreach(['overview' => __('Обзор'), 'experience' => __('Опыт'), 'education' => __('Образование'), 'portfolio' => __('Портфолио'), 'certificates' => __('Сертификаты'), 'activity' => __('Активность'), 'settings' => __('Настройки')] as $key => $label)
+            @foreach(['overview' => __('profile_tab_overview'), 'experience' => __('profile_tab_experience'), 'education' => __('profile_tab_education'), 'portfolio' => __('profile_tab_portfolio'), 'certificates' => __('profile_tab_certificates'), 'activity' => __('profile_tab_activity'), 'settings' => __('profile_tab_settings')] as $key => $label)
             <button @click="activeTab = '{{ $key }}'" :class="activeTab === '{{ $key }}' ? 'active' : ''" class="pf-tab">{{ $label }}</button>
             @endforeach
         </div>
@@ -331,7 +331,7 @@
                 <div style="display:flex;flex-direction:column;gap:1.5rem">
                     <div class="pf-card">
                         <div class="pf-card__header">
-                            <h3 class="pf-card__title"><i class="fas fa-code" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('Навыки') }}</h3>
+                            <h3 class="pf-card__title"><i class="fas fa-code" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('profile_skills') }}</h3>
                             <button @click="openModal('skill')" class="pf-card__add"><i class="fas fa-plus"></i></button>
                         </div>
                         <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
@@ -341,30 +341,30 @@
                                 @if($skill->is_verified)<i class="fas fa-check-circle"></i>@endif
                             </span>
                             @empty
-                            <p style="font-size:0.85rem;color:var(--text-muted)">{{ __('Пока нет навыков') }}</p>
+                            <p style="font-size:0.85rem;color:var(--text-muted)">{{ __('profile_no_skills_yet') }}</p>
                             @endforelse
                         </div>
                     </div>
                     <div class="pf-card">
                         <div class="pf-card__header">
-                            <h3 class="pf-card__title"><i class="fas fa-chart-bar" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('Статистика') }}</h3>
+                            <h3 class="pf-card__title"><i class="fas fa-chart-bar" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('profile_stats') }}</h3>
                         </div>
                         <div class="pf-stat-grid">
                             <div class="pf-stat">
                                 <p class="pf-stat__val pf-stat__val--accent">{{ number_format($user->total_xp) }}</p>
-                                <p class="pf-stat__label">{{ __('Всего XP') }}</p>
+                                <p class="pf-stat__label">{{ __('profile_total_xp') }}</p>
                             </div>
                             <div class="pf-stat">
                                 <p class="pf-stat__val pf-stat__val--purple">{{ $stats->completed_courses ?? 0 }}</p>
-                                <p class="pf-stat__label">{{ __('Курсов пройдено') }}</p>
+                                <p class="pf-stat__label">{{ __('profile_courses_completed') }}</p>
                             </div>
                             <div class="pf-stat">
                                 <p class="pf-stat__val pf-stat__val--yellow">{{ $user->certificates_count ?? 0 }}</p>
-                                <p class="pf-stat__label">{{ __('Сертификатов') }}</p>
+                                <p class="pf-stat__label">{{ __('profile_certs_count') }}</p>
                             </div>
                             <div class="pf-stat">
                                 <p class="pf-stat__val pf-stat__val--green">{{ $user->skills->count() }}</p>
-                                <p class="pf-stat__label">{{ __('Навыков') }}</p>
+                                <p class="pf-stat__label">{{ __('profile_skills_count') }}</p>
                             </div>
                         </div>
                     </div>
@@ -372,7 +372,7 @@
                 <div style="display:flex;flex-direction:column;gap:1.5rem">
                     <div class="pf-card">
                         <div class="pf-card__header">
-                            <h3 class="pf-card__title"><i class="fas fa-briefcase" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('Опыт') }}</h3>
+                            <h3 class="pf-card__title"><i class="fas fa-briefcase" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('profile_tab_experience') }}</h3>
                             <button @click="openModal('experience')" class="pf-card__add"><i class="fas fa-plus"></i></button>
                         </div>
                         <div style="display:flex;flex-direction:column;gap:0.75rem">
@@ -382,23 +382,23 @@
                                 <div class="pf-item__body">
                                     <div class="pf-item__row">
                                         <span class="pf-item__name">{{ $exp->position }}</span>
-                                        <form action="{{ route('profile.experience.delete', $exp->id) }}" method="POST" onsubmit="return confirm('{{ __('Удалить?') }}')">
+                                        <form action="{{ route('profile.experience.delete', $exp->id) }}" method="POST" onsubmit="return confirm('{{ __('profile_confirm_delete') }}')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="pf-del"><i class="fas fa-trash"></i></button>
                                         </form>
                                     </div>
-                                    <p class="pf-item__sub">{{ $exp->company }} &bull; {{ $exp->start_date }} - {{ $exp->is_current ? __('Настоящее время') : ($exp->end_date ?? '') }}</p>
+                                    <p class="pf-item__sub">{{ $exp->company }} &bull; {{ $exp->start_date }} - {{ $exp->is_current ? __('profile_now') : ($exp->end_date ?? '') }}</p>
                                     @if($exp->description)<p class="pf-item__desc">{{ $exp->description }}</p>@endif
                                 </div>
                             </div>
                             @empty
-                            <div class="pf-empty"><i class="fas fa-briefcase"></i>{{ __('Пока нет опыта') }}</div>
+                            <div class="pf-empty"><i class="fas fa-briefcase"></i>{{ __('profile_experience_empty') }}</div>
                             @endforelse
                         </div>
                     </div>
                     <div class="pf-card">
                         <div class="pf-card__header">
-                            <h3 class="pf-card__title"><i class="fas fa-graduation-cap" style="color:var(--accent-2);margin-right:0.4rem"></i>{{ __('Образование') }}</h3>
+                            <h3 class="pf-card__title"><i class="fas fa-graduation-cap" style="color:var(--accent-2);margin-right:0.4rem"></i>{{ __('profile_tab_education') }}</h3>
                             <button @click="openModal('education')" class="pf-card__add"><i class="fas fa-plus"></i></button>
                         </div>
                         <div style="display:flex;flex-direction:column;gap:0.75rem">
@@ -408,16 +408,16 @@
                                 <div class="pf-item__body">
                                     <div class="pf-item__row">
                                         <span class="pf-item__name">{{ $edu->degree }}{{ $edu->field ? ' &mdash; ' . $edu->field : '' }}</span>
-                                        <form action="{{ route('profile.education.delete', $edu->id) }}" method="POST" onsubmit="return confirm('{{ __('Удалить?') }}')">
+                                        <form action="{{ route('profile.education.delete', $edu->id) }}" method="POST" onsubmit="return confirm('{{ __('profile_confirm_delete') }}')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="pf-del"><i class="fas fa-trash"></i></button>
                                         </form>
                                     </div>
-                                    <p class="pf-item__sub">{{ $edu->institution }} &bull; {{ $edu->start_date }} - {{ $edu->end_date ?? __('Настоящее время') }}</p>
+                                    <p class="pf-item__sub">{{ $edu->institution }} &bull; {{ $edu->start_date }} - {{ $edu->end_date ?? __('profile_now') }}</p>
                                 </div>
                             </div>
                             @empty
-                            <div class="pf-empty"><i class="fas fa-graduation-cap"></i>{{ __('Пока нет образования') }}</div>
+                            <div class="pf-empty"><i class="fas fa-graduation-cap"></i>{{ __('profile_education_empty') }}</div>
                             @endforelse
                         </div>
                     </div>
@@ -428,7 +428,7 @@
         {{-- EXPERIENCE --}}
         <div x-show="activeTab === 'experience'" x-cloak>
             <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-                <button @click="openModal('experience')" class="pf-btn pf-btn--primary"><i class="fas fa-plus" style="margin-right:0.3rem"></i>{{ __('Добавить опыт') }}</button>
+                <button @click="openModal('experience')" class="pf-btn pf-btn--primary"><i class="fas fa-plus" style="margin-right:0.3rem"></i>{{ __('profile_add_experience') }}</button>
             </div>
             <div style="display:flex;flex-direction:column;gap:1rem">
                 @forelse($user->experience as $exp)
@@ -438,18 +438,18 @@
                         <div class="pf-item__body">
                             <div class="pf-item__row">
                                 <span class="pf-item__name" style="font-size:0.95rem">{{ $exp->position }}</span>
-                                <form action="{{ route('profile.experience.delete', $exp->id) }}" method="POST" onsubmit="return confirm('{{ __('Удалить?') }}')">
+                                <form action="{{ route('profile.experience.delete', $exp->id) }}" method="POST" onsubmit="return confirm('{{ __('profile_confirm_delete') }}')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="pf-del"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
-                            <p class="pf-item__sub">{{ $exp->company }} &bull; {{ $exp->start_date }} - {{ $exp->is_current ? __('Настоящее время') : ($exp->end_date ?? '') }}</p>
+                            <p class="pf-item__sub">{{ $exp->company }} &bull; {{ $exp->start_date }} - {{ $exp->is_current ? __('profile_now') : ($exp->end_date ?? '') }}</p>
                             @if($exp->description)<p class="pf-item__desc" style="margin-top:0.5rem">{{ $exp->description }}</p>@endif
                         </div>
                     </div>
                 </div>
                 @empty
-                <div class="pf-card pf-empty"><i class="fas fa-briefcase"></i>{{ __('Пока нет опыта') }}</div>
+                <div class="pf-card pf-empty"><i class="fas fa-briefcase"></i>{{ __('profile_experience_empty') }}</div>
                 @endforelse
             </div>
         </div>
@@ -457,7 +457,7 @@
         {{-- EDUCATION --}}
         <div x-show="activeTab === 'education'" x-cloak>
             <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-                <button @click="openModal('education')" class="pf-btn pf-btn--primary"><i class="fas fa-plus" style="margin-right:0.3rem"></i>{{ __('Добавить образование') }}</button>
+                <button @click="openModal('education')" class="pf-btn pf-btn--primary"><i class="fas fa-plus" style="margin-right:0.3rem"></i>{{ __('profile_add_education') }}</button>
             </div>
             <div style="display:flex;flex-direction:column;gap:1rem">
                 @forelse($user->education as $edu)
@@ -467,17 +467,17 @@
                         <div class="pf-item__body">
                             <div class="pf-item__row">
                                 <span class="pf-item__name" style="font-size:0.95rem">{{ $edu->degree }}{{ $edu->field ? ' &mdash; ' . $edu->field : '' }}</span>
-                                <form action="{{ route('profile.education.delete', $edu->id) }}" method="POST" onsubmit="return confirm('{{ __('Удалить?') }}')">
+                                <form action="{{ route('profile.education.delete', $edu->id) }}" method="POST" onsubmit="return confirm('{{ __('profile_confirm_delete') }}')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="pf-del"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
-                            <p class="pf-item__sub">{{ $edu->institution }} &bull; {{ $edu->start_date }} - {{ $edu->end_date ?? __('Настоящее время') }}</p>
+                            <p class="pf-item__sub">{{ $edu->institution }} &bull; {{ $edu->start_date }} - {{ $edu->end_date ?? __('profile_now') }}</p>
                         </div>
                     </div>
                 </div>
                 @empty
-                <div class="pf-card pf-empty"><i class="fas fa-graduation-cap"></i>{{ __('Пока нет образования') }}</div>
+                <div class="pf-card pf-empty"><i class="fas fa-graduation-cap"></i>{{ __('profile_education_empty') }}</div>
                 @endforelse
             </div>
         </div>
@@ -485,7 +485,7 @@
         {{-- PORTFOLIO --}}
         <div x-show="activeTab === 'portfolio'" x-cloak>
             <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-                <button @click="openModal('portfolio')" class="pf-btn pf-btn--primary"><i class="fas fa-plus" style="margin-right:0.3rem"></i>{{ __('Добавить проект') }}</button>
+                <button @click="openModal('portfolio')" class="pf-btn pf-btn--primary"><i class="fas fa-plus" style="margin-right:0.3rem"></i>{{ __('profile_add_project') }}</button>
             </div>
             <div class="pf-port-grid">
                 @forelse($user->portfolio as $item)
@@ -502,7 +502,7 @@
                     <div class="pf-port-card__body">
                         <div class="pf-port-card__row">
                             <span class="pf-port-card__title">{{ $item->title }}</span>
-                            <form action="{{ route('profile.portfolio.delete', $item->id) }}" method="POST" onsubmit="return confirm('{{ __('Удалить?') }}')">
+                            <form action="{{ route('profile.portfolio.delete', $item->id) }}" method="POST" onsubmit="return confirm('{{ __('profile_confirm_delete') }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="pf-del"><i class="fas fa-trash"></i></button>
                             </form>
@@ -516,7 +516,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="pf-card pf-empty" style="grid-column:1/-1"><i class="fas fa-folder-open"></i>{{ __('Пока нет проектов') }}</div>
+                <div class="pf-card pf-empty" style="grid-column:1/-1"><i class="fas fa-folder-open"></i>{{ __('profile_projects_empty') }}</div>
                 @endforelse
             </div>
         </div>
@@ -533,7 +533,7 @@
                     </div>
                 </a>
                 @empty
-                <div class="pf-card pf-empty" style="grid-column:1/-1"><i class="fas fa-certificate"></i>{{ __('Пока нет сертификатов') }}</div>
+                <div class="pf-card pf-empty" style="grid-column:1/-1"><i class="fas fa-certificate"></i>{{ __('profile_certs_empty') }}</div>
                 @endforelse
             </div>
         </div>
@@ -551,7 +551,7 @@
                         </div>
                     </div>
                     @empty
-                    <div class="pf-empty"><i class="fas fa-clock"></i>{{ __('Пока нет активности') }}</div>
+                    <div class="pf-empty"><i class="fas fa-clock"></i>{{ __('profile_no_activity_yet') }}</div>
                     @endforelse
                 </div>
             </div>
@@ -562,26 +562,26 @@
             <div style="display:flex;flex-direction:column;gap:1.5rem">
                 <div class="pf-card">
                     <div class="pf-card__header">
-                        <h3 class="pf-card__title"><i class="fas fa-user-edit" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('Редактировать профиль') }}</h3>
+                        <h3 class="pf-card__title"><i class="fas fa-user-edit" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('profile_edit_profile') }}</h3>
                     </div>
                     <form action="{{ route('profile.update') }}" method="POST">
                         @csrf @method('PUT')
                         <div class="pf-form-row">
                             <div class="pf-form-group">
-                                <label class="pf-label">{{ __('Имя') }}</label>
+                                <label class="pf-label">{{ __('profile_name') }}</label>
                                 <input type="text" name="name" value="{{ old('name', $user->name) }}" class="pf-input" required>
                             </div>
                             <div class="pf-form-group">
-                                <label class="pf-label">{{ __('Должность') }}</label>
+                                <label class="pf-label">{{ __('profile_position_label') }}</label>
                                 <input type="text" name="title" value="{{ old('title', $user->title) }}" class="pf-input" placeholder="Full Stack Developer">
                             </div>
                         </div>
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('Местоположение') }}</label>
-                            <input type="text" name="location" value="{{ old('location', $user->location) }}" class="pf-input" placeholder="Душанбе">
+                            <label class="pf-label">{{ __('profile_location_label') }}</label>
+                            <input type="text" name="location" value="{{ old('location', $user->location) }}" class="pf-input" placeholder="{{ __('profile_location_placeholder') }}">
                         </div>
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('О себе') }}</label>
+                            <label class="pf-label">{{ __('profile_about_me') }}</label>
                             <textarea name="bio" rows="3" class="pf-input">{{ old('bio', $user->bio) }}</textarea>
                         </div>
                         <div class="pf-form-row">
@@ -595,76 +595,86 @@
                             </div>
                         </div>
                         <div class="pf-form-group">
-                            <label class="pf-label"><i class="fas fa-globe"></i> {{ __('Сайт') }}</label>
+                            <label class="pf-label"><i class="fas fa-globe"></i> {{ __('profile_site') }}</label>
                             <input type="url" name="website" value="{{ old('website', $user->website) }}" class="pf-input" placeholder="https://...">
                         </div>
                         <div class="pf-form-actions">
-                            <button type="submit" class="pf-btn pf-btn--primary">{{ __('Сохранить') }}</button>
+                            <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_save') }}</button>
                         </div>
                     </form>
                 </div>
 
                 <div class="pf-card">
                     <div class="pf-card__header">
-                        <h3 class="pf-card__title"><i class="fas fa-lock" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('Изменить пароль') }}</h3>
+                        <h3 class="pf-card__title"><i class="fas fa-lock" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('profile_change_password') }}</h3>
                     </div>
                     <form action="{{ route('profile.password') }}" method="POST">
                         @csrf @method('PUT')
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('Текущий пароль') }}</label>
+                            <label class="pf-label">{{ __('profile_current_password') }}</label>
                             <input type="password" name="current_password" class="pf-input" required>
                         </div>
                         <div class="pf-form-row">
                             <div class="pf-form-group">
-                                <label class="pf-label">{{ __('Новый пароль') }}</label>
+                                <label class="pf-label">{{ __('profile_new_password') }}</label>
                                 <input type="password" name="password" class="pf-input" required>
                             </div>
                             <div class="pf-form-group">
-                                <label class="pf-label">{{ __('Подтверждение') }}</label>
+                                <label class="pf-label">{{ __('profile_confirm_password') }}</label>
                                 <input type="password" name="password_confirmation" class="pf-input" required>
                             </div>
                         </div>
                         <div class="pf-form-actions">
-                            <button type="submit" class="pf-btn pf-btn--primary">{{ __('Обновить пароль') }}</button>
+                            <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_update_password') }}</button>
                         </div>
                     </form>
                 </div>
+
+                <div class="pf-card">
+                    <div class="pf-card__header">
+                        <h3 class="pf-card__title"><i class="fas fa-shield-halved" style="color:var(--accent);margin-right:0.4rem"></i>{{ __('profile_two_factor') }}</h3>
+                    </div>
+                    <div style="padding:0 1.25rem 1.25rem">
+                        <p style="font-size:13px;color:var(--text-muted);margin:0 0 1rem">{{ __('profile_two_factor_desc') }}</p>
+                        <a href="{{ route('two-factor.show') }}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:var(--accent);color:white;font-size:13px;font-weight:700;text-decoration:none">
+                            <i class="fas fa-arrow-right"></i> {{ __('profile_setup_2fa') }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-
-        {{-- MODALS --}}
         <div x-show="modalType === 'skill'" x-transition style="display:none" class="pf-overlay">
             <div class="pf-overlay__bg" @click="modalType = null"></div>
             <div class="pf-modal">
                 <div class="pf-modal__head">
-                    <h3 class="pf-modal__title">{{ __('Добавить навык') }}</h3>
+                    <h3 class="pf-modal__title">{{ __('profile_add_skill') }}</h3>
                     <button @click="modalType = null" class="pf-modal__close"><i class="fas fa-times"></i></button>
                 </div>
                 <form action="{{ route('profile.skill.add') }}" method="POST">
                     @csrf
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Название') }}</label>
+                        <label class="pf-label">{{ __('profile_title') }}</label>
                         <input type="text" name="skill_name" class="pf-input" required placeholder="JavaScript">
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Уровень') }}</label>
+                        <label class="pf-label">{{ __('profile_skill_level') }}</label>
                         <select name="skill_level" class="pf-input">
-                            <option value="beginner">{{ __('Начинающий') }}</option>
-                            <option value="intermediate">{{ __('Средний') }}</option>
-                            <option value="advanced">{{ __('Продвинутый') }}</option>
-                            <option value="expert">{{ __('Эксперт') }}</option>
+                            <option value="beginner">{{ __('profile_skill_difficulty_beginner') }}</option>
+                            <option value="intermediate">{{ __('profile_skill_difficulty_intermediate') }}</option>
+                            <option value="advanced">{{ __('profile_skill_difficulty_advanced') }}</option>
+                            <option value="expert">{{ __('profile_skill_difficulty_expert') }}</option>
                         </select>
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Категория') }}</label>
+                        <label class="pf-label">{{ __('profile_skill_category') }}</label>
                         <select name="category" class="pf-input">
-                            <option value="technical">{{ __('Технические') }}</option>
-                            <option value="soft">{{ __('Гибкие навыки') }}</option>
+                            <option value="technical">{{ __('profile_skill_cat_technical') }}</option>
+                            <option value="soft">{{ __('profile_skill_cat_soft') }}</option>
                         </select>
                     </div>
                     <div class="pf-form-actions">
-                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('Отмена') }}</button>
-                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('Добавить') }}</button>
+                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('profile_cancel') }}</button>
+                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_add') }}</button>
                     </div>
                 </form>
             </div>
@@ -674,40 +684,40 @@
             <div class="pf-overlay__bg" @click="modalType = null"></div>
             <div class="pf-modal" style="max-width:32rem">
                 <div class="pf-modal__head">
-                    <h3 class="pf-modal__title">{{ __('Добавить опыт') }}</h3>
+                    <h3 class="pf-modal__title">{{ __('profile_add_experience') }}</h3>
                     <button @click="modalType = null" class="pf-modal__close"><i class="fas fa-times"></i></button>
                 </div>
                 <form action="{{ route('profile.experience.add') }}" method="POST">
                     @csrf
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Должность') }}</label>
+                        <label class="pf-label">{{ __('profile_position_label') }}</label>
                         <input type="text" name="position" class="pf-input" required placeholder="Senior Developer">
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Компания') }}</label>
+                        <label class="pf-label">{{ __('profile_company_label') }}</label>
                         <input type="text" name="company" class="pf-input" required placeholder="TechCorp">
                     </div>
                     <div class="pf-form-row">
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('Дата начала') }}</label>
+                            <label class="pf-label">{{ __('profile_start_date') }}</label>
                             <input type="text" name="start_date" class="pf-input" required placeholder="2022-01">
                         </div>
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('Дата окончания') }}</label>
+                            <label class="pf-label">{{ __('profile_end_date') }}</label>
                             <input type="text" name="end_date" class="pf-input" placeholder="2024-01">
                         </div>
                     </div>
                     <label class="pf-chk">
                         <input type="checkbox" name="is_current" value="1">
-                        <span>{{ __('Работаю здесь') }}</span>
+                        <span>{{ __('profile_working_here') }}</span>
                     </label>
                     <div class="pf-form-group" style="margin-top:0.75rem">
-                        <label class="pf-label">{{ __('Описание') }}</label>
+                        <label class="pf-label">{{ __('profile_description_label') }}</label>
                         <textarea name="description" rows="3" class="pf-input"></textarea>
                     </div>
                     <div class="pf-form-actions">
-                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('Отмена') }}</button>
-                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('Добавить') }}</button>
+                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('profile_cancel') }}</button>
+                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_add') }}</button>
                     </div>
                 </form>
             </div>
@@ -717,40 +727,40 @@
             <div class="pf-overlay__bg" @click="modalType = null"></div>
             <div class="pf-modal" style="max-width:32rem">
                 <div class="pf-modal__head">
-                    <h3 class="pf-modal__title">{{ __('Добавить образование') }}</h3>
+                    <h3 class="pf-modal__title">{{ __('profile_add_education') }}</h3>
                     <button @click="modalType = null" class="pf-modal__close"><i class="fas fa-times"></i></button>
                 </div>
                 <form action="{{ route('profile.education.add') }}" method="POST">
                     @csrf
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Учебное заведение') }}</label>
-                        <input type="text" name="institution" class="pf-input" required placeholder="Таджикский национальный университет">
+                        <label class="pf-label">{{ __('profile_institution_label') }}</label>
+                        <input type="text" name="institution" class="pf-input" required placeholder="{{ __('profile_institution_placeholder') }}">
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Степень') }}</label>
-                        <input type="text" name="degree" class="pf-input" required placeholder="Бакалавр компьютерных наук">
+                        <label class="pf-label">{{ __('profile_degree_label') }}</label>
+                        <input type="text" name="degree" class="pf-input" required placeholder="{{ __('profile_degree_placeholder') }}">
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Специальность') }}</label>
-                        <input type="text" name="field" class="pf-input" placeholder="Информатика">
+                        <label class="pf-label">{{ __('profile_specialization') }}</label>
+                        <input type="text" name="field" class="pf-input" placeholder="{{ __('profile_specialization_placeholder') }}">
                     </div>
                     <div class="pf-form-row">
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('Дата начала') }}</label>
+                            <label class="pf-label">{{ __('profile_start_date') }}</label>
                             <input type="text" name="start_date" class="pf-input" required placeholder="2018-09">
                         </div>
                         <div class="pf-form-group">
-                            <label class="pf-label">{{ __('Дата окончания') }}</label>
+                            <label class="pf-label">{{ __('profile_end_date') }}</label>
                             <input type="text" name="end_date" class="pf-input" placeholder="2022-06">
                         </div>
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Описание') }}</label>
+                        <label class="pf-label">{{ __('profile_description_label') }}</label>
                         <textarea name="description" rows="3" class="pf-input"></textarea>
                     </div>
                     <div class="pf-form-actions">
-                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('Отмена') }}</button>
-                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('Добавить') }}</button>
+                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('profile_cancel') }}</button>
+                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_add') }}</button>
                     </div>
                 </form>
             </div>
@@ -760,17 +770,17 @@
             <div class="pf-overlay__bg" @click="modalType = null"></div>
             <div class="pf-modal" style="max-width:32rem">
                 <div class="pf-modal__head">
-                    <h3 class="pf-modal__title">{{ __('Добавить проект') }}</h3>
+                    <h3 class="pf-modal__title">{{ __('profile_add_project') }}</h3>
                     <button @click="modalType = null" class="pf-modal__close"><i class="fas fa-times"></i></button>
                 </div>
                 <form action="{{ route('profile.portfolio.add') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Название') }}</label>
+                        <label class="pf-label">{{ __('profile_title') }}</label>
                         <input type="text" name="title" class="pf-input" required placeholder="E-Commerce Platform">
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Описание') }}</label>
+                        <label class="pf-label">{{ __('profile_description_label') }}</label>
                         <textarea name="description" rows="3" class="pf-input"></textarea>
                     </div>
                     <div class="pf-form-row">
@@ -784,11 +794,11 @@
                         </div>
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Категория') }}</label>
+                        <label class="pf-label">{{ __('profile_skill_category') }}</label>
                         <input type="text" name="category" class="pf-input" placeholder="Web App, Mobile...">
                     </div>
                     <div class="pf-form-group">
-                        <label class="pf-label">{{ __('Изображение') }}</label>
+                        <label class="pf-label">{{ __('profile_image') }}</label>
                         <div class="pf-file"
                              @dragover.prevent="$el.classList.add('dragover')"
                              @dragleave.prevent="$el.classList.remove('dragover')"
@@ -797,8 +807,8 @@
                             <input type="file" name="image" accept="image/*"
                                    @change="const f = $event.target.files[0]; if(f){ fileName = f.name; preview = URL.createObjectURL(f); }">
                             <div class="pf-file__icon"><i class="fas fa-image"></i></div>
-                            <p class="pf-file__text">{{ __('Нажмите или перетащите файл') }}</p>
-                            <p class="pf-file__hint">PNG, JPG, GIF &bull; {{ __('максимум 5 МБ') }}</p>
+                            <p class="pf-file__text">{{ __('profile_click_or_drag') }}</p>
+                            <p class="pf-file__hint">PNG, JPG, GIF &bull; {{ __('profile_max_5mb') }}</p>
                             <div class="pf-file__preview" :style="preview ? 'display:block' : ''">
                                 <img :src="preview" alt="preview">
                                 <p class="pf-file__preview-name" x-text="fileName"></p>
@@ -806,8 +816,8 @@
                         </div>
                     </div>
                     <div class="pf-form-actions">
-                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('Отмена') }}</button>
-                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('Добавить') }}</button>
+                        <button type="button" @click="modalType = null" class="pf-btn pf-btn--ghost">{{ __('profile_cancel') }}</button>
+                        <button type="submit" class="pf-btn pf-btn--primary">{{ __('profile_add') }}</button>
                     </div>
                 </form>
             </div>

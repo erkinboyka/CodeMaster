@@ -15,9 +15,12 @@ class GamificationService
     const XP_COURSE_COMPLETE = 100;
     const XP_CONTEST_PASS = 40;
     const XP_INTERVIEW_COMPLETE = 35;
+    const XP_PROBLEM_SOLVED = 10;
+    const XP_DAILY_CHALLENGE = 30;
 
     const AI_TOKEN_CHAT_COST = 1;
     const AI_TOKEN_DAILY_BONUS = 5;
+    const AI_TOKEN_DAILY_CHALLENGE = 3;
 
     public function awardXp(User $user, int $amount, string $reason): bool
     {
@@ -26,6 +29,7 @@ class GamificationService
         $oldLevel = $user->level;
 
         $user->addXp($amount);
+        $user->refresh();
 
         $newLevel = $this->calculateLevel($user->total_xp);
 
@@ -150,10 +154,20 @@ class GamificationService
 
     public function deductAiTokens(User $user, int $amount = 1): bool
     {
-        if ($user->ai_tokens < $amount) return false;
+        $affected = User::where('id', $user->id)
+            ->where('ai_tokens', '>=', $amount)
+            ->decrement('ai_tokens', $amount);
 
-        $user->deductAiTokens($amount);
-        return true;
+        if ($affected > 0) {
+            UserActivity::create([
+                'user_id' => $user->id,
+                'activity_type' => 'tokens_spent',
+                'activity_text' => "-{$amount} токенов: AI чат",
+                'activity_time' => now(),
+            ]);
+        }
+
+        return $affected > 0;
     }
 
     public function addAiTokens(User $user, int $amount, string $reason = ''): void
@@ -172,39 +186,37 @@ class GamificationService
 
     public function dailyTokenBonus(User $user): int
     {
-        $today = now()->toDateString();
-        $alreadyReceived = UserActivity::where('user_id', $user->id)
-            ->where('activity_type', 'daily_bonus')
-            ->whereDate('activity_time', $today)
-            ->exists();
+        return DB::transaction(function () use ($user) {
+            $today = now()->toDateString();
+            $alreadyReceived = UserActivity::where('user_id', $user->id)
+                ->where('activity_type', 'daily_bonus')
+                ->whereDate('activity_time', $today)
+                ->lockForUpdate()
+                ->exists();
 
-        if ($alreadyReceived) return 0;
+            if ($alreadyReceived) return 0;
 
-        $amount = self::AI_TOKEN_DAILY_BONUS;
-        $user->addAiTokens($amount);
+            $amount = self::AI_TOKEN_DAILY_BONUS;
+            $user->addAiTokens($amount);
 
-        UserActivity::create([
-            'user_id' => $user->id,
-            'activity_type' => 'daily_bonus',
-            'activity_text' => "+{$amount} токенов: Ежедневный бонус",
-            'activity_time' => now(),
-        ]);
+            UserActivity::create([
+                'user_id' => $user->id,
+                'activity_type' => 'daily_bonus',
+                'activity_text' => "+{$amount} токенов: Ежедневный бонус",
+                'activity_time' => now(),
+            ]);
 
-        return $amount;
+            return $amount;
+        });
     }
 
     public function getLevelTitle(int $level): string
     {
         return match(true) {
-            $level >= 50 => 'Гуру',
-            $level >= 40 => 'Мастер',
-            $level >= 30 => 'Эксперт',
-            $level >= 20 => 'Специалист',
+            $level >= 30 => 'Expert',
             $level >= 15 => 'Продвинутый',
-            $level >= 10 => 'Опытный',
-            $level >= 7 => 'Новичок',
-            $level >= 5 => 'Ученик',
-            $level >= 3 => 'Адепт',
+            $level >= 10 => 'Experienced',
+            $level >= 5 => 'Student',
             default => 'Начинающий',
         };
     }
@@ -212,32 +224,22 @@ class GamificationService
     public function getLevelColor(int $level): string
     {
         return match(true) {
-            $level >= 50 => '#FFD700',
-            $level >= 40 => '#E5E4E2',
-            $level >= 30 => '#CD7F32',
-            $level >= 20 => '#7C3AED',
-            $level >= 15 => '#3B82F6',
-            $level >= 10 => '#22C55E',
-            $level >= 7 => '#F59E0B',
-            $level >= 5 => '#F97316',
-            $level >= 3 => '#6366F1',
-            default => '#94A3B8',
+            $level >= 30 => '#eab308',
+            $level >= 15 => '#f97316',
+            $level >= 10 => '#8b5cf6',
+            $level >= 5 => '#3b82f6',
+            default => '#22c55e',
         };
     }
 
     public function getLevelBadge(int $level): string
     {
         return match(true) {
-            $level >= 50 => '👑',
-            $level >= 40 => '💎',
-            $level >= 30 => '🏆',
-            $level >= 20 => '⭐',
-            $level >= 15 => '🔥',
-            $level >= 10 => '🎯',
-            $level >= 7 => '🚀',
-            $level >= 5 => '⚡',
-            $level >= 3 => '✨',
-            default => '🌱',
+            $level >= 30 => '<i class="fas fa-crown"></i>',
+            $level >= 15 => '<i class="fas fa-fire"></i>',
+            $level >= 10 => '<i class="fas fa-star"></i>',
+            $level >= 5 => '<i class="fas fa-graduation-cap"></i>',
+            default => '<i class="fas fa-seedling"></i>',
         };
     }
 }

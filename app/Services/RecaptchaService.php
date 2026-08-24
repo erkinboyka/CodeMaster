@@ -14,10 +14,14 @@ class RecaptchaService
         $this->secretKey = config('services.recaptcha.secret_key', '');
     }
 
-    public function verify(string $token, ?string $remoteIp = null): bool
+    public function verify(?string $token, ?string $remoteIp = null): bool
     {
         if (empty($this->secretKey)) {
             return true;
+        }
+
+        if (empty($token)) {
+            return false;
         }
 
         try {

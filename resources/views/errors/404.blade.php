@@ -130,7 +130,7 @@
                     <span class="error-output error-output--yellow">Content-Type: text/html</span>
                 </div>
                 <div class="error-line">
-                    <span class="error-output">Page not found on this server.</span>
+                    <span class="error-output">{{ __('ml_terminal_404') }}</span>
                 </div>
                 <div class="error-line">
                     <span class="error-prompt">$</span>

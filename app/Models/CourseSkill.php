@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CourseSkill extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'course_id',
         'skill_name',

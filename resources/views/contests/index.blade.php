@@ -124,6 +124,7 @@
         transform: translateY(-6px);
         box-shadow: 0 20px 50px -15px rgba(0,0,0,0.2);
         border-color: var(--accent);
+        z-index: 2;
     }
     .ct-card-cover {
         position: relative;
@@ -325,8 +326,7 @@
     .ct-heatmap-legend{display:flex;align-items:center;gap:4px;margin-top:10px;justify-content:flex-end}
     .ct-heatmap-legend span{font-size:10px;color:var(--text-muted)}
     .ct-heatmap-legend-cell{width:12px;height:12px;border-radius:3px}
-    .ct-heatmap-tooltip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);padding:4px 8px;border-radius:6px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);font-size:10px;white-space:nowrap;z-index:10;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-    .ct-heatmap-cell:hover .ct-heatmap-tooltip{display:block}
+    .ct-heatmap-tooltip{display:none;position:fixed;padding:6px 10px;border-radius:6px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);font-size:10px;white-space:nowrap;z-index:9999;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 </style>
 @endsection
 
@@ -408,7 +408,7 @@
                             <span><i class="fas fa-clock"></i> {{ $contest->time_limit }} {{ __('min') }}</span>
                         </div>
                         <div class="ct-card-tags">
-                            <span class="ct-card-tag" style="background:{{ $diffColor }}15;color:{{ $diffColor }}">{{ ucfirst($contest->difficulty) }}</span>
+                            <span class="ct-card-tag" style="background:{{ $diffColor }}15;color:{{ $diffColor }}">{{ __('difficulty_' . $contest->difficulty) }}</span>
                             @if($contest->start_time)
                             <span class="ct-card-tag" style="background:var(--accent-glow);color:var(--accent)">{{ $contest->start_time->diffForHumans() }}</span>
                             @endif
@@ -474,6 +474,7 @@
                     </div>
                     <div x-data="heatmap()" x-init="init()" id="heatmap-container">
                         <div class="ct-heatmap-grid" id="heatmap-grid"></div>
+                        <div class="ct-heatmap-tooltip" id="ct-heatmap-tooltip"></div>
                     </div>
                     <div class="ct-heatmap-legend">
                         <span>{{ __('Less') }}</span>
@@ -506,6 +507,6 @@
 </div>
 
 <script>
-function heatmap(){return{init(){const data=@json($activityData);const grid=document.getElementById('heatmap-grid');if(!grid)return;const today=new Date();const total=Object.values(data).reduce((a,b)=>a+b,0);document.getElementById('heatmap-total').textContent=total+' {{ __("submissions this year") }}';const weeks=53;const startDate=new Date(today);startDate.setDate(startDate.getDate()-(weeks*7-1)+(6-startDate.getDay()));let html='';let currentDate=new Date(startDate);for(let w=0;w<weeks;w++){html+='<div class="ct-heatmap-week">';for(let d=0;d<7;d++){const dateStr=currentDate.toISOString().split('T')[0];const count=data[dateStr]||0;let lvl=0;if(count>=10)lvl=4;else if(count>=6)lvl=3;else if(count>=3)lvl=2;else if(count>=1)lvl=1;const label=count>0?count+' {{ __("submissions on") }} '+dateStr:'{{ __("No submissions on") }} '+dateStr;const isFuture=currentDate>today;const opacity=isFuture?'opacity:0.3;pointer-events:none;':'';html+='<div class="ct-heatmap-cell ct-heatmap-lvl-'+(isFuture?0:lvl)+'" style="'+opacity+'"><div class="ct-heatmap-tooltip">'+label+'</div></div>';currentDate.setDate(currentDate.getDate()+1)}html+='</div>'}grid.innerHTML=html}}}
+function heatmap(){return{init(){const data=@json($activityData);const grid=document.getElementById('heatmap-grid');if(!grid)return;const today=new Date();const total=Object.values(data).reduce((a,b)=>a+b,0);document.getElementById('heatmap-total').textContent=total+' {{ __("submissions this year") }}';const weeks=53;const startDate=new Date(today);startDate.setDate(startDate.getDate()-(weeks*7-1)+(6-startDate.getDay()));let html='';let currentDate=new Date(startDate);for(let w=0;w<weeks;w++){html+='<div class="ct-heatmap-week">';for(let d=0;d<7;d++){const dateStr=currentDate.toISOString().split('T')[0];const count=data[dateStr]||0;let lvl=0;if(count>=10)lvl=4;else if(count>=6)lvl=3;else if(count>=3)lvl=2;else if(count>=1)lvl=1;const label=count>0?count+' {{ __("submissions on") }} '+dateStr:'{{ __("No submissions on") }} '+dateStr;const isFuture=currentDate>today;const opacity=isFuture?'opacity:0.3;pointer-events:none;':'';html+='<div class="ct-heatmap-cell ct-heatmap-lvl-'+(isFuture?0:lvl)+'" style="'+opacity+'" data-tip="'+label.replace(/"/g,'&quot;')+'"></div>';currentDate.setDate(currentDate.getDate()+1)}html+='</div>'}grid.innerHTML=html;const tip=document.getElementById('ct-heatmap-tooltip');grid.addEventListener('mouseover',function(e){const cell=e.target.closest('.ct-heatmap-cell');if(!cell||!cell.dataset.tip)return;tip.textContent=cell.dataset.tip;tip.style.display='block';const r=cell.getBoundingClientRect();tip.style.left=r.left+r.width/2-tip.offsetWidth/2+'px';tip.style.top=r.top-tip.offsetHeight-6+'px'});grid.addEventListener('mouseout',function(e){const cell=e.target.closest('.ct-heatmap-cell');if(cell)tip.style.display='none'})}}}
 </script>
 @endsection

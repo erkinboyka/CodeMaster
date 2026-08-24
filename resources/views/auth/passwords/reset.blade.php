@@ -3,51 +3,67 @@
 @section('title', __('Reset Password') . ' - CodeMaster')
 
 @section('content')
-<div>
-    <h2 class="text-2xl font-bold text-gray-900 mb-1">{{ __('Reset Password') }}</h2>
-    <p class="text-sm text-gray-500 mb-6">{{ __('Enter your new password below') }}</p>
+<div x-data="{ showPw: false }">
+    <h2 class="auth-title">{{ __('Reset Password') }}</h2>
+    <p class="auth-subtitle">$ password --set <span class="text-[var(--accent)]">new</span></p>
 
-    <form method="POST" action="{{ route('password.update') }}">
+    @if($errors->any())
+    <div class="auth-alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        @foreach($errors->all() as $error)
+            <span>{{ $error }}</span>
+        @endforeach
+    </div>
+    @endif
+
+    <form method="POST" action="{{ route('password.update') }}" class="auth-form">
         @csrf
         <input type="hidden" name="token" value="{{ $token ?? '' }}">
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('Email') }}</label>
-            <div class="relative">
-                <input type="email" name="email" value="{{ old('email', $email ?? '') }}" required class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="you@example.com">
-                <i class="fas fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            </div>
-            @error('email')
-            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('Password') }}</label>
-            <div class="relative">
-                <input type="password" name="password" required class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="••••••••">
-                <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            </div>
-            @error('password')
-            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('Confirm Password') }}</label>
-            <div class="relative">
-                <input type="password" name="password_confirmation" required class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="••••••••">
-                <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        <div class="auth-field">
+            <label class="auth-label">
+                <span class="auth-label-prefix">></span> {{ __('Email') }}
+            </label>
+            <div class="auth-input-wrap">
+                <span class="auth-input-icon">@</span>
+                <input type="email" name="email" value="{{ old('email', $email ?? '') }}" required
+                    class="auth-input" placeholder="you@codemaster.dev">
             </div>
         </div>
 
-        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors duration-200">
-            {{ __('Reset Password') }}
+        <div class="auth-field">
+            <label class="auth-label">
+                <span class="auth-label-prefix">></span> {{ __('New Password') }}
+            </label>
+            <div class="auth-input-wrap">
+                <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
+                <input :type="showPw ? 'text' : 'password'" name="password" required
+                    class="auth-input" placeholder="••••••••">
+                <button type="button" @click="showPw = !showPw" class="auth-input-action">
+                    <i class="fas" :class="showPw ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="auth-field">
+            <label class="auth-label">
+                <span class="auth-label-prefix">></span> {{ __('Confirm Password') }}
+            </label>
+            <div class="auth-input-wrap">
+                <span class="auth-input-icon"><i class="fas fa-shield-alt"></i></span>
+                <input type="password" name="password_confirmation" required
+                    class="auth-input" placeholder="••••••••">
+            </div>
+        </div>
+
+        <button type="submit" class="auth-submit">
+            <span>{{ __('Reset Password') }}</span>
+            <i class="fas fa-key"></i>
         </button>
     </form>
 
-    <p class="text-center text-sm text-gray-500 mt-6">
-        <a href="{{ route('login') }}" class="text-indigo-600 hover:text-indigo-500 font-medium">{{ __('Back to Login') }}</a>
+    <p class="auth-footer-text" style="margin-top:20px">
+        <a href="{{ route('login') }}" class="auth-link-bold">{{ __('Back to Login') }}</a>
     </p>
 </div>
 @endsection

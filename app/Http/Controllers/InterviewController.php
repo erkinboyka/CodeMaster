@@ -440,6 +440,10 @@ PROMPT;
             default => 'Оцени качество и релевантность ответа.',
         };
 
+        $sanitizedAnswer = strip_tags($answer);
+        $sanitizedAnswer = str_replace(["\n", "\r"], [' ', ''], $sanitizedAnswer);
+        $sanitizedAnswer = mb_substr($sanitizedAnswer, 0, 5000);
+
         return <<<PROMPT
 Ты — эксперт-интервьюер, оценивающий ответ кандидата.
 
@@ -447,7 +451,7 @@ PROMPT;
 Уровень сложности: {$interview->difficulty}
 Тип вопроса: {$questionType}
 Вопрос: {$questionText}
-Ответ кандидата: {$answer}
+Ответ кандидата: {$sanitizedAnswer}
 
 {$typeInstructions}
 

@@ -9,6 +9,7 @@ use App\Services\GamificationService;
 use App\Services\Judge0Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PracticeController extends Controller
 {
@@ -65,16 +66,19 @@ class PracticeController extends Controller
 
         $xpEarned = 0;
         if ($success) {
-            $alreadyPassed = PracticeSubmission::where('user_id', $user->id)
-                ->where('task_id', $taskId)
-                ->where('passed', true)
-                ->where('id', '!=', $submission->id)
-                ->exists();
+            $xpEarned = DB::transaction(function () use ($user, $taskId, $submission, $task) {
+                $alreadyPassed = PracticeSubmission::where('user_id', $user->id)
+                    ->where('task_id', $taskId)
+                    ->where('passed', true)
+                    ->where('id', '!=', $submission->id)
+                    ->exists();
 
-            if (!$alreadyPassed) {
-                $xpEarned = $this->gamificationService->awardPracticeXp($user, $task->title);
-                $user->refresh();
-            }
+                if (!$alreadyPassed) {
+                    return $this->gamificationService->awardPracticeXp($user, $task->title);
+                }
+                return 0;
+            });
+            $user->refresh();
         }
 
         return response()->json([

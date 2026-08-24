@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'CodeMaster — IT Education & Career Platform')
+@section('title', t('home_title'))
 @section('main-class', '')
 @section('content')
     <style>
@@ -2873,194 +2873,304 @@
         }
 
         /* ══════════════════════════════════════════
-       RESPONSIVE
+       RESPONSIVE — TABLET (768px–1024px)
        ══════════════════════════════════════════ */
         @@media (max-width: 1024px) {
             .hero {
                 grid-template-columns: 1fr;
-                gap: 60px;
+                gap: 40px;
                 text-align: center;
-                padding: 100px 0;
+                padding: 100px 0 60px;
+                min-height: auto;
             }
-
-            .hero-content {
-                padding-left: 20px;
-                padding-right: 20px;
-            }
-
-            .hero-description {
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .hero-actions {
-                justify-content: center;
-            }
-
-            .hero-stats {
-                justify-content: center;
-            }
-
-            .hero-visual {
-                height: 400px;
-            }
-
+            .hero-content { padding: 0 24px; }
+            .hero-description { margin: 0 auto 32px; max-width: 100%; }
+            .hero-actions { justify-content: center; }
+            .hero-stats { justify-content: center; gap: 32px; }
+            .hero-visual { height: 350px; margin-top: 20px; }
             .hero-code-window {
                 transform: perspective(1200px) rotateY(0deg) rotateX(0deg);
-                animation: codeWindowInMobile 1.2s 0.6s var(--ease-out-expo) forwards;
+                max-width: 500px;
+                margin: 0 auto;
             }
+            .hero-float-card-1 { right: 5%; }
+            .hero-float-card-2 { left: 5%; }
+            .hero-float-card-3 { right: 0; }
+            .hero-orb-1 { width: 400px; height: 400px; }
+            .hero-orb-2 { width: 350px; height: 350px; }
+            .hero-orb-3 { width: 200px; height: 200px; }
 
-            @@keyframes codeWindowInMobile {
-                to {
-                    opacity: 1;
-                    transform: perspective(1200px) rotateY(0deg) rotateX(0deg);
-                }
-            }
+            .journey-panel-content { grid-template-columns: 1fr; gap: 40px; padding: 40px; }
+            .journey-number { font-size: 120px; left: 3%; }
 
-            .hero-float {
-                display: none;
-            }
+            .leader-panel-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 32px; text-align: center; }
+            .leader-panel-avatar { width: 200px; height: 200px; }
+            .leader-panel-ring { width: 240px; height: 240px; }
+            .leader-panel-ring-2 { width: 280px; height: 280px; }
+            .leader-panel-visual { order: -1; }
+            .leader-panel-desc { max-width: 100%; }
+            .leader-panel-index { justify-content: center; }
+            .leader-panel-index::before { display: none; }
 
-            .community-layout {
-                grid-template-columns: 1fr;
-            }
+            .holo-card { padding: 32px; }
+            .feature-title { font-size: 32px; }
+            .feature-desc { font-size: 16px; }
+            .feature-chart { height: 120px; }
+            .feature-stats { gap: 10px; }
+            .feature-stat { padding: 14px; }
+            .feature-stat-num { font-size: 24px; }
 
-            .journey-panel-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
+            .community-layout { grid-template-columns: 1fr; gap: 40px; }
+            .community-visual { height: auto; min-height: 400px; }
+
+            .cs-stack-area { height: auto; min-height: 400px; }
+            .cs-scatter-card { width: 220px; }
+
+            .marquee-item { font-size: 15px; padding: 0 32px; }
+
+            .nav-dots { display: none; }
         }
 
+        /* ══════════════════════════════════════════
+       RESPONSIVE — MOBILE (max 768px)
+       ══════════════════════════════════════════ */
         @@media (max-width: 768px) {
-            .hero-stats {
-                flex-direction: column;
-                gap: 24px;
-            }
+            .container { padding: 0 16px; }
 
-            .hero-stat::after {
-                display: none;
-            }
+            /* Hero */
+            .hero { padding: 80px 0 40px; gap: 30px; }
+            .hero-eyebrow { font-size: 10px; padding: 6px 14px; margin-bottom: 20px; }
+            .hero-title { font-size: clamp(36px, 10vw, 56px); letter-spacing: -2px; margin-bottom: 16px; }
+            .hero-description { font-size: 15px; margin-bottom: 28px; }
+            .hero-actions { flex-direction: column; align-items: center; gap: 12px; margin-bottom: 40px; }
+            .btn { width: 100%; max-width: 300px; justify-content: center; padding: 14px 24px; font-size: 14px; }
+            .hero-stats { flex-direction: column; gap: 20px; align-items: center; }
+            .hero-stat::after { display: none; }
+            .hero-stat-value { font-size: 28px; }
+            .hero-stat-label { font-size: 11px; }
+            .hero-visual { height: 260px; }
+            .hero-code-window { max-width: 100%; transform: none; }
+            .code-window-body { padding: 14px; font-size: 11px; min-height: 180px; line-height: 1.8; }
+            .code-window-tabs { display: none; }
+            .hero-float { display: block; }
+            .hero-float-card { padding: 10px 14px; font-size: 11px; gap: 8px; }
+            .hero-float-icon { width: 28px; height: 28px; font-size: 13px; border-radius: 8px; }
+            .hero-float-text strong { font-size: 11px; }
+            .hero-float-text span { font-size: 10px; }
+            .hero-float-card-1 { top: 5%; right: 0; animation-delay: 1.5s; }
+            .hero-float-card-2 { bottom: 20%; left: 0; animation-delay: 1.8s; }
+            .hero-float-card-3 { top: 55%; right: -10px; animation-delay: 2.1s; }
 
-            .community-stats {
-                grid-template-columns: 1fr;
-            }
+            /* Marquee */
+            .marquee-section { padding: 40px 0; }
+            .marquee-label { font-size: 10px; margin-bottom: 16px; }
+            .marquee-item { font-size: 13px; padding: 0 24px; gap: 8px; }
+            .marquee-item i { font-size: 18px; }
+            .marquee-fade-left, .marquee-fade-right { width: 40px; }
 
-            .community-stack-card {
-                position: relative !important;
-                top: auto !important;
-                left: auto !important;
-                right: auto !important;
-                bottom: auto !important;
-                width: 100% !important;
-                transform: none !important;
-                margin-bottom: 16px;
-            }
+            /* Journey — KEEP sticky scroll effects */
+            .journey-panel { padding: 60px 20px; }
+            .journey-panel-content { gap: 24px; padding: 20px 0; }
+            .journey-number { font-size: 80px; left: 2%; }
+            .journey-title { font-size: 28px; letter-spacing: -1px; }
+            .journey-desc { font-size: 15px; margin-bottom: 24px; }
+            .terminal-body { padding: 16px; font-size: 11px; }
+            .journey-bug-card { padding: 14px; gap: 12px; }
+            .journey-bug-icon { width: 36px; height: 36px; font-size: 15px; }
 
-            .community-visual {
-                height: auto;
-            }
+            /* Leaders — KEEP sticky scroll effects */
+            .leaders-intro { padding: 80px 0 40px; }
+            .leader-panel { padding: 40px 20px; }
+            .leader-panel-inner { padding: 0; gap: 24px; }
+            .leader-panel-avatar { width: 140px; height: 140px; border-width: 3px; }
+            .leader-panel-ring { width: 180px; height: 180px; }
+            .leader-panel-ring-2 { width: 210px; height: 210px; }
+            .leader-panel-icon { width: 44px; height: 44px; font-size: 18px; right: 20px; }
+            .leader-panel-name { font-size: 28px; letter-spacing: -1px; }
+            .leader-panel-company { font-size: 16px; }
+            .leader-panel-desc { font-size: 14px; }
+            .leader-panel-quote { padding: 16px; font-size: 13px; margin-top: 20px; }
 
-            .nav-dots {
-                display: none;
-            }
+            /* Feature Steps — KEEP sticky scroll effects */
+            .fp-step { padding: 60px 20px; }
+            .fp-step-num { font-size: 60px; letter-spacing: -3px; margin-bottom: 16px; }
+            .fp-step-title { font-size: 24px; margin-bottom: 12px; }
+            .fp-step-desc { font-size: 14px; }
+            .fp-visual { width: 260px; height: 200px; transform: scale(0.8); margin-bottom: 20px; }
+            .fp-course-mini { width: 60px; height: 42px; font-size: 18px; }
+            .fp-rm-node { width: 36px; height: 36px; font-size: 14px; }
+            .fp-contest-bar { padding: 6px 10px; }
+            .fp-contest-name { font-size: 12px; }
+            .fp-contest-score { font-size: 12px; }
+            .fp-job-card { width: 110px; padding: 10px; }
+            .fp-job-title { font-size: 10px; }
+            .fp-ai-core { width: 80px; height: 80px; font-size: 28px; }
+            .fp-ai-orbit:nth-child(2) { width: 140px; height: 140px; }
+            .fp-ai-orbit:nth-child(3) { width: 200px; height: 200px; }
+            .fp-ai-code { font-size: 9px; padding: 4px 8px; }
+            .fp-comm-avatar { width: 32px; height: 32px; font-size: 13px; }
+            .fp-comm-msg { font-size: 10px; max-width: 90px; padding: 4px 8px; }
 
-            .journey-section {
-                height: auto;
-            }
+            /* Holo Card */
+            .holo-card { padding: 20px; border-radius: 20px; }
+            .feature-icon-wrap { width: 56px; height: 56px; border-radius: 16px; font-size: 26px; }
+            .feature-title { font-size: 24px; }
+            .feature-desc { font-size: 14px; margin-bottom: 20px; }
+            .feature-code { padding: 14px; font-size: 10px; }
+            .feature-chart { height: 100px; gap: 5px; }
+            .feature-stats { flex-direction: column; gap: 8px; }
+            .feature-stat { padding: 12px; }
+            .feature-stat-num { font-size: 20px; }
+            .feature-stat-label { font-size: 10px; }
+            .feature-chat-msg { padding: 12px 14px; font-size: 12px; }
 
-            .journey-sticky {
-                position: relative;
-                height: auto;
-            }
+            /* Courses */
+            .cs-header { padding: 60px 16px 24px; }
+            .cs-header .section-title { font-size: 28px; }
+            .cs-sub { font-size: 13px; padding: 0 16px 16px; }
+            .cs-scatter-card { width: 160px; }
+            .cs-card-cover { height: 90px; }
+            .cs-card-cover i { font-size: 32px; }
+            .cs-card-body { padding: 12px 14px 14px; }
+            .cs-card-title { font-size: 12px; }
+            .cs-card-meta { font-size: 10px; gap: 6px; }
+            .cs-link-wrap { padding: 40px 16px 24px; }
 
-            .journey-panel {
-                padding: 80px 20px;
-            }
+            /* Community */
+            .community-section { padding: 80px 0; }
+            .community-stack-card { padding: 18px; }
+            .community-stack-avatar { width: 36px; height: 36px; font-size: 14px; }
+            .community-stack-name { font-size: 13px; }
+            .community-stack-content { font-size: 12px; }
+            .community-stat-value { font-size: 24px; }
+            .community-stat-label { font-size: 10px; }
 
-            .journey-number {
-                display: none;
-            }
+            /* CTA */
+            .cta-section { padding: 80px 0; }
+            .cta-title { font-size: clamp(28px, 8vw, 48px); letter-spacing: -2px; }
+            .cta-desc { font-size: 15px; margin-bottom: 32px; }
+            .cta-actions { flex-direction: column; align-items: center; gap: 12px; }
 
-            .leaders-panel-inner {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                padding: 0 24px;
-                text-align: center;
-            }
+            /* Section Headers */
+            .section-title { font-size: clamp(24px, 6vw, 40px); letter-spacing: -1px; }
+            .section-desc { font-size: 14px; }
 
-            .leader-panel-avatar {
-                width: 180px;
-                height: 180px;
-            }
+            /* Scroll Hint */
+            .scroll-hint { bottom: 20px; }
+            .scroll-hint-text { font-size: 10px; }
 
-            .leader-panel-ring {
-                width: 220px;
-                height: 220px;
-            }
-
-            .leader-panel-ring-2 {
-                width: 260px;
-                height: 260px;
-            }
-
-            .leader-panel-visual {
-                order: -1;
-            }
-
-            .leader-panel-text {
-                transform: translateY(30px);
-            }
-
-            .leader-panel.active .leader-panel-text {
-                transform: translateY(0);
-            }
-
-            .leader-panel-desc {
-                max-width: 100%;
-            }
-
-            .leader-panel-quote {
-                text-align: left;
-            }
-
-            .feature-title {
-                font-size: 28px;
-            }
-
-            .feature-desc {
-                font-size: 15px;
-            }
-
-            .feature-stat-num {
-                font-size: 22px;
-            }
-
-            .holo-card {
-                padding: 24px;
-            }
+            /* AI Section */
+            .ai-logo-core { width: 120px; height: 120px; }
+            .ai-orbit-1 { width: 200px; height: 200px; }
+            .ai-orbit-2 { width: 300px; height: 300px; }
+            .ai-glow-backdrop { width: 250px; height: 250px; }
         }
 
+        /* ══════════════════════════════════════════
+       RESPONSIVE — SMALL MOBILE (max 480px)
+       ══════════════════════════════════════════ */
         @@media (max-width: 480px) {
-            .hero-title {
-                letter-spacing: -2px;
-            }
+            .hero { padding: 60px 0 30px; gap: 20px; }
+            .hero-eyebrow { font-size: 9px; padding: 5px 12px; margin-bottom: 16px; gap: 6px; }
+            .hero-title { font-size: 32px; letter-spacing: -1.5px; margin-bottom: 12px; }
+            .hero-description { font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+            .hero-actions { gap: 10px; margin-bottom: 32px; }
+            .btn { padding: 12px 20px; font-size: 13px; max-width: 260px; }
+            .hero-stats { gap: 16px; }
+            .hero-stat-value { font-size: 24px; }
+            .hero-visual { height: 220px; }
+            .code-window-body { padding: 12px; font-size: 10px; line-height: 1.8; min-height: 160px; }
+            .code-line-num { display: none; }
+            .hero-float-card { padding: 8px 12px; font-size: 10px; gap: 6px; }
+            .hero-float-icon { width: 24px; height: 24px; font-size: 11px; }
+            .hero-float-text strong { font-size: 10px; }
+            .hero-float-text span { font-size: 9px; }
 
-            .hero-actions {
-                flex-direction: column;
-                align-items: center;
-            }
+            .marquee-item { font-size: 12px; padding: 0 16px; gap: 6px; }
+            .marquee-item i { font-size: 15px; }
 
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
+            .journey-panel { padding: 40px 16px; }
+            .journey-number { font-size: 60px; }
+            .journey-title { font-size: 22px; }
+            .journey-desc { font-size: 13px; }
+
+            .leader-panel { padding: 30px 16px; }
+            .leader-panel-avatar { width: 110px; height: 110px; }
+            .leader-panel-ring { width: 140px; height: 140px; }
+            .leader-panel-ring-2 { width: 170px; height: 170px; }
+            .leader-panel-name { font-size: 24px; }
+            .leader-panel-company { font-size: 14px; }
+            .leader-panel-desc { font-size: 13px; }
+
+            .fp-step { padding: 40px 16px; }
+            .fp-step-num { font-size: 48px; }
+            .fp-step-title { font-size: 20px; }
+            .fp-step-desc { font-size: 13px; }
+            .fp-visual { width: 200px; height: 160px; transform: scale(0.75); }
+
+            .holo-card { padding: 16px; border-radius: 16px; }
+            .feature-icon-wrap { width: 48px; height: 48px; border-radius: 12px; font-size: 22px; }
+            .feature-title { font-size: 20px; }
+            .feature-desc { font-size: 13px; }
+
+            .cs-scatter-card { width: 140px; }
+            .cs-card-cover { height: 75px; }
+            .cs-card-cover i { font-size: 26px; }
+
+            .community-stack-card { padding: 14px; }
+
+            .cta-title { font-size: 24px; letter-spacing: -1px; }
+            .cta-desc { font-size: 13px; }
+
+            .section-title { font-size: 22px; }
+            .section-desc { font-size: 13px; }
+        }
+
+        /* ══════════════════════════════════════════
+       RESPONSIVE — LANDSCAPE MOBILE
+       ══════════════════════════════════════════ */
+        @@media (max-height: 500px) and (orientation: landscape) {
+            .hero { min-height: auto; padding: 40px 0; }
+            .hero-visual { height: 200px; }
+        }
+
+        /* ══════════════════════════════════════════
+       RESPONSIVE — LARGE DESKTOP (1400px+)
+       ══════════════════════════════════════════ */
+        @@media (min-width: 1400px) {
+            .hero { gap: 100px; padding: 140px 0; }
+            .hero-content { padding-left: 80px; }
+            .holo-card { padding: 56px; }
+            .feature-title { font-size: 48px; }
+        }
+
+        /* ══════════════════════════════════════════
+       TOUCH DEVICE — disable hover transforms only
+       ══════════════════════════════════════════ */
+        @@media (hover: none) and (pointer: coarse) {
+            .btn:hover { transform: none; }
+            .btn-primary:hover { transform: none; }
+            .community-stack-card:hover { transform: none !important; }
+            .journey-bug-card:hover { transform: none; }
+            .holo-card:hover { transform: none; }
+            .nav-dot:hover { transform: scale(1); }
+        }
+
+        /* ══════════════════════════════════════════
+       PRINT
+       ══════════════════════════════════════════ */
+        @@media print {
+            .nav-dots, .scroll-progress, .scroll-hint, #particles-canvas,
+            .hero-bg, .hero-float, .hero-orbs, .marquee-section,
+            .journey-section, .leader-panel-bg, .cinematic-scene,
+            .cta-bg-gradient { display: none !important; }
+            .hero { min-height: auto; padding: 20px 0; }
+            .hero-visual { display: none; }
+            body { background: #fff; color: #000; }
         }
 
         @@media (prefers-reduced-motion: reduce) {
-
-            *,
-            *::before,
-            *::after {
+            *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
@@ -3074,25 +3184,25 @@
     <!-- Navigation Dots -->
     <div class="nav-dots" id="navDots">
         <div class="nav-dot active" data-target="hero">
-            <span class="nav-dot-label">Начало</span>
+            <span class="nav-dot-label">{{ t('home_nav_start') }}</span>
         </div>
         <div class="nav-dot" data-target="journey">
-            <span class="nav-dot-label">Путь</span>
+            <span class="nav-dot-label">{{ t('home_nav_journey') }}</span>
         </div>
         <div class="nav-dot" data-target="leaders">
-            <span class="nav-dot-label">Вдохновение</span>
+            <span class="nav-dot-label">{{ t('home_nav_inspiration') }}</span>
         </div>
         <div class="nav-dot" data-target="features">
-            <span class="nav-dot-label">Возможности</span>
+            <span class="nav-dot-label">{{ t('home_nav_features') }}</span>
         </div>
         <div class="nav-dot" data-target="courses">
-            <span class="nav-dot-label">Курсы</span>
+            <span class="nav-dot-label">{{ t('home_nav_courses') }}</span>
         </div>
         <div class="nav-dot" data-target="ai">
-            <span class="nav-dot-label">AI</span>
+            <span class="nav-dot-label">{{ t('home_nav_ai') }}</span>
         </div>
         <div class="nav-dot" data-target="community">
-            <span class="nav-dot-label">Сообщество</span>
+            <span class="nav-dot-label">{{ t('home_nav_community') }}</span>
         </div>
     </div>
     <!-- ══════════════════════════════════════════
@@ -3110,35 +3220,34 @@
         </div>
         <div class="hero-content">
             <h1 class="hero-title">
-                <span class="hero-title-line">Code Your</span>
-                <span class="hero-title-line hero-title-gradient">Future</span>
+                <span class="hero-title-line">{{ t('home_hero_title_1') }}</span>
+                <span class="hero-title-line hero-title-gradient">{{ t('home_hero_title_2') }}</span>
             </h1>
             <p class="hero-description">
-                Платформа, которая превращает новичка в разработчика. Курсы с видео, аудио, презентациями и практикой,
-                AI-помощник, собеседования и вакансии.
+                {{ t('home_hero_desc') }}
             </p>
             <div class="hero-actions">
                 <a href="{{ route('courses.index') }}" class="btn btn-primary magnetic">
                     <i class="fas fa-rocket"></i>
-                    <span>Начать учиться</span>
+                    <span>{{ t('home_hero_cta_start') }}</span>
                 </a>
                 <a href="{{ route('vacancies.index') }}" class="btn btn-secondary magnetic">
                     <i class="fas fa-briefcase"></i>
-                    <span>Найти работу</span>
+                    <span>{{ t('home_hero_cta_jobs') }}</span>
                 </a>
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
                     <div class="hero-stat-value" data-count="{{ $totalUsers }}">0</div>
-                    <div class="hero-stat-label">Студентов</div>
+                    <div class="hero-stat-label">{{ t('home_hero_stat_students') }}</div>
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-value" data-count="{{ $totalCourses }}">0</div>
-                    <div class="hero-stat-label">Курсов</div>
+                    <div class="hero-stat-label">{{ t('home_hero_stat_courses') }}</div>
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-value" data-count="{{ $totalVacancies }}">0</div>
-                    <div class="hero-stat-label">Вакансий</div>
+                    <div class="hero-stat-label">{{ t('home_hero_stat_vacancies') }}</div>
                 </div>
             </div>
         </div>
@@ -3194,7 +3303,7 @@
                     <div class="code-line">
                         <span class="code-line-num">8</span>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span
-                                class="code-string">"✨ Level Up!"</span><span class="code-cursor"></span></span>
+                                class="code-string">"Level Up!"</span><span class="code-cursor"></span></span>
                     </div>
                 </div>
             </div>
@@ -3202,35 +3311,35 @@
             <div class="hero-float hero-float-card hero-float-card-1">
                 <div class="hero-float-icon green"><i class="fas fa-check"></i></div>
                 <div class="hero-float-text">
-                    <strong>Курс завершён</strong>
-                    <span>Python Basics</span>
+                    <strong>{{ t('home_float_course_done') }}</strong>
+                    <span>{{ t('home_float_course_name') }}</span>
                 </div>
             </div>
             <div class="hero-float hero-float-card hero-float-card-2">
                 <div class="hero-float-icon purple"><i class="fas fa-trophy"></i></div>
                 <div class="hero-float-text">
-                    <strong>Новое достижение</strong>
+                    <strong>{{ t('home_float_achievement') }}</strong>
                     <span>+500 XP</span>
                 </div>
             </div>
             <div class="hero-float hero-float-card hero-float-card-3">
                 <div class="hero-float-icon amber"><i class="fas fa-briefcase"></i></div>
                 <div class="hero-float-text">
-                    <strong>Приглашение</strong>
-                    <span>Junior Developer</span>
+                    <strong>{{ t('home_float_invite') }}</strong>
+                    <span>{{ t('home_float_job_title') }}</span>
                 </div>
             </div>
         </div>
     </section>
     <div class="scroll-hint">
-        <span class="scroll-hint-text">Scroll вниз</span>
+        <span class="scroll-hint-text">{{ t('home_scroll_hint') }}</span>
         <div class="scroll-hint-arrow"><i class="fas fa-chevron-down"></i></div>
     </div>
     <!-- ══════════════════════════════════════════
        MARQUEE SECTION
        ══════════════════════════════════════════ -->
     <section class="marquee-section">
-        <div class="marquee-label">Наши студенты работают в лучших компаниях мира</div>
+        <div class="marquee-label">{{ t('home_marquee_label') }}</div>
         <div class="marquee-fade-left"></div>
         <div class="marquee-fade-right"></div>
         <div style="overflow:hidden">
@@ -3269,15 +3378,12 @@
                     <span class="journey-number">01</span>
                     <div class="journey-panel-content">
                         <div>
-                            <div class="journey-step-tag green"><i class="fas fa-play"></i> Шаг 1</div>
-                            <h2 class="journey-title">Каждый путь начинается с <span class="gradient-text">одной
-                                    строки</span></h2>
-                            <p class="journey-desc">Помнишь свой первый "Hello, World"? Тот момент, когда экран ожил от
-                                твоего кода — именно тогда начинается путь разработчика. CodeMaster — место, где искра
-                                превращается в пламя.</p>
+                            <div class="journey-step-tag green"><i class="fas fa-play"></i> {{ t('home_journey_step') }} 1</div>
+                            <h2 class="journey-title">{{ t('home_journey_1_title') }}</h2>
+                            <p class="journey-desc">{{ t('home_journey_1_desc') }}</p>
                             <a href="{{ route('courses.index') }}" class="btn btn-primary magnetic">
                                 <i class="fas fa-terminal"></i>
-                                <span>Напиши первую строку</span>
+                                <span>{{ t('home_journey_1_cta') }}</span>
                             </a>
                         </div>
                         <div>
@@ -3304,7 +3410,7 @@
                                         <span class="terminal-command">python future.py</span>
                                     </div>
                                     <div class="terminal-line">
-                                        <span class="terminal-success">✨ Developer journey started</span>
+                                        <span class="terminal-success">{{ t('home_terminal_journey_started') }}</span>
                                     </div>
                                     <div class="terminal-line" style="margin-top:8px">
                                         <span class="terminal-prompt">$</span>
@@ -3326,32 +3432,30 @@
                                     <div class="journey-bug-icon error"><i class="fas fa-times-circle"></i></div>
                                     <div class="journey-bug-text">
                                         <h4>SyntaxError: unexpected EOF</h4>
-                                        <p>Код сломался. Не сдавайся — исправь это.</p>
+                                        <p>{{ t('home_journey_bug_syntax') }}</p>
                                     </div>
                                 </div>
                                 <div class="journey-bug-card">
                                     <div class="journey-bug-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
                                     <div class="journey-bug-text">
-                                        <h4>Logic Error: бесконечный цикл</h4>
-                                        <p>Отладка учит мыслить ясно.</p>
+                                        <h4>{{ t('home_journey_bug_logic_title') }}</h4>
+                                        <p>{{ t('home_journey_bug_debug') }}</p>
                                     </div>
                                 </div>
                                 <div class="journey-bug-card">
                                     <div class="journey-bug-icon info"><i class="fas fa-lightbulb"></i></div>
                                     <div class="journey-bug-text">
-                                        <h4>Подсказка: Stack Overflow спас</h4>
-                                        <p>Каждый разработчик гуглит. Это нормально.</p>
+                                        <h4>{{ t('home_journey_bug_hint') }}</h4>
+                                        <p>{{ t('home_journey_bug_norm') }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <div class="journey-step-tag red"><i class="fas fa-bug"></i> Шаг 2</div>
-                            <h2 class="journey-title">Потом приходят <span style="color:#ef4444">баги</span></h2>
-                            <p class="journey-desc">Каждый разработчик проходит через ошибки, краши и бессонные ночи за
-                                отладкой. Но те, кто проходит через это — становятся настоящими профессионалами.</p>
-                            <p style="color:var(--accent);font-weight:700;font-size:15px">Каждый баг — это урок. Каждая
-                                ошибка делает тебя сильнее.</p>
+                            <div class="journey-step-tag red"><i class="fas fa-bug"></i> {{ t('home_journey_step') }} 2</div>
+                            <h2 class="journey-title">{{ t('home_journey_2_title') }}</h2>
+                            <p class="journey-desc">{{ t('home_journey_2_desc') }}</p>
+                            <p style="color:var(--accent);font-weight:700;font-size:15px">{{ t('home_journey_2_quote') }}</p>
                         </div>
                     </div>
                 </div>
@@ -3360,13 +3464,12 @@
                     <span class="journey-number">03</span>
                     <div class="journey-panel-content">
                         <div>
-                            <div class="journey-step-tag amber"><i class="fas fa-trophy"></i> Шаг 3</div>
-                            <h2 class="journey-title">Потом наступает <span class="gradient-text">прорыв</span></h2>
-                            <p class="journey-desc">Твой код работает. Приложение запущено. Ты получаешь работу. Каждый баг,
-                                каждая бессонная ночь — всё было не зря.</p>
+                            <div class="journey-step-tag amber"><i class="fas fa-trophy"></i> {{ t('home_journey_step') }} 3</div>
+                            <h2 class="journey-title">{{ t('home_journey_3_title') }}</h2>
+                            <p class="journey-desc">{{ t('home_journey_3_desc') }}</p>
                             <a href="{{ route('register') }}" class="btn btn-primary magnetic">
                                 <i class="fas fa-rocket"></i>
-                                <span>Начни свою историю</span>
+                                <span>{{ t('home_journey_3_cta') }}</span>
                             </a>
                         </div>
                         <div>
@@ -3379,7 +3482,7 @@
                                     </div>
                                     <span
                                         style="margin-left:12px;font-size:11px;color:#22c55e;font-family:var(--font-mono)">✓
-                                        deployed</span>
+                                        {{ t('home_terminal_deployed') }}</span>
                                 </div>
                                 <div class="terminal-body">
                                     <div class="terminal-line">
@@ -3387,21 +3490,21 @@
                                         <span class="terminal-command">git push origin main</span>
                                     </div>
                                     <div class="terminal-line">
-                                        <span class="terminal-success">✓ Deployed successfully!</span>
+                                        <span class="terminal-success">✓ {{ t('home_terminal_deploy_success') }}</span>
                                     </div>
                                     <div class="terminal-line" style="margin-top:8px">
                                         <span class="terminal-prompt">$</span>
                                         <span class="terminal-command">cat achievements.txt</span>
                                     </div>
-                                    <div class="terminal-line"><span class="terminal-output">✓ Первая программа</span></div>
-                                    <div class="terminal-line"><span class="terminal-output">✓ Первый баг исправлен</span>
+                                    <div class="terminal-line"><span class="terminal-output">✓ {{ t('home_journey_3_prog1') }}</span></div>
+                                    <div class="terminal-line"><span class="terminal-output">✓ {{ t('home_journey_3_prog2') }}</span>
                                     </div>
-                                    <div class="terminal-line"><span class="terminal-output">✓ Первый проект
-                                            задеплоен</span></div>
-                                    <div class="terminal-line"><span class="terminal-output">✓ Первое предложение о
-                                            работе</span></div>
+                                    <div class="terminal-line"><span class="terminal-output">✓ {{ t('home_journey_3_prog3') }}
+                                            </span></div>
+                                    <div class="terminal-line"><span class="terminal-output">✓ {{ t('home_journey_3_prog4') }}
+                                            </span></div>
                                     <div class="terminal-line" style="margin-top:12px">
-                                        <span style="font-weight:700;color:var(--text)">★ Welcome to CodeMaster.</span>
+                                        <span style="font-weight:700;color:var(--text)">★ {{ t('home_journey_3_welcome') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -3412,16 +3515,14 @@
                 <div class="journey-panel" style="text-align:center">
                     <div style="max-width:700px;margin:0 auto">
                         <div class="journey-step-tag blue" style="margin:0 auto 24px;display:inline-flex"><i
-                                class="fas fa-infinity"></i> Бесконечность</div>
-                        <h2 class="journey-title" style="font-size:clamp(36px,5vw,64px);margin-bottom:24px">Путь
-                            никогда<br>не <span class="gradient-text">заканчивается</span></h2>
-                        <p class="journey-desc" style="max-width:540px;margin:0 auto 40px">Технологии меняются. Языки
-                            эволюционируют. Но страсть к созданию остаётся. Продолжай учиться, расти и вдохновлять.</p>
+                                class="fas fa-infinity"></i> {{ t('home_journey_inf_tag') }}</div>
+                        <h2 class="journey-title" style="font-size:clamp(36px,5vw,64px);margin-bottom:24px">{{ t('home_journey_inf_title') }}</h2>
+                        <p class="journey-desc" style="max-width:540px;margin:0 auto 40px">{{ t('home_journey_inf_desc') }}</p>
                         <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
                             <a href="{{ route('courses.index') }}" class="btn btn-primary magnetic"><i
-                                    class="fas fa-book"></i><span>Исследуй курсы</span></a>
+                                    class="fas fa-book"></i><span>{{ t('home_journey_inf_cta1') }}</span></a>
                             <a href="{{ route('register') }}" class="btn btn-secondary magnetic"><i
-                                    class="fas fa-user-plus"></i><span>Присоединяйся</span></a>
+                                    class="fas fa-user-plus"></i><span>{{ t('home_journey_inf_cta2') }}</span></a>
                         </div>
                     </div>
                 </div>
@@ -3434,9 +3535,9 @@
     <section class="leaders-intro noise" id="leaders">
         <div class="container">
             <div class="section-header reveal">
-                <div class="section-tag"><i class="fas fa-star"></i> Вдохновение</div>
-                <h2 class="section-title">Учись у <span class="gradient-text">великих</span></h2>
-                <p class="section-desc">Самые успешные разработчики мира начали именно там, где ты сейчас.</p>
+                <div class="section-tag"><i class="fas fa-star"></i> {{ t('home_leaders_tag') }}</div>
+                <h2 class="section-title">{{ t('home_leaders_title') }}</h2>
+                <p class="section-desc">{{ t('home_leaders_desc') }}</p>
             </div>
         </div>
     </section>
@@ -3447,48 +3548,48 @@
                 'company' => 'Microsoft',
                 'img' => 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Bill_Gates%2C_September_2024.jpg',
                 'icon' => 'fab fa-microsoft',
-                'desc' => 'В 15 лет написал языковой интерпретатор BASIC. Бросил Harvard, основал Microsoft и создал одну из крупнейших технологических компаний в истории.',
-                'quote' => 'Если ты родился бедным, это не твоя вина. Но если ты умрёшь бедным — это твоя вина.',
+                'desc' => t('home_leader_bill_desc'),
+                'quote' => t('home_leader_bill_quote'),
             ],
             [
                 'name' => 'Elon Musk',
                 'company' => 'Tesla & SpaceX',
                 'img' => 'https://upload.wikimedia.org/wikipedia/commons/0/06/Elon_Musk%2C_2018_%28cropped%29.jpg',
                 'icon' => 'fas fa-bolt',
-                'desc' => 'Самоучка, который в 24 года создал Zip2. Сегодня управляет Tesla, SpaceX и Neuralink, меняя будущее человечества.',
-                'quote' => 'Когда что-то достаточно важно, делай это, даже если шансы не в твою пользу.',
+                'desc' => t('home_leader_elon_desc'),
+                'quote' => t('home_leader_elon_quote'),
             ],
             [
                 'name' => 'Linus Torvalds',
                 'company' => 'Linux & Git',
                 'img' => 'https://upload.wikimedia.org/wikipedia/commons/6/69/Linus_Torvalds.jpeg',
                 'icon' => 'fab fa-linux',
-                'desc' => 'В 21 год создал Linux — операционную систему, которая обеспечивает 96% серверов мира. Позже изобрёл Git.',
-                'quote' => 'Говори и делай код. Остальное не имеет значения.',
+                'desc' => t('home_leader_linus_desc'),
+                'quote' => t('home_leader_linus_quote'),
             ],
             [
                 'name' => 'Mark Zuckerberg',
                 'company' => 'Meta',
                 'img' => 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Mark_Zuckerberg_%282020%29_%28cropped%29.jpg',
                 'icon' => 'fab fa-meta',
-                'desc' => 'Бросил Harvard и в 19 лет создал Facebook. Социальная сеть соединила миллиарды людей по всему миру.',
-                'quote' => 'Двигайся быстро и ломай вещи. Если ты ничего не ломаешь, ты недостаточно быстро двигаешься.',
+                'desc' => t('home_leader_mark_desc'),
+                'quote' => t('home_leader_mark_quote'),
             ],
             [
                 'name' => 'Larry Page',
                 'company' => 'Google',
                 'img' => 'https://upload.wikimedia.org/wikipedia/commons/7/77/Larry_Page_in_the_European_Parliament%2C_17.06.2009_%28cropped1%29.jpg',
                 'icon' => 'fab fa-google',
-                'desc' => 'Создал алгоритм PageRank и поисковую систему Google, которая стала главным порталом в интернет для миллиардов людей.',
-                'quote' => 'Если вы работаете над чем-то, что вам действительно нравится, вам не нужно прилагать усилия — оно просто происходит.',
+                'desc' => t('home_leader_larry_desc'),
+                'quote' => t('home_leader_larry_quote'),
             ],
             [
                 'name' => 'Sam Altman',
                 'company' => 'OpenAI',
                 'img' => 'https://upload.wikimedia.org/wikipedia/commons/1/12/Sam_altman.jpg',
                 'icon' => 'fas fa-brain',
-                'desc' => 'Руководил Y Combinator, а затем стал CEO OpenAI — компании, создавшей ChatGPT и GPT-4, определяющей будущее ИИ.',
-                'quote' => 'ИИ будет величайшей технологической платформой в истории человечества.',
+                'desc' => t('home_leader_sam_desc'),
+                'quote' => t('home_leader_sam_quote'),
             ],
         ];
     @endphp
@@ -3521,8 +3622,8 @@
        ══════════════════════════════════════════ -->
     <section id="features">
         <div style="text-align:center;padding:100px 24px 60px">
-            <div class="section-tag" style="margin-bottom:16px">Возможности</div>
-            <h2 class="section-title" style="font-size:clamp(32px,4vw,56px)">Всё что нужно <span class="gradient-text">для старта</span></h2>
+            <div class="section-tag" style="margin-bottom:16px">{{ t('home_features_tag') }}</div>
+            <h2 class="section-title" style="font-size:clamp(32px,4vw,56px)">{{ t('home_features_title') }}</h2>
         </div>
         <div class="fp-steps-panels" id="fpSteps">
             <!-- STEP 1: Курсы -->
@@ -3540,8 +3641,8 @@
                     </div>
                     <div class="fp-step-num">01</div>
                     <div class="fp-step-content">
-                        <h3 class="fp-step-title">Профессиональные курсы</h3>
-                        <p class="fp-step-desc">Frontend, Backend, DevOps, Design. Видео, аудио и презентации от практиков индустрии.</p>
+                        <h3 class="fp-step-title">{{ t('home_feature_courses_title') }}</h3>
+                        <p class="fp-step-desc">{{ t('home_feature_courses_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -3565,8 +3666,8 @@
                     </div>
                     <div class="fp-step-num">02</div>
                     <div class="fp-step-content">
-                        <h3 class="fp-step-title">Дорожные карты</h3>
-                        <p class="fp-step-desc">Структурированные пути от новичка до профессионала. Никакой воды, только то, что нужно.</p>
+                        <h3 class="fp-step-title">{{ t('home_feature_roadmaps_title') }}</h3>
+                        <p class="fp-step-desc">{{ t('home_feature_roadmaps_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -3604,8 +3705,8 @@
                     </div>
                     <div class="fp-step-num">03</div>
                     <div class="fp-step-content">
-                        <h3 class="fp-step-title">Контесты и хакатоны</h3>
-                        <p class="fp-step-desc">Соревнуйся с разработчиками со всего мира. Решай задачи, поднимайся в рейтинге.</p>
+                        <h3 class="fp-step-title">{{ t('home_feature_contests_title') }}</h3>
+                        <p class="fp-step-desc">{{ t('home_feature_contests_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -3616,25 +3717,25 @@
                         <div class="fp-jobs">
                             <div class="fp-job-card">
                                 <div class="fp-job-logo" style="background:linear-gradient(135deg,#4285F4,#34A853)"><i class="fab fa-google"></i></div>
-                                <div class="fp-job-title">Frontend Dev</div>
+                                <div class="fp-job-title">{{ t('home_job_frontend') }}</div>
                                 <div class="fp-job-company">Google</div>
                                 <div class="fp-job-salary">$120K+</div>
                             </div>
                             <div class="fp-job-card">
                                 <div class="fp-job-logo" style="background:linear-gradient(135deg,#00A1F4,#0078D4)"><i class="fab fa-microsoft"></i></div>
-                                <div class="fp-job-title">Backend Dev</div>
+                                <div class="fp-job-title">{{ t('home_job_backend') }}</div>
                                 <div class="fp-job-company">Microsoft</div>
                                 <div class="fp-job-salary">$110K+</div>
                             </div>
                             <div class="fp-job-card">
                                 <div class="fp-job-logo" style="background:linear-gradient(135deg,#FF9900,#232F3E)"><i class="fab fa-amazon"></i></div>
-                                <div class="fp-job-title">Fullstack Dev</div>
+                                <div class="fp-job-title">{{ t('home_job_fullstack') }}</div>
                                 <div class="fp-job-company">Amazon</div>
                                 <div class="fp-job-salary">$130K+</div>
                             </div>
                             <div class="fp-job-card">
                                 <div class="fp-job-logo" style="background:linear-gradient(135deg,#E44D26,#1572B6)"><i class="fab fa-apple"></i></div>
-                                <div class="fp-job-title">iOS Dev</div>
+                                <div class="fp-job-title">{{ t('home_job_ios') }}</div>
                                 <div class="fp-job-company">Apple</div>
                                 <div class="fp-job-salary">$140K+</div>
                             </div>
@@ -3644,8 +3745,8 @@
                     </div>
                     <div class="fp-step-num">04</div>
                     <div class="fp-step-content">
-                        <h3 class="fp-step-title">Прямые вакансии</h3>
-                        <p class="fp-step-desc">Реальные предложения от топ-компаний. Резюме автоматически попадает к HR.</p>
+                        <h3 class="fp-step-title">{{ t('home_feature_vacancies_title') }}</h3>
+                        <p class="fp-step-desc">{{ t('home_feature_vacancies_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -3665,8 +3766,8 @@
                     </div>
                     <div class="fp-step-num">05</div>
                     <div class="fp-step-content">
-                        <h3 class="fp-step-title">AI-наставник 24/7</h3>
-                        <p class="fp-step-desc">Понимает твой код, находит баги и ведёт к цели. Мгновенные ответы.</p>
+                        <h3 class="fp-step-title">{{ t('home_feature_ai_title') }}</h3>
+                        <p class="fp-step-desc">{{ t('home_feature_ai_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -3682,9 +3783,9 @@
                             <div class="fp-comm-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">С</div>
                             <div class="fp-comm-avatar" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">М</div>
                             <div class="fp-comm-avatar" style="background:linear-gradient(135deg,#f43f5e,#e11d48)">Н</div>
-                            <div class="fp-comm-msg">Помоги с React хуком!</div>
-                            <div class="fp-comm-msg">Готово, смотри PR</div>
-                            <div class="fp-comm-msg">Крутое решение!</div>
+                            <div class="fp-comm-msg">{{ t('home_community_chat1') }}</div>
+                            <div class="fp-comm-msg">{{ t('home_community_chat2') }}</div>
+                            <div class="fp-comm-msg">{{ t('home_community_chat3') }}</div>
                             <div class="fp-comm-line"></div>
                             <div class="fp-comm-line"></div>
                             <div class="fp-comm-line"></div>
@@ -3692,8 +3793,8 @@
                     </div>
                     <div class="fp-step-num">06</div>
                     <div class="fp-step-content">
-                        <h3 class="fp-step-title">Живое сообщество</h3>
-                        <p class="fp-step-desc">Тысячи разработчиков помогают друг другу расти, делают код-ревью и заводят связи.</p>
+                        <h3 class="fp-step-title">{{ t('home_feature_community_title') }}</h3>
+                        <p class="fp-step-desc">{{ t('home_feature_community_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -3707,10 +3808,10 @@
             <div class="cs-sticky">
                 <div>
                     <div class="cs-header">
-                        <div class="section-tag" style="margin-bottom:16px"><i class="fas fa-book-open"></i> Курсы</div>
-                        <h2 class="section-title">Начни учиться <span class="gradient-text">сегодня</span></h2>
+                        <div class="section-tag" style="margin-bottom:16px"><i class="fas fa-book-open"></i> {{ t('home_courses_tag') }}</div>
+                        <h2 class="section-title">{{ t('home_courses_title') }}</h2>
                     </div>
-                    <p class="cs-sub">Видеокурсы от практиков индустрии — от основ до продвинутых паттернов</p>
+                    <p class="cs-sub">{{ t('home_courses_desc') }}</p>
                     <div class="cs-stack-area" id="csStack">
                         @php
                     $positions = [
@@ -3753,11 +3854,11 @@
                                     <i class="{{ $ci }}"></i>
                                 </div>
                                 <div class="cs-card-body">
-                                    <div class="cs-card-level"><i class="fas fa-signal"></i> {{ $cl }}</div>
+                                    <div class="cs-card-level"><i class="fas fa-signal"></i> {{ __('courses_level_' . mb_strtolower($cl)) }}</div>
                                     <div class="cs-card-title">{{ $course->title }}</div>
                                     <div class="cs-card-meta">
                                         <span><i class="fas fa-play-circle"></i> {{ $lessons }}</span>
-                                        <span><i class="fas fa-signal"></i> {{ $cl }}</span>
+                                        <span><i class="fas fa-signal"></i> {{ t($cl) }}</span>
                                     </div>
                                 </div>
                             </a>
@@ -3768,7 +3869,7 @@
             <div class="cs-link-wrap">
                 <a href="{{ route('courses.index') }}" class="btn btn-secondary magnetic">
                     <i class="fas fa-compass"></i>
-                    <span>Смотреть все курсы</span>
+                    <span>{{ t('home_courses_view_all') }}</span>
                 </a>
             </div>
         </section>
@@ -3780,33 +3881,50 @@
         <div class="container">
             <div class="community-layout">
                 <div class="reveal-left">
-                    <div class="section-tag"><i class="fas fa-users"></i> Сообщество</div>
-                    <h2 class="section-title" style="text-align:left;margin-bottom:16px">Расти вместе с <span
-                            class="gradient-text">тысячами</span> разработчиков</h2>
-                    <p class="section-desc" style="margin:0;text-align:left">Живое сообщество, где ты находишь
-                        единомышленников, получаешь фидбек и заводишь полезные связи в индустрии.</p>
+                    <div class="section-tag"><i class="fas fa-users"></i> {{ t('home_community_tag') }}</div>
+                    <h2 class="section-title" style="text-align:left;margin-bottom:16px">{{ t('home_community_title') }}</h2>
+                    <p class="section-desc" style="margin:0;text-align:left">{{ t('home_community_desc') }}</p>
                 </div>
                 <div class="community-visual reveal-right">
                     <div class="community-card-stack">
-                        @foreach($recentUsers as $idx => $u)
-                            <div class="community-stack-card">
-                                <div class="community-stack-header">
-                                    <div class="community-stack-avatar"
-                                        style="background:linear-gradient(135deg,{{ $u['color'] }},var(--accent))">
-                                        {{ $u['initial'] }}</div>
-                                    <div>
-                                        <div class="community-stack-name">{{ $u['name'] }}</div>
-                                        <div class="community-stack-role">{{ $u['role'] }}</div>
+                        @if($reviews->count())
+                            @foreach($reviews->take(3) as $review)
+                                <div class="community-stack-card">
+                                    <div class="community-stack-header">
+                                        <div class="community-stack-avatar"
+                                            style="background:linear-gradient(135deg,var(--accent),var(--accent-2))">
+                                            {{ mb_substr($review->user->name, 0, 1) }}</div>
+                                        <div>
+                                            <div class="community-stack-name">{{ $review->user->name }}</div>
+                                            <div class="community-stack-role" style="color:#f59e0b">
+                                                @for($i = 0; $i < $review->rating; $i++)★@endfor
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="community-stack-content">{{ $review->text }}</div>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach($recentUsers as $idx => $u)
+                                <div class="community-stack-card">
+                                    <div class="community-stack-header">
+                                        <div class="community-stack-avatar"
+                                            style="background:linear-gradient(135deg,{{ $u['color'] }},var(--accent))">
+                                            {{ $u['initial'] }}</div>
+                                        <div>
+                                            <div class="community-stack-name">{{ $u['name'] }}</div>
+                                            <div class="community-stack-role">{{ $u['role'] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="community-stack-content">{{ $u['name'] }} {{ t('home_community_joined') }}</div>
+                                    <div class="community-stack-tags">
+                                        @foreach($u['tags'] as $tag)
+                                            <span class="community-stack-tag">{{ $tag }}</span>
+                                        @endforeach
                                     </div>
                                 </div>
-                                <div class="community-stack-content">{{ $u['content'] }}</div>
-                                <div class="community-stack-tags">
-                                    @foreach($u['tags'] as $tag)
-                                        <span class="community-stack-tag">{{ $tag }}</span>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -3819,19 +3937,17 @@
         <div class="cta-bg-gradient"></div>
         <div class="container">
             <div class="cta-content reveal-scale">
-                <div class="section-tag" style="margin:0 auto 24px;display:inline-flex"><i class="fas fa-rocket"></i> Начни
-                    сейчас</div>
-                <h2 class="cta-title">Готов начать<br><span class="gradient-text">свой путь?</span></h2>
-                <p class="cta-desc">Присоединяйся к тысячам разработчиков, которые уже строят свою карьеру с CodeMaster.
-                    Первый шаг — самый важный.</p>
+                <div class="section-tag" style="margin:0 auto 24px;display:inline-flex"><i class="fas fa-rocket"></i> {{ t('home_cta_tag') }}</div>
+                <h2 class="cta-title">{{ t('home_cta_title') }}</h2>
+                <p class="cta-desc">{{ t('home_cta_desc') }}</p>
                 <div class="cta-actions">
                     <a href="{{ route('register') }}" class="btn btn-primary magnetic">
                         <i class="fas fa-user-plus"></i>
-                        <span>Создать аккаунт</span>
+                        <span>{{ t('home_cta_register') }}</span>
                     </a>
                     <a href="{{ route('courses.index') }}" class="btn btn-secondary magnetic">
                         <i class="fas fa-compass"></i>
-                        <span>Изучить платформу</span>
+                        <span>{{ t('home_cta_explore') }}</span>
                     </a>
                 </div>
             </div>
@@ -3878,8 +3994,8 @@
             }
             resizeParticles();
             window.addEventListener('resize', resizeParticles);
-            const particleCount = window.innerWidth < 768 ? 10 : 20;
-            const drawConnections = window.innerWidth >= 768;
+            const particleCount = window.innerWidth < 768 ? 15 : 20;
+            const drawConnections = true;
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
                     x: Math.random() * pW,
@@ -4346,7 +4462,7 @@
                 });
                 requestAnimationFrame(animateCommunityFloat);
             }
-            if (communityCards.length && window.innerWidth > 768) {
+            if (communityCards.length) {
                 setTimeout(animateCommunityFloat, 2000);
             }
         })();

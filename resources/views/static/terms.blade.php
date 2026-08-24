@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Условия использования' . ' - CodeMaster')
+@section('title', __('terms.page_title') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -509,28 +509,28 @@
         <div class="sp-terms-hero-inner">
             <div class="sp-terms-badge">
                 <span class="sp-legal-icon">&#9878;</span>
-                Правовая информация
+                {{ __('terms.hero_badge') }}
             </div>
-            <h1>Условия использования</h1>
-            <p>Последнее обновление: 10 августа 2026 г.</p>
+            <h1>{{ __('terms.hero_title') }}</h1>
+            <p>{{ __('terms.hero_subtitle') }}</p>
         </div>
     </section>
 
     <div class="sp-terms-layout">
 
         <nav class="sp-terms-toc">
-            <p class="sp-terms-toc-title">Содержание</p>
+            <p class="sp-terms-toc-title">{{ __('terms.toc_title') }}</p>
             <ul class="sp-terms-toc-list">
-                <li><a href="#section-1" class="sp-terms-toc-link"><span class="sp-terms-toc-num">1</span> Принятие условий</a></li>
-                <li><a href="#section-2" class="sp-terms-toc-link"><span class="sp-terms-toc-num">2</span> Аккаунты пользователей</a></li>
-                <li><a href="#section-3" class="sp-terms-toc-link"><span class="sp-terms-toc-num">3</span> Использование платформы</a></li>
-                <li><a href="#section-4" class="sp-terms-toc-link"><span class="sp-terms-toc-num">4</span> Контент</a></li>
-                <li><a href="#section-5" class="sp-terms-toc-link"><span class="sp-terms-toc-num">5</span> Контент пользователей</a></li>
-                <li><a href="#section-6" class="sp-terms-toc-link"><span class="sp-terms-toc-num">6</span> Конфиденциальность</a></li>
-                <li><a href="#section-7" class="sp-terms-toc-link"><span class="sp-terms-toc-num">7</span> Прекращение доступа</a></li>
-                <li><a href="#section-8" class="sp-terms-toc-link"><span class="sp-terms-toc-num">8</span> Ограничение ответственности</a></li>
-                <li><a href="#section-9" class="sp-terms-toc-link"><span class="sp-terms-toc-num">9</span> Изменения условий</a></li>
-                <li><a href="#section-10" class="sp-terms-toc-link"><span class="sp-terms-toc-num">10</span> Контакты</a></li>
+                <li><a href="#section-1" class="sp-terms-toc-link"><span class="sp-terms-toc-num">1</span> {{ __('terms.toc_item_1') }}</a></li>
+                <li><a href="#section-2" class="sp-terms-toc-link"><span class="sp-terms-toc-num">2</span> {{ __('terms.toc_item_2') }}</a></li>
+                <li><a href="#section-3" class="sp-terms-toc-link"><span class="sp-terms-toc-num">3</span> {{ __('terms.toc_item_3') }}</a></li>
+                <li><a href="#section-4" class="sp-terms-toc-link"><span class="sp-terms-toc-num">4</span> {{ __('terms.toc_item_4') }}</a></li>
+                <li><a href="#section-5" class="sp-terms-toc-link"><span class="sp-terms-toc-num">5</span> {{ __('terms.toc_item_5') }}</a></li>
+                <li><a href="#section-6" class="sp-terms-toc-link"><span class="sp-terms-toc-num">6</span> {{ __('terms.toc_item_6') }}</a></li>
+                <li><a href="#section-7" class="sp-terms-toc-link"><span class="sp-terms-toc-num">7</span> {{ __('terms.toc_item_7') }}</a></li>
+                <li><a href="#section-8" class="sp-terms-toc-link"><span class="sp-terms-toc-num">8</span> {{ __('terms.toc_item_8') }}</a></li>
+                <li><a href="#section-9" class="sp-terms-toc-link"><span class="sp-terms-toc-num">9</span> {{ __('terms.toc_item_9') }}</a></li>
+                <li><a href="#section-10" class="sp-terms-toc-link"><span class="sp-terms-toc-num">10</span> {{ __('terms.toc_item_10') }}</a></li>
             </ul>
         </nav>
 
@@ -538,21 +538,21 @@
 
             <div class="sp-mobile-toc">
                 <button class="sp-mobile-toc-toggle" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('open')">
-                    Содержание
+                    {{ __('terms.mobile_toc_toggle') }}
                     <svg class="sp-mobile-toc-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
                 <div class="sp-mobile-toc-body">
                     <ul class="sp-mobile-toc-list">
-                        <li><a href="#section-1" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">1</span> Принятие условий</a></li>
-                        <li><a href="#section-2" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">2</span> Аккаунты пользователей</a></li>
-                        <li><a href="#section-3" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">3</span> Использование платформы</a></li>
-                        <li><a href="#section-4" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">4</span> Контент</a></li>
-                        <li><a href="#section-5" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">5</span> Контент пользователей</a></li>
-                        <li><a href="#section-6" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">6</span> Конфиденциальность</a></li>
-                        <li><a href="#section-7" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">7</span> Прекращение доступа</a></li>
-                        <li><a href="#section-8" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">8</span> Ограничение ответственности</a></li>
-                        <li><a href="#section-9" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">9</span> Изменения условий</a></li>
-                        <li><a href="#section-10" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">10</span> Контакты</a></li>
+                        <li><a href="#section-1" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">1</span> {{ __('terms.toc_item_1') }}</a></li>
+                        <li><a href="#section-2" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">2</span> {{ __('terms.toc_item_2') }}</a></li>
+                        <li><a href="#section-3" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">3</span> {{ __('terms.toc_item_3') }}</a></li>
+                        <li><a href="#section-4" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">4</span> {{ __('terms.toc_item_4') }}</a></li>
+                        <li><a href="#section-5" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">5</span> {{ __('terms.toc_item_5') }}</a></li>
+                        <li><a href="#section-6" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">6</span> {{ __('terms.toc_item_6') }}</a></li>
+                        <li><a href="#section-7" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">7</span> {{ __('terms.toc_item_7') }}</a></li>
+                        <li><a href="#section-8" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">8</span> {{ __('terms.toc_item_8') }}</a></li>
+                        <li><a href="#section-9" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">9</span> {{ __('terms.toc_item_9') }}</a></li>
+                        <li><a href="#section-10" class="sp-mobile-toc-link"><span class="sp-terms-toc-num">10</span> {{ __('terms.toc_item_10') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -560,13 +560,13 @@
             <article id="section-1" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">1</div>
-                    <h2 class="sp-terms-section-title">Принятие условий</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_1_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Добро пожаловать на платформу CodeMaster. Используя наш сайт и сервисы, вы подтверждаете, что ознакомились с настоящими Условиями использования и соглашаетесь с их положениями.</p>
-                    <p>Если вы не согласны с каким-либо из условий, пожалуйста, прекратите использование платформы. Продолжая пользоваться нашими сервисами, вы подтверждаете своё согласие с данными условиями.</p>
+                    <p>{{ __('terms.section_1_para_1') }}</p>
+                    <p>{{ __('terms.section_1_para_2') }}</p>
                     <div class="sp-terms-highlight">
-                        <strong>Важно:</strong> Использование платформы лицами младше 18 лет не допускается без согласия родителя или законного представителя.
+                        <strong>{{ __('terms.section_1_highlight_1_label') }}</strong> {{ __('terms.section_1_highlight_1_text') }}
                     </div>
                 </div>
             </article>
@@ -574,34 +574,34 @@
             <article id="section-2" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">2</div>
-                    <h2 class="sp-terms-section-title">Аккаунты пользователей</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_2_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Для доступа к определённым функциям платформы вам может потребоваться создание аккаунта. При регистрации вы обязуетесь:</p>
+                    <p>{{ __('terms.section_2_para_1') }}</p>
                     <ul>
-                        <li>Предоставить точную и актуальную информацию</li>
-                        <li>Поддерживать конфиденциальность учётных данных</li>
-                        <li>Немедленно уведомлять нас о несанкционированном доступе к аккаунту</li>
-                        <li>Нести ответственность за все действия, совершённые под вашим аккаунтом</li>
+                        <li>{{ __('terms.section_2_list_1') }}</li>
+                        <li>{{ __('terms.section_2_list_2') }}</li>
+                        <li>{{ __('terms.section_2_list_3') }}</li>
+                        <li>{{ __('terms.section_2_list_4') }}</li>
                     </ul>
-                    <p>Мы оставляем за собой право заблокировать или удалить аккаунт при нарушении настоящих условий.</p>
+                    <p>{{ __('terms.section_2_para_2') }}</p>
                 </div>
             </article>
 
             <article id="section-3" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">3</div>
-                    <h2 class="sp-terms-section-title">Использование платформы</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_3_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Платформа предоставляет доступ к образовательным материалам, инструментам программирования и сообществу разработчиков. Вы соглашаетесь использовать платформу только в законных целях.</p>
-                    <p>Запрещается:</p>
+                    <p>{{ __('terms.section_3_para_1') }}</p>
+                    <p>{{ __('terms.section_3_para_2') }}</p>
                     <ul>
-                        <li>Использовать платформу для распространения вредоносного программного обеспечения</li>
-                        <li>Пытаться получить несанкционированный доступ к системам или данным других пользователей</li>
-                        <li>Нарушать работу серверов или инфраструктуры платформы</li>
-                        <li>Копировать, модифицировать или распространять контент без разрешения</li>
-                        <li>Использовать автоматизированные средства для сбора данных без согласия</li>
+                        <li>{{ __('terms.section_3_list_1') }}</li>
+                        <li>{{ __('terms.section_3_list_2') }}</li>
+                        <li>{{ __('terms.section_3_list_3') }}</li>
+                        <li>{{ __('terms.section_3_list_4') }}</li>
+                        <li>{{ __('terms.section_3_list_5') }}</li>
                     </ul>
                 </div>
             </article>
@@ -609,13 +609,13 @@
             <article id="section-4" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">4</div>
-                    <h2 class="sp-terms-section-title">Контент</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_4_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Весь контент, размещённый на платформе CodeMaster, включая тексты, изображения, графику, логотипы, иконки, аудио и видеоматериалы, является интеллектуальной собственностью CodeMaster или его лицензиаров и защищён законодательством об авторском праве.</p>
-                    <p>Вам предоставляется ограниченная, неисключительная, непередаваемая лицензия на использование контента исключительно в личных и образовательных целях.</p>
+                    <p>{{ __('terms.section_4_para_1') }}</p>
+                    <p>{{ __('terms.section_4_para_2') }}</p>
                     <div class="sp-terms-highlight">
-                        <strong>Обратите внимание:</strong> Любое коммерческое использование контента требует предварительного письменного согласия правообладателя.
+                        <strong>{{ __('terms.section_4_highlight_1_label') }}</strong> {{ __('terms.section_4_highlight_1_text') }}
                     </div>
                 </div>
             </article>
@@ -623,33 +623,33 @@
             <article id="section-5" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">5</div>
-                    <h2 class="sp-terms-section-title">Контент пользователей</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_5_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Платформа позволяет пользователям размещать собственный контент, включая код, комментарии, проекты и другие материалы. Размещая контент на платформе, вы:</p>
+                    <p>{{ __('terms.section_5_para_1') }}</p>
                     <ul>
-                        <li>Подтверждаете, что обладаете всеми необходимыми правами на размещаемый контент</li>
-                        <li>Предоставляете CodeMaster неисключительную лицензию на использование, воспроизведение и распространение данного контента</li>
-                        <li>Гарантируете, что контент не нарушает права третьих лиц</li>
+                        <li>{{ __('terms.section_5_list_1') }}</li>
+                        <li>{{ __('terms.section_5_list_2') }}</li>
+                        <li>{{ __('terms.section_5_list_3') }}</li>
                     </ul>
-                    <p>Мы оставляем за собой право удалять любой контент, нарушающий настоящие условия или законодательство.</p>
+                    <p>{{ __('terms.section_5_para_2') }}</p>
                 </div>
             </article>
 
             <article id="section-6" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">6</div>
-                    <h2 class="sp-terms-section-title">Конфиденциальность</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_6_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Мы серьёзно относимся к защите ваших персональных данных. Сбор, использование и хранение информации регулируется нашей Политикой конфиденциальности.</p>
-                    <p>Используя платформу, вы даёте согласие на обработку ваших персональных данных в соответствии с применимым законодательством о защите персональных данных, включая Федеральный закон №152-ФЗ «О персональных данных».</p>
-                    <p>Мы implement следующие меры для обеспечения безопасности ваших данных:</p>
+                    <p>{{ __('terms.section_6_para_1') }}</p>
+                    <p>{{ __('terms.section_6_para_2') }}</p>
+                    <p>{{ __('terms.section_6_para_3') }}</p>
                     <ul>
-                        <li>Шифрование данных при передаче (TLS/SSL)</li>
-                        <li>Регулярный аудит систем безопасности</li>
-                        <li>Ограниченный доступ сотрудников к персональным данным</li>
-                        <li>Мониторинг и устранение уязвимостей</li>
+                        <li>{{ __('terms.section_6_list_1') }}</li>
+                        <li>{{ __('terms.section_6_list_2') }}</li>
+                        <li>{{ __('terms.section_6_list_3') }}</li>
+                        <li>{{ __('terms.section_6_list_4') }}</li>
                     </ul>
                 </div>
             </article>
@@ -657,35 +657,35 @@
             <article id="section-7" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">7</div>
-                    <h2 class="sp-terms-section-title">Прекращение доступа</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_7_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Мы оставляем за собой право приостановить или прекратить ваш доступ к платформе в любое время и по любой причине, включая, но не ограничиваясь:</p>
+                    <p>{{ __('terms.section_7_para_1') }}</p>
                     <ul>
-                        <li>Нарушение настоящих Условий использования</li>
-                        <li>Запросы правоохранительных органов</li>
-                        <li>Технические или операционные проблемы</li>
-                        <li>Долгое отсутствие активности в аккаунте</li>
+                        <li>{{ __('terms.section_7_list_1') }}</li>
+                        <li>{{ __('terms.section_7_list_2') }}</li>
+                        <li>{{ __('terms.section_7_list_3') }}</li>
+                        <li>{{ __('terms.section_7_list_4') }}</li>
                     </ul>
-                    <p>При прекращении доступа ваше право на использование контента платформы аннулируется. Вы можете запросить экспорт своих данных в течение 30 дней после прекращения доступа.</p>
+                    <p>{{ __('terms.section_7_para_2') }}</p>
                 </div>
             </article>
 
             <article id="section-8" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">8</div>
-                    <h2 class="sp-terms-section-title">Ограничение ответственности</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_8_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Платформа и её контент предоставляются «как есть» без каких-либо гарантий. CodeMaster не несёт ответственности за:</p>
+                    <p>{{ __('terms.section_8_para_1') }}</p>
                     <ul>
-                        <li>Точность, полноту или актуальность контента</li>
-                        <li>Решения, принятые на основе информации, полученной с платформы</li>
-                        <li>Убытки, возникшие в результате использования или невозможности использования платформы</li>
-                        <li>Действия третьих лиц, повлиявшие на ваш доступ к сервису</li>
+                        <li>{{ __('terms.section_8_list_1') }}</li>
+                        <li>{{ __('terms.section_8_list_2') }}</li>
+                        <li>{{ __('terms.section_8_list_3') }}</li>
+                        <li>{{ __('terms.section_8_list_4') }}</li>
                     </ul>
                     <div class="sp-terms-highlight">
-                        <strong>Максимальная ответственность:</strong> Совокупная ответственность CodeMaster по любому иску не может превышать сумму, уплаченную вами за использование платформы за последние 12 месяцев, или 10 000 рублей, в зависимости от того, какая сумма больше.
+                        <strong>{{ __('terms.section_8_highlight_1_label') }}</strong> {{ __('terms.section_8_highlight_1_text') }}
                     </div>
                 </div>
             </article>
@@ -693,55 +693,55 @@
             <article id="section-9" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">9</div>
-                    <h2 class="sp-terms-section-title">Изменения условий</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_9_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>CodeMaster оставляет за собой право изменять настоящие Условия использования в любое время. При внесении существенных изменений мы уведомим вас следующими способами:</p>
+                    <p>{{ __('terms.section_9_para_1') }}</p>
                     <ul>
-                        <li>Уведомление по электронной почте, зарегистрированной в аккаунте</li>
-                        <li>Публикация объявления на главной странице платформы</li>
-                        <li>Обновление даты последней модификации в начале данного документа</li>
+                        <li>{{ __('terms.section_9_list_1') }}</li>
+                        <li>{{ __('terms.section_9_list_2') }}</li>
+                        <li>{{ __('terms.section_9_list_3') }}</li>
                     </ul>
-                    <p>Продолжение использования платформы после внесения изменений означает ваше согласие с обновлёнными условиями. Если вы не согласны с изменениями, вы должны прекратить использование платформы.</p>
+                    <p>{{ __('terms.section_9_para_2') }}</p>
                 </div>
             </article>
 
             <article id="section-10" class="sp-terms-section">
                 <div class="sp-terms-section-header">
                     <div class="sp-terms-section-num">10</div>
-                    <h2 class="sp-terms-section-title">Контакты</h2>
+                    <h2 class="sp-terms-section-title">{{ __('terms.section_10_title') }}</h2>
                 </div>
                 <div class="sp-terms-section-body">
-                    <p>Если у вас есть вопросы относительно настоящих Условий использования, свяжитесь с нами:</p>
+                    <p>{{ __('terms.section_10_para_1') }}</p>
                     <div class="sp-terms-contact-grid">
                         <div class="sp-terms-contact-card">
-                            <div class="sp-terms-contact-label">Электронная почта</div>
+                            <div class="sp-terms-contact-label">{{ __('terms.contact_label_email') }}</div>
                             <div class="sp-terms-contact-value"><a href="mailto:legal@codemaster.dev">legal@codemaster.dev</a></div>
                         </div>
                         <div class="sp-terms-contact-card">
-                            <div class="sp-terms-contact-label">Поддержка</div>
+                            <div class="sp-terms-contact-label">{{ __('terms.contact_label_support') }}</div>
                             <div class="sp-terms-contact-value"><a href="mailto:support@codemaster.dev">support@codemaster.dev</a></div>
                         </div>
                         <div class="sp-terms-contact-card">
-                            <div class="sp-terms-contact-label">Адрес</div>
-                            <div class="sp-terms-contact-value">г. Москва, ул. Разработчиков, 42</div>
+                            <div class="sp-terms-contact-label">{{ __('terms.contact_label_address') }}</div>
+                            <div class="sp-terms-contact-value">{{ __('terms.contact_value_address') }}</div>
                         </div>
                         <div class="sp-terms-contact-card">
-                            <div class="sp-terms-contact-label">Время ответа</div>
-                            <div class="sp-terms-contact-value">В течение 2 рабочих дней</div>
+                            <div class="sp-terms-contact-label">{{ __('terms.contact_label_response_time') }}</div>
+                            <div class="sp-terms-contact-value">{{ __('terms.contact_value_response_time') }}</div>
                         </div>
                     </div>
                 </div>
             </article>
 
             <div class="sp-terms-footer-note">
-                <p>Документ составлен в соответствии с законодательством Российской Федерации.<br>Последняя редакция: <strong>10 августа 2026 г.</strong></p>
+                <p>{!! __('terms.legal_note') !!}</p>
             </div>
 
         </div>
     </div>
 
-    <button class="sp-back-to-top" id="spBackToTop" aria-label="Наверх" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <button class="sp-back-to-top" id="spBackToTop" aria-label="{{ __('terms.back_to_top_label') }}" onclick="window.scrollTo({top:0,behavior:'smooth'})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
     </button>
 

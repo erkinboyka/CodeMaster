@@ -35,9 +35,9 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Difficulty') }} *</label>
                         <select name="difficulty" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                            <option value="easy" {{ old('difficulty') === 'easy' ? 'selected' : '' }}>Easy</option>
-                            <option value="medium" {{ old('difficulty', 'medium') === 'medium' ? 'selected' : '' }}>Medium</option>
-                            <option value="hard" {{ old('difficulty') === 'hard' ? 'selected' : '' }}>Hard</option>
+                            <option value="easy" {{ old('difficulty') === 'easy' ? 'selected' : '' }}>{{ __('Easy') }}</option>
+                            <option value="medium" {{ old('difficulty', 'medium') === 'medium' ? 'selected' : '' }}>{{ __('Medium') }}</option>
+                            <option value="hard" {{ old('difficulty') === 'hard' ? 'selected' : '' }}>{{ __('Hard') }}</option>
                         </select>
                     </div>
                     <div>

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VacancyRequirement extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'vacancy_id',
         'requirement_text',

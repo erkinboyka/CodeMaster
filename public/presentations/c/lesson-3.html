@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ООП в C++ — Слайды</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0a0a0a;color:#e0e0e0;overflow:hidden;height:100vh}
+.prog{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#00ff88,#00d4ff);z-index:100;transition:width .3s}
+.bar{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(10,10,10,.95);border-bottom:1px solid #1a1a2e;display:flex;align-items:center;padding:0 20px;z-index:50;gap:12px}
+.bar .lg{width:32px;height:32px;background:linear-gradient(135deg,#00ff88,#00d4ff);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#0a0a0a}
+.bar .lt{color:#888;font-size:14px}
+.bar h2{margin-left:auto;color:#666;font-size:13px;font-weight:400}
+.wrap{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:70px 40px 60px}
+.slide{display:none;flex-direction:column;max-width:1000px;margin:0 auto;width:100%;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.st{display:flex;flex-direction:column;gap:16px}
+.sb{font-size:13px;color:#00ff88;font-weight:500;text-transform:uppercase;letter-spacing:1px}
+h1{font-size:42px;font-weight:700;background:linear-gradient(135deg,#00ff88,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h2{font-size:30px;font-weight:600;color:#fff}
+h3{font-size:18px;font-weight:600;color:#ccc}
+.sub{font-size:18px;color:#888;margin-top:8px}
+.pr{margin-top:24px;display:flex;gap:12px}
+.pr span{padding:6px 16px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid #333;color:#aaa}
+.sl{list-style:none;display:flex;flex-direction:column;gap:12px}
+.sl li{padding:12px 16px;background:rgba(255,255,255,.03);border-left:3px solid #00ff88;border-radius:0 8px 8px 0;font-size:16px;line-height:1.6}
+.sl li strong{color:#00d4ff}
+.sc{background:#0d1117;border:1px solid #21262d;border-radius:12px;overflow:hidden}
+.sc pre{padding:20px;overflow-x:auto;font-size:14px;line-height:1.6}
+.sc code{color:#e6edf3;font-family:"Fira Code","Cascadia Code",monospace}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.sg .sc{padding:16px;display:flex;flex-direction:column;gap:8px}
+.sg .sc h3{color:#00ff88}
+.sg .sc pre{background:#0d1117;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px}
+.sg .sc p{color:#888;font-size:14px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase}
+.b-blue{background:rgba(0,100,255,.2);color:#4dabf7}
+.b-green{background:rgba(0,255,100,.2);color:#51cf66}
+.b-orange{background:rgba(255,150,0,.2);color:#ffa94d}
+.b-red{background:rgba(255,50,50,.2);color:#ff6b6b}
+.b-yellow{background:rgba(255,200,0,.2);color:#ffd43b}
+.b-purple{background:rgba(150,0,255,.2);color:#b197fc}
+.ft{position:fixed;bottom:0;left:0;right:0;height:50px;background:rgba(10,10,10,.95);border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:50}
+.ft button{background:rgba(255,255,255,.05);border:1px solid #333;color:#aaa;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:14px;transition:all .2s}
+.ft button:hover:not(:disabled){background:rgba(0,255,136,.1);border-color:#00ff88;color:#00ff88}
+.ft button:disabled{opacity:.3;cursor:default}
+.dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#333;cursor:pointer;transition:all .2s}
+.dot.on{background:#00ff88;box-shadow:0 0 8px #00ff88}
+@media(max-width:768px){.wrap{padding:60px 16px 60px}h1{font-size:28px}h2{font-size:22px}.sg{grid-template-columns:1fr}.sc pre{font-size:12px}}</style></head><body>
+<div class="prog" id="prog"></div>
+<div class="bar"><div class="lg">C</div><span class="lt">ООП в C++</span><h2>CodeMaster Slides</h2></div>
+<div class="wrap" id="wrap">
+<div class="slide"><div class="st"><div class="sb">Слайд 1 из 4</div><h1>ООП в C++</h1><p class="sub">Изучаем основы пошагово</p><div class="pr"></div></div></div><div class="slide"><div class="st"><div class="sb">Слайд 2 из 4</div><h2>Классы</h2><div class="sc"><pre><code>class Animal {\nprivate:\n    string name;\npublic:\n    Animal(string n) : name(n) {}\n    virtual void speak() const { cout &lt;&lt; name &lt;&lt; \&quot; makes a sound\&quot;; }\n    virtual double getSpeed() const = 0;\n};</code></pre></div><p><span class="badge b-blue">CPP</span> Пример кода</p></div></div><div class="slide"><div class="st"><div class="sb">Слайд 3 из 4</div><h2>Наследование</h2><div class="sc"><pre><code>class Dog : public Animal {\n    string breed;\npublic:\n    Dog(string n, string b) : Animal(n), breed(b) {}\n    void speak() const override { cout &lt;&lt; \&quot;barks\&quot;; }\n};</code></pre></div><p><span class="badge b-blue">CPP</span> Пример кода</p></div></div><div class="slide"><div class="st"><div class="sb">Слайд 4 из 4</div><h2>Полиморфизм</h2><div class="sc"><pre><code>void makeAnimalSpeak(const Animal* a) { a-&gt;speak(); }\nDog dog(\&quot;Rex\&quot;, \&quot;Husky\&quot;);\nmakeAnimalSpeak(&amp;dog);</code></pre></div></div></div>
+</div>
+<div class="ft"><button id="pb" onclick="go(-1)" disabled>&#8592; Назад</button><div class="dots" id="dots"></div><button id="nb" onclick="go(1)">Вперёд &#8594;</button></div>
+<script>
+let c=1,n=4,ss=document.querySelectorAll(".slide"),dt=document.getElementById("dots"),pg=document.getElementById("prog");
+for(let i=1;i<=n;i++){let d=document.createElement("div");d.className="dot"+(i===1?" on":"");d.onclick=()=>show(i);dt.appendChild(d)}
+function show(i){if(i<1||i>n)return;ss.forEach(s=>s.style.display="none");ss[i-1].style.display="flex";c=i;
+document.querySelectorAll(".dot").forEach((d,j)=>d.classList.toggle("on",j===i-1));
+document.getElementById("pb").disabled=i===1;document.getElementById("nb").disabled=i===n;pg.style.width=(i/n*100)+"%"}
+function go(d){show(c+d)}
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key===" ")go(1);if(e.key==="ArrowLeft")go(-1)});
+let sx=0;document.addEventListener("touchstart",e=>sx=e.touches[0].clientX);
+document.addEventListener("touchend",e=>{let dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)dx<0?go(1):go(-1)});
+show(1);
+window.addEventListener("message",e=>{
+if(e.data==="slide-next")go(1);if(e.data==="slide-prev")go(-1);
+if(e.data==="slide-get-info"){parent.postMessage({type:"slide-info",current:c,total:n},"*")}
+});
+</script></body></html>

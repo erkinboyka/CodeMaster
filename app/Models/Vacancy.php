@@ -42,7 +42,7 @@ class Vacancy extends Model
 
     public function pluses(): HasMany
     {
-        return $this->hasMany(VacancyPluse::class);
+        return $this->hasMany(VacancyPlus::class);
     }
 
     public function responsibilities(): HasMany

@@ -10,6 +10,7 @@ use App\Models\UserLessonProgress;
 use App\Services\GamificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -45,7 +46,7 @@ class CourseController extends Controller
 
     public function show($id)
     {
-        $course = Course::with('lessons')->findOrFail($id);
+        $course = Course::with(['lessons' => fn($q) => $q->orderBy('order_num')])->findOrFail($id);
         $user = Auth::user();
 
         $progress = UserCourseProgress::where('user_id', $user->id)
@@ -65,9 +66,9 @@ class CourseController extends Controller
         $exam = CourseExam::where('course_id', $id)->first();
         $certificate = Certificate::where('user_id', $user->id)->where('course_id', $id)->first();
 
-        $modules = $course->lessons->sortBy('order_num')->groupBy('module');
+        $modules = $course->lessons->groupBy('module');
 
-        $nextLesson = $course->lessons->sortBy('order_num')->first(function ($lesson) use ($completedLessonIds) {
+        $nextLesson = $course->lessons->first(function ($lesson) use ($completedLessonIds) {
             return !in_array($lesson->id, $completedLessonIds);
         });
 
@@ -88,64 +89,66 @@ class CourseController extends Controller
 
         $user = Auth::user();
 
-        $alreadyCompleted = UserLessonProgress::where('user_id', $user->id)
-            ->where('lesson_id', $validated['lesson_id'])
-            ->where('completed', true)
-            ->exists();
+        return DB::transaction(function () use ($validated, $user) {
+            $alreadyCompleted = UserLessonProgress::where('user_id', $user->id)
+                ->where('lesson_id', $validated['lesson_id'])
+                ->where('completed', true)
+                ->exists();
 
-        UserLessonProgress::firstOrCreate([
-            'user_id' => $user->id,
-            'lesson_id' => $validated['lesson_id'],
-        ], [
-            'completed' => true,
-            'completed_at' => now(),
-        ]);
+            UserLessonProgress::firstOrCreate([
+                'user_id' => $user->id,
+                'lesson_id' => $validated['lesson_id'],
+            ], [
+                'completed' => true,
+                'completed_at' => now(),
+            ]);
 
-        $lesson = \App\Models\Lesson::find($validated['lesson_id']);
-        $xpEarned = 0;
-        if (!$alreadyCompleted && $lesson) {
-            $xpEarned = $this->gamificationService->awardLessonXp($user, $lesson->title);
-        }
+            $lesson = \App\Models\Lesson::find($validated['lesson_id']);
+            $xpEarned = 0;
+            if (!$alreadyCompleted && $lesson) {
+                $xpEarned = $this->gamificationService->awardLessonXp($user, $lesson->title);
+            }
 
-        $course = Course::with('lessons')->find($validated['course_id']);
-        $totalLessons = $course->lessons->count();
-        $completedCount = UserLessonProgress::where('user_id', $user->id)
-            ->where('completed', true)
-            ->whereIn('lesson_id', $course->lessons->pluck('id'))
-            ->count();
-        $percent = $totalLessons > 0 ? round(($completedCount / $totalLessons) * 100) : 0;
+            $course = Course::with('lessons')->find($validated['course_id']);
+            $totalLessons = $course->lessons->count();
+            $completedCount = UserLessonProgress::where('user_id', $user->id)
+                ->where('completed', true)
+                ->whereIn('lesson_id', $course->lessons->pluck('id'))
+                ->count();
+            $percent = $totalLessons > 0 ? round(($completedCount / $totalLessons) * 100) : 0;
 
-        $wasAlreadyComplete = UserCourseProgress::where('user_id', $user->id)
-            ->where('course_id', $validated['course_id'])
-            ->where('completed', true)
-            ->exists();
+            $wasAlreadyComplete = UserCourseProgress::where('user_id', $user->id)
+                ->where('course_id', $validated['course_id'])
+                ->where('completed', true)
+                ->exists();
 
-        UserCourseProgress::updateOrCreate(
-            ['user_id' => $user->id, 'course_id' => $validated['course_id']],
-            [
-                'progress' => $percent,
+            UserCourseProgress::updateOrCreate(
+                ['user_id' => $user->id, 'course_id' => $validated['course_id']],
+                [
+                    'progress' => $percent,
+                    'completed' => $percent >= 100,
+                    'completed_at' => $percent >= 100 ? now() : null,
+                ]
+            );
+
+            $courseCompletedNow = $percent >= 100 && !$wasAlreadyComplete;
+            $courseXp = 0;
+            if ($courseCompletedNow) {
+                $courseXp = $this->gamificationService->awardCourseCompleteXp($user, $course->title);
+            }
+
+            $user->refresh();
+
+            return response()->json([
+                'success' => true,
+                'percent' => $percent,
                 'completed' => $percent >= 100,
-                'completed_at' => $percent >= 100 ? now() : null,
-            ]
-        );
-
-        $courseCompletedNow = $percent >= 100 && !$wasAlreadyComplete;
-        $courseXp = 0;
-        if ($courseCompletedNow) {
-            $courseXp = $this->gamificationService->awardCourseCompleteXp($user, $course->title);
-        }
-
-        $user->refresh();
-
-        return response()->json([
-            'success' => true,
-            'percent' => $percent,
-            'completed' => $percent >= 100,
-            'xp_earned' => $xpEarned,
-            'course_xp' => $courseXp,
-            'total_xp' => $user->total_xp,
-            'level' => $user->level,
-        ]);
+                'xp_earned' => $xpEarned,
+                'course_xp' => $courseXp,
+                'total_xp' => $user->total_xp,
+                'level' => $user->level,
+            ]);
+        });
     }
 
     public function exam($id)
@@ -207,20 +210,24 @@ class CourseController extends Controller
 
         $certificate = null;
         if ($passed) {
-            $existingCert = Certificate::where('user_id', Auth::id())->where('course_id', $id)->first();
-            if (!$existingCert) {
-                $certificate = Certificate::create([
-                    'user_id' => Auth::id(),
-                    'course_id' => $id,
-                    'cert_hash' => Str::random(40),
-                    'certificate_name' => $course->title,
-                    'issuer' => 'CodeMaster',
-                    'issue_date' => now(),
-                ]);
+            $certificate = DB::transaction(function () use ($user, $course, $id, $score) {
+                $existingCert = Certificate::where('user_id', $user->id)->where('course_id', $id)->first();
+                if (!$existingCert) {
+                    $cert = Certificate::create([
+                        'user_id' => $user->id,
+                        'course_id' => $id,
+                        'cert_hash' => Str::random(40),
+                        'certificate_name' => $course->title,
+                        'issuer' => 'CodeMaster',
+                        'issue_date' => now(),
+                    ]);
+                    return $cert;
+                }
+                return $existingCert;
+            });
 
+            if ($certificate->wasRecentlyCreated) {
                 $xpEarned = $this->gamificationService->awardCourseExamXp($user, $course->title, $score);
-            } else {
-                $certificate = $existingCert;
             }
         }
 

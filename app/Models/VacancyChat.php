@@ -13,6 +13,11 @@ class VacancyChat extends Model
         'application_id',
         'sender_id',
         'message_text',
+        'message_type',
+        'file_url',
+        'file_name',
+        'file_type',
+        'file_size',
     ];
 
     public function application(): BelongsTo

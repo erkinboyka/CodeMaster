@@ -427,7 +427,7 @@
                         </div>
                     </div>
                 </div>
-                <span class="vc-type-badge {{ $typeClass }}"><i class="fas {{ $typeIcon }}" style="margin-right:4px"></i>{{ ucfirst($vacancy->type) }}</span>
+                <span class="vc-type-badge {{ $typeClass }}"><i class="fas {{ $typeIcon }}" style="margin-right:4px"></i>{{ __($vacancy->type) }}</span>
             </div>
 
             @if($vacancy->salary_min || $vacancy->salary_max)

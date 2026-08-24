@@ -21,13 +21,13 @@
                     <span><i class="fas fa-user-tie mr-1"></i>{{ $course->instructor }}</span>
                     @endif
                     <span><i class="fas fa-layer-group mr-1"></i>{{ $course->category }}</span>
-                    <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-medium">{{ $course->level }}</span>
+                    <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-medium">{{ __('courses_level_' . mb_strtolower($course->level)) }}</span>
                 </div>
             </div>
             <div class="bg-white rounded-2xl p-6 shadow-2xl reveal-right" data-delay="0.3">
                 <div class="aspect-video bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl mb-4 flex items-center justify-center">
                     <button class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition shadow-xl">
-                        <i class="fas fa-play text-indigo-600 text-xl ml-1"></i>
+                        <i class="fas fa-book-open text-indigo-600 text-xl ml-1"></i>
                     </button>
                 </div>
                 <div class="space-y-3 mb-4">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">{{ __('Level') }}</span>
-                        <span class="font-semibold text-gray-800">{{ $course->level }}</span>
+                        <span class="font-semibold text-gray-800">{{ __('courses_level_' . mb_strtolower($course->level)) }}</span>
                     </div>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">{{ __('Certificate') }}</span>
@@ -69,7 +69,7 @@
                 </a>
                 @else
                 <a href="{{ $nextLesson ? route('courses.lesson', [$course->id, $nextLesson->id]) : '#' }}" class="block w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-purple-700 shadow-lg transition-all duration-300 text-center">
-                    <i class="fas fa-play mr-2"></i>{{ __('Continue Learning') }}
+                    <i class="fas fa-book-open mr-2"></i>{{ __('Continue Learning') }}
                 </a>
                 @endif
             </div>
@@ -120,15 +120,15 @@
                                         <p class="text-sm {{ in_array($lesson->id, $completedLessonIds) ? 'text-gray-500' : 'text-gray-800 font-medium' }}">{{ $lesson->title }}</p>
                                         <div class="flex items-center space-x-3 mt-0.5">
                                             <span class="text-xs text-gray-400"><i class="fas fa-clock mr-1"></i>{{ $lesson->duration_minutes }} {{ __('min') }}</span>
-                                            @if($lesson->video_url)<span class="text-xs text-gray-400"><i class="fas fa-play-circle mr-1"></i></span>@endif
-                                            @if($lesson->audio_url)<span class="text-xs text-gray-400"><i class="fas fa-headphones mr-1"></i></span>@endif
+                                            @if($lesson->presentation_url)<span class="text-xs text-gray-400"><i class="fas fa-desktop mr-1"></i></span>@endif
+                                            @if($lesson->materials_url)<span class="text-xs text-gray-400"><i class="fas fa-link mr-1"></i></span>@endif
                                             @if($lesson->practiceTasks->count())<span class="text-xs text-gray-400"><i class="fas fa-code mr-1"></i>{{ $lesson->practiceTasks->count() }}</span>@endif
                                             @if($lesson->lessonQuizzes->count())<span class="text-xs text-gray-400"><i class="fas fa-question-circle mr-1"></i></span>@endif
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
-                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ $lesson->difficulty === 'easy' ? 'bg-green-100 text-green-700' : ($lesson->difficulty === 'hard' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">{{ $lesson->difficulty }}</span>
+                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ $lesson->difficulty === 'easy' ? 'bg-green-100 text-green-700' : ($lesson->difficulty === 'hard' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">{{ __('difficulty_' . $lesson->difficulty) }}</span>
                                 </div>
                             </a>
                         </div>
@@ -167,7 +167,7 @@
                 <h3 class="font-bold text-gray-900 mb-4">{{ __('Instructor') }}</h3>
                 @if($instructorUser)
                 <a href="{{ route('profile.show', $instructorUser->id) }}" class="flex items-center space-x-3 group">
-                    <img src="{{ $instructorUser->avatar ? asset('storage/' . $instructorUser->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($course->instructor) . '&background=6366f1&color=fff' }}" class="w-12 h-12 rounded-full ring-2 ring-transparent group-hover:ring-indigo-500 transition">
+                    <img src="{{ $instructorUser->avatar_url }}" class="w-12 h-12 rounded-full ring-2 ring-transparent group-hover:ring-indigo-500 transition">
                     <div>
                         <p class="font-semibold text-gray-800 group-hover:text-indigo-600 transition">{{ $course->instructor }}</p>
                         <p class="text-xs text-gray-500">{{ $course->category }}</p>
@@ -195,4 +195,5 @@
         </div>
     </div>
 </div>
+
 @endsection

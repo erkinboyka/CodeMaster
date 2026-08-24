@@ -322,17 +322,7 @@ class ProfileController extends Controller
 
     public function verifySkill(Request $request)
     {
-        $validated = $request->validate([
-            'user_skill_id' => 'required|exists:user_skills,id',
-        ]);
-
-        $userSkill = UserSkill::where('user_id', Auth::id())
-            ->where('id', $validated['user_skill_id'])
-            ->firstOrFail();
-
-        $userSkill->update(['is_verified' => true]);
-
-        return back()->with('success', 'Навык подтверждён.');
+        return back()->with('error', 'Самостоятельное подтверждение навыков недоступно. Обратитесь к администратору.');
     }
 
     public function reviewPlatform(Request $request)

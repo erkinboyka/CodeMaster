@@ -42,9 +42,14 @@
                                 <div class="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                                     {{ strtoupper(substr($entry->user->name ?? '?', 0, 1)) }}
                                 </div>
-                                <span class="font-medium text-gray-800 {{ $entry->user_id === Auth::id() ? 'text-indigo-600' : '' }}">
-                                    {{ $entry->user->name ?? 'Unknown' }}
-                                </span>
+                                <div>
+                                    <span class="font-medium text-gray-800 {{ $entry->user_id === Auth::id() ? 'text-indigo-600' : '' }}">
+                                        {{ $entry->user->name ?? 'Unknown' }}
+                                    </span>
+                                    <div style="font-size:11px;color:var(--text-muted);margin-top:1px">
+                                        <span style="font-weight:700;color:var(--accent)">{{ $entry->user->rating ?? 1200 }}</span> ELO
+                                    </div>
+                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-center">

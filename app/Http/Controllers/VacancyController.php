@@ -63,6 +63,7 @@ class VacancyController extends Controller
     public function apply($id)
     {
         $vacancy = Vacancy::findOrFail($id);
+
         $user = Auth::user();
 
         $existing = UserApplication::where('user_id', $user->id)

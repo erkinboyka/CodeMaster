@@ -254,7 +254,7 @@
                 ];
                 $dc = $diffMap[$contest->difficulty] ?? $diffMap['easy'];
                 @endphp
-                <span class="cp-sidebar-tag" style="background:{{ $dc['bg'] }};color:{{ $dc['c'] }}">{{ ucfirst($contest->difficulty) }}</span>
+                <span class="cp-sidebar-tag" style="background:{{ $dc['bg'] }};color:{{ $dc['c'] }}">{{ __('difficulty_' . $contest->difficulty) }}</span>
                 <span class="cp-sidebar-tag" style="background:var(--accent-glow);color:var(--accent)">{{ $problems->count() }}</span>
             </div>
         </div>
@@ -272,7 +272,7 @@
                 </div>
                 <div class="cp-pi-info">
                     <div class="cp-pi-title">{{ $p->title }}</div>
-                    <div class="cp-pi-diff" style="color:{{ $pd['c'] }}">{{ $p->points }} pts</div>
+                    <div class="cp-pi-diff" style="color:{{ $pd['c'] }}">{{ $p->points }} {{ __('pts') }}</div>
                 </div>
             </a>
             @endforeach
@@ -284,7 +284,7 @@
         <div class="cp-topbar">
             <div class="cp-topbar-left">
                 <span class="cp-topbar-title">{{ $problem->title }}</span>
-                <span class="cp-topbar-diff" style="background:{{ $dc['bg'] }};color:{{ $dc['c'] }}">{{ ucfirst($problem->difficulty) }}</span>
+                <span class="cp-topbar-diff" style="background:{{ $dc['bg'] }};color:{{ $dc['c'] }}">{{ __('difficulty_' . $problem->difficulty) }}</span>
                 @if($userPassed)
                 <span class="cp-topbar-diff" style="background:rgba(34,197,94,.12);color:#22c55e"><i class="fas fa-check mr-1"></i> {{ __('Solved') }}</span>
                 @endif
@@ -374,7 +374,7 @@
                         <div class="cp-limit-card">
                             <div class="cp-limit-icon" style="background:rgba(99,102,241,.12);color:#6366f1"><i class="fas fa-list-ol"></i></div>
                             <div class="cp-limit-info">
-                                <div class="cp-limit-val">{{ $problem->points }} pts</div>
+                                <div class="cp-limit-val">{{ $problem->points }} {{ __('pts') }}</div>
                                 <div class="cp-limit-label">{{ __('Points') }}</div>
                             </div>
                         </div>
@@ -399,7 +399,7 @@
                                 @case('go') GO @break
                                 @default ?? @endswitch
                         </span>
-                        <span>solution{{ match($problem->language) { 'python'=>'.py', 'javascript'=>'.js', 'php'=>'.php', 'c'=>'.c', 'cpp'=>'.cpp', 'java'=>'.java', 'ruby'=>'.rb', 'go'=>'.go', default=>'.txt' } }}</span>
+                        <span x-text="'solution' + {python:'.py',javascript:'.js',php:'.php',c:'.c',cpp:'.cpp',java:'.java',ruby:'.rb',go:'.go'}[language]"></span>
                     </div>
                 </div>
 
@@ -608,4 +608,5 @@ function problemApp() {
     };
 }
 </script>
+
 @endsection

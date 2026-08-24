@@ -24,7 +24,7 @@ class LessonController extends Controller
     public function show($courseId, $lessonId)
     {
         $user = Auth::user();
-        $course = Course::with('lessons')->findOrFail($courseId);
+        $course = Course::with(['lessons' => fn($q) => $q->orderBy('order_num')])->findOrFail($courseId);
         $lesson = Lesson::with(['lessonQuizzes', 'practiceTasks.submissions', 'quizQuestions.options'])
             ->where('course_id', $courseId)
             ->where('id', $lessonId)
@@ -36,7 +36,7 @@ class LessonController extends Controller
             ->pluck('lesson_id')
             ->toArray();
 
-        $sortedLessons = $course->lessons->sortBy('order_num')->values();
+        $sortedLessons = $course->lessons->values();
         $currentIndex = $sortedLessons->pluck('id')->search($lessonId);
         $prevLesson = $currentIndex > 0 ? $sortedLessons[$currentIndex - 1] : null;
         $nextLesson = $currentIndex < $sortedLessons->count() - 1 ? $sortedLessons[$currentIndex + 1] : null;

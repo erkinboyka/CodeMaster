@@ -163,7 +163,7 @@
     .cm-filter-tabs {
         display: flex;
         gap: 6px;
-        margin-bottom: 20px;
+        margin-bottom: 8px;
     }
     .cm-filter-tab {
         padding: 8px 18px;
@@ -219,16 +219,22 @@
         box-shadow: 0 8px 25px var(--accent-glow);
     }
     .cm-tag {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 11px;
         font-weight: 600;
         background: var(--bg);
         color: var(--text-muted);
         border: 1px solid var(--border);
         transition: all 0.2s;
         cursor: pointer;
+        letter-spacing: 0.02em;
+    }
+    .cm-tag i {
+        font-size: 18px;
     }
     .cm-tag:hover {
         border-color: var(--accent);
@@ -448,38 +454,63 @@
     </div>
 </section>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-data="communityApp()">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-data="communityApp()" x-init="init()">
     <div class="grid lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2">
-            <div class="cm-post-card" style="margin-bottom:24px">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name ?? 'U') . '&background=6366f1&color=fff' }}" class="cm-post-avatar">
-                    <button @click="showEditor = true" style="flex:1;text-align:left;padding:12px 16px;border-radius:12px;font-size:14px;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:all 0.2s">
-                        {{ __('Share something with the community...') }}
-                    </button>
-                </div>
-            </div>
-
-            <div class="cm-filter-tabs">
-                <a href="{{ route('community.index', ['sort' => 'newest']) }}" class="cm-filter-tab {{ $sort === 'newest' ? 'active' : '' }}">{{ __('Newest') }}</a>
-                <a href="{{ route('community.index', ['sort' => 'likes']) }}" class="cm-filter-tab {{ $sort === 'likes' ? 'active' : '' }}">{{ __('Most Liked') }}</a>
-            </div>
 
             @forelse($posts as $post)
             <div class="cm-post-card" style="margin-bottom:16px" x-data="{ liked: {{ $post->isLikedBy(Auth::id()) ? 'true' : 'false' }}, likes: {{ $post->likes_count }}, commentsCount: {{ $post->comments_count }} }" id="post-{{ $post->id }}">
                 <div class="cm-post-header">
-                    <img src="{{ $post->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name ?? 'U') . '&background=6366f1&color=fff' }}" class="cm-post-avatar">
+                    <img src="{{ $post->user->avatar_url }}" class="cm-post-avatar">
                     <div>
                         <a href="{{ route('profile.show', $post->user_id) }}" class="cm-post-author">{{ $post->user->name ?? __('Unknown') }}</a>
                         <div class="cm-post-time">{{ $post->created_at->diffForHumans() }}</div>
                     </div>
                 </div>
                 <h3 class="cm-post-title">{{ $post->title }}</h3>
-                <p class="cm-post-excerpt">{{ Str::limit($post->content, 220) }}</p>
+                <p class="cm-post-excerpt">{{ Str::limit(strip_tags($post->content), 220) }}</p>
                 @if($post->tags->count())
                 <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
                     @foreach($post->tags as $tag)
-                    <a href="{{ route('community.index', ['tag' => $tag->slug, 'sort' => $sort]) }}" class="cm-tag">{{ $tag->name }}</a>
+                    @php
+                        $tagIcons = [
+                            'javascript' => 'fa-brands fa-js',
+                            'react' => 'fa-brands fa-react',
+                            'laravel' => 'fa-brands fa-laravel',
+                            'python' => 'fa-brands fa-python',
+                            'php' => 'fa-brands fa-php',
+                            'nodejs' => 'fa-brands fa-node-js',
+                            'typescript' => 'fa-brands fa-js',
+                            'docker' => 'fa-brands fa-docker',
+                            'kubernetes' => 'fa-solid fa-dharmachakra',
+                            'devops' => 'fa-solid fa-gears',
+                            'frontend' => 'fa-solid fa-code',
+                            'backend' => 'fa-solid fa-server',
+                            'css' => 'fa-brands fa-css3-alt',
+                            'html' => 'fa-brands fa-html5',
+                            'git' => 'fa-brands fa-git-alt',
+                            'mysql' => 'fa-solid fa-database',
+                            'postgresql' => 'fa-solid fa-database',
+                            'java' => 'fa-brands fa-java',
+                            'cpp' => 'fa-solid fa-c',
+                            'csharp' => 'fa-solid fa-c',
+                            'ui-ux' => 'fa-solid fa-pen-nib',
+                            'algorithms' => 'fa-solid fa-brain',
+                            'interview' => 'fa-solid fa-microphone',
+                            'career' => 'fa-solid fa-briefcase',
+                            'beginners' => 'fa-solid fa-graduation-cap',
+                            'projects' => 'fa-solid fa-folder-open',
+                            'code-review' => 'fa-solid fa-code-branch',
+                            'testing' => 'fa-solid fa-vial',
+                            'security' => 'fa-solid fa-shield-halved',
+                            'ai-ml' => 'fa-solid fa-robot',
+                        ];
+                        $icon = $tagIcons[strtolower($tag->slug)] ?? 'fa-solid fa-code';
+                    @endphp
+                    <a href="{{ route('community.index', ['tag' => $tag->slug, 'sort' => $sort]) }}" class="cm-tag">
+                        <i class="{{ $icon }}"></i>
+                        {{ $tag->name }}
+                    </a>
                     @endforeach
                 </div>
                 @endif
@@ -535,7 +566,7 @@
             @endif
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-6" style="position:sticky;top:80px;align-self:start">
             <div class="cm-sidebar-card" style="background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);border:none;color:white">
                 <div class="cm-sidebar-title" style="color:white">{{ __('Start a Discussion') }}</div>
                 <p style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:16px">{{ __('Share your thoughts, ask questions, or help others.') }}</p>
@@ -556,12 +587,80 @@
                 @endif
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
                     @forelse($popularTags as $tag)
-                    <a href="{{ route('community.index', ['tag' => $tag->slug, 'sort' => $sort]) }}" class="cm-tag {{ $activeTag && $activeTag->id === $tag->id ? 'active' : '' }}">{{ $tag->name }}</a>
+                    @php
+                        $tagIcons = [
+                            'javascript' => 'fa-brands fa-js text-yellow-400',
+                            'react' => 'fa-brands fa-react text-cyan-400',
+                            'laravel' => 'fa-brands fa-laravel text-red-500',
+                            'python' => 'fa-brands fa-python text-blue-400',
+                            'php' => 'fa-brands fa-php text-indigo-400',
+                            'nodejs' => 'fa-brands fa-node-js text-green-500',
+                            'typescript' => 'fa-brands fa-js text-blue-500',
+                            'docker' => 'fa-brands fa-docker text-blue-500',
+                            'kubernetes' => 'fa-solid fa-dharmachakra text-blue-400',
+                            'devops' => 'fa-solid fa-gears text-sky-400',
+                            'frontend' => 'fa-solid fa-code text-pink-400',
+                            'backend' => 'fa-solid fa-server text-green-400',
+                            'css' => 'fa-brands fa-css3-alt text-blue-400',
+                            'html' => 'fa-brands fa-html5 text-orange-500',
+                            'git' => 'fa-brands fa-git-alt text-orange-600',
+                            'mysql' => 'fa-solid fa-database text-blue-500',
+                            'postgresql' => 'fa-solid fa-database text-blue-600',
+                            'java' => 'fa-brands fa-java text-red-400',
+                            'cpp' => 'fa-solid fa-c text-blue-400',
+                            'csharp' => 'fa-solid fa-c text-purple-500',
+                            'ui-ux' => 'fa-solid fa-pen-nib text-fuchsia-400',
+                            'algorithms' => 'fa-solid fa-brain text-amber-400',
+                            'interview' => 'fa-solid fa-microphone text-teal-400',
+                            'career' => 'fa-solid fa-briefcase text-emerald-400',
+                            'beginners' => 'fa-solid fa-graduation-cap text-green-400',
+                            'projects' => 'fa-solid fa-folder-open text-violet-400',
+                            'code-review' => 'fa-solid fa-code-branch text-sky-400',
+                            'testing' => 'fa-solid fa-vial text-lime-400',
+                            'security' => 'fa-solid fa-shield-halved text-red-400',
+                            'ai-ml' => 'fa-solid fa-robot text-purple-400',
+                        ];
+                        $icon = $tagIcons[strtolower($tag->slug)] ?? 'fa-solid fa-code text-gray-400';
+                    @endphp
+                    <a href="{{ route('community.index', ['tag' => $tag->slug, 'sort' => $sort]) }}" class="cm-tag {{ $activeTag && $activeTag->id === $tag->id ? 'active' : '' }}">
+                        <i class="{{ $icon }}"></i>
+                        {{ $tag->name }}
+                    </a>
                     @empty
                     <span style="font-size:13px;color:var(--text-muted)">{{ __('No tags yet') }}</span>
                     @endforelse
                 </div>
             </div>
+
+            @if(isset($latestNews) && $latestNews->count())
+            <div class="cm-sidebar-card">
+                <div class="cm-sidebar-title"><i class="fas fa-newspaper" style="margin-right:6px;color:var(--accent)"></i>{{ __('News') }}</div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                    @foreach($latestNews as $news)
+                    <a href="#" style="text-decoration:none;display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:10px;transition:background .15s" onmouseover="this.style.background='var(--bg-2)'" onmouseout="this.style.background='transparent'">
+                        @if($news->image)
+                        <img src="{{ $news->image }}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0">
+                        @else
+                        <div style="width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fas fa-newspaper" style="color:white;font-size:14px"></i>
+                        </div>
+                        @endif
+                        <div style="min-width:0;flex:1">
+                            <div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ $news->title }}</div>
+                            <div style="font-size:10px;color:var(--text-muted);margin-top:2px">{{ $news->created_at->diffForHumans() }}</div>
+                            @if($news->tags->count())
+                            <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px">
+                                @foreach($news->tags->take(2) as $ntag)
+                                <span style="font-size:9px;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--accent) 8%,var(--card));color:var(--accent);font-weight:600">{{ $ntag->name }}</span>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -575,7 +674,10 @@
             </div>
             <div class="cm-modal-body">
                 <input type="text" x-model="editorTitle" placeholder="{{ __('Title') }}" class="cm-form-input">
-                <textarea x-model="editorContent" placeholder="{{ __('Write your post...') }}" class="cm-form-textarea"></textarea>
+                <div id="cm-editor-create-wrap">
+                    <textarea id="cm-editor-create" style="width:100%;min-height:200px"></textarea>
+                </div>
+                <input type="hidden" id="cm-editor-create-content" value="">
                 <div style="margin-bottom:12px">
                     <div style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);min-height:42px;align-items:center;cursor:text" @click="$refs.tagInput.focus()">
                         <template x-for="(tag, i) in editorTags" :key="i">
@@ -612,8 +714,8 @@
                         <div style="display:flex;gap:8px">
                             <template x-if="viewingPost.is_owner">
                                 <div style="display:flex;gap:8px">
-                                    <button @click="startEditPost()" class="cm-modal-close" title="Edit"><i class="fas fa-edit"></i></button>
-                                    <button @click="deletePost()" class="cm-modal-close" title="Delete" style="color:#ef4444"><i class="fas fa-trash"></i></button>
+                                    <button @click="startEditPost()" class="cm-modal-close" title="{{ __('Edit') }}"><i class="fas fa-edit"></i></button>
+                                    <button @click="deletePost()" class="cm-modal-close" title="{{ __('Delete') }}" style="color:#ef4444"><i class="fas fa-trash"></i></button>
                                 </div>
                             </template>
                             <button @click="viewingPost = null" class="cm-modal-close"><i class="fas fa-times"></i></button>
@@ -626,7 +728,7 @@
                                 <template x-if="viewingPost.tags && viewingPost.tags.length">
                                     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
                                         <template x-for="tag in viewingPost.tags" :key="tag.slug">
-                                            <a :href="`/community?tag=${tag.slug}`" class="cm-tag" x-text="tag.name"></a>
+                                            <a :href="`/community?tag=${tag.slug}`" class="cm-tag" style="display:inline-flex;align-items:center;gap:5px" x-text="tag.name"></a>
                                         </template>
                                     </div>
                                 </template>
@@ -636,7 +738,10 @@
                         <template x-if="editingInModal">
                             <div style="margin-bottom:16px">
                                 <input type="text" x-model="editTitle" class="cm-form-input">
-                                <textarea x-model="editContent" class="cm-form-textarea"></textarea>
+                                <div id="cm-editor-edit-wrap">
+                                    <textarea id="cm-editor-edit" style="width:100%;min-height:200px"></textarea>
+                                </div>
+                                <input type="hidden" id="cm-editor-edit-content" value="">
                                 <div style="margin-bottom:12px">
                                     <div style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);min-height:42px;align-items:center;cursor:text" @click="$refs.editTagInput.focus()">
                                         <template x-for="(tag, i) in editTags" :key="i">
@@ -706,13 +811,115 @@ function communityApp() {
         editorContent: '',
         editorTags: [],
         tagInputValue: '',
+        problemId: new URLSearchParams(window.location.search).get('problem') || null,
         viewingPost: null,
         newComment: '',
         editingInModal: false,
         editTitle: '',
         editContent: '',
         editTags: [],
+        cmEditorCreate: null,
+        cmEditorEdit: null,
+
+        init() {
+            if (this.problemId) {
+                this.showEditor = true;
+                this.$nextTick(() => this.initCreateEditor());
+            }
+            this.$watch('showEditor', (val) => {
+                if (val) {
+                    this.$nextTick(() => this.initCreateEditor());
+                } else {
+                    this.destroyCreateEditor();
+                }
+            });
+            this.$watch('editingInModal', (val) => {
+                if (val) {
+                    this.$nextTick(() => this.initEditEditor());
+                } else {
+                    this.destroyEditEditor();
+                }
+            });
+        },
         editTagInputValue: '',
+
+        getCmSkin() {
+            return !(document.documentElement.getAttribute('data-theme') || '').includes('light') ? 'oxide-dark' : 'oxide';
+        },
+        getCmContentCss() {
+            return !(document.documentElement.getAttribute('data-theme') || '').includes('light') ? 'dark' : 'default';
+        },
+        getCmContentStyle() {
+            const isDark = !(document.documentElement.getAttribute('data-theme') || '').includes('light');
+            return 'body { font-family: Inter, sans-serif; font-size: 14px; color: ' + (isDark ? '#e2e8f0' : '#1e293b') + '; }';
+        },
+
+        initCreateEditor() {
+            if (this.cmEditorCreate) return;
+            const self = this;
+            tinymce.init({
+                selector: '#cm-editor-create',
+                height: 300,
+                skin: this.getCmSkin(),
+                content_css: this.getCmContentCss(),
+                menubar: false,
+                plugins: 'lists link image code codesample fullscreen quickbars',
+                toolbar: 'undo redo | blocks | bold italic strikethrough | link image codesample | bullist numlist | code fullscreen',
+                codesample_languages: [
+                    {text: 'HTML/XML', value: 'markup'}, {text: 'JavaScript', value: 'javascript'},
+                    {text: 'TypeScript', value: 'typescript'}, {text: 'CSS', value: 'css'},
+                    {text: 'PHP', value: 'php'}, {text: 'Python', value: 'python'},
+                    {text: 'Java', value: 'java'}, {text: 'C', value: 'c'}, {text: 'C++', value: 'cpp'},
+                ],
+                content_style: this.getCmContentStyle(),
+                setup: (editor) => { self.cmEditorCreate = editor; }
+            });
+        },
+
+        destroyCreateEditor() {
+            if (this.cmEditorCreate) {
+                tinymce.remove('#cm-editor-create');
+                this.cmEditorCreate = null;
+            }
+        },
+
+        initEditEditor() {
+            if (this.cmEditorEdit) return;
+            const self = this;
+            this.$nextTick(() => {
+                const ta = document.getElementById('cm-editor-edit');
+                if (!ta) return;
+                tinymce.init({
+                    selector: '#cm-editor-edit',
+                    height: 300,
+                    skin: self.getCmSkin(),
+                    content_css: self.getCmContentCss(),
+                    menubar: false,
+                    plugins: 'lists link image code codesample fullscreen quickbars',
+                    toolbar: 'undo redo | blocks | bold italic strikethrough | link image codesample | bullist numlist | code fullscreen',
+                    codesample_languages: [
+                        {text: 'HTML/XML', value: 'markup'}, {text: 'JavaScript', value: 'javascript'},
+                        {text: 'TypeScript', value: 'typescript'}, {text: 'CSS', value: 'css'},
+                        {text: 'PHP', value: 'php'}, {text: 'Python', value: 'python'},
+                        {text: 'Java', value: 'java'}, {text: 'C', value: 'c'}, {text: 'C++', value: 'cpp'},
+                    ],
+                    content_style: self.getCmContentStyle(),
+                    setup: (editor) => {
+                        self.cmEditorEdit = editor;
+                        editor.on('init', () => {
+                            editor.setContent(self.editContent || '');
+                        });
+                    }
+                });
+            });
+        },
+
+        destroyEditEditor() {
+            if (this.cmEditorEdit) {
+                tinymce.remove('#cm-editor-edit');
+                this.cmEditorEdit = null;
+            }
+        },
 
         addTag() {
             const val = this.tagInputValue.trim();
@@ -746,7 +953,12 @@ function communityApp() {
         },
 
         async savePost() {
-            if (!this.editorTitle.trim() || !this.editorContent.trim()) return;
+            if (!this.editorTitle.trim()) return;
+            let content = '';
+            if (this.cmEditorCreate) {
+                content = this.cmEditorCreate.getContent();
+            }
+            if (!content.trim()) return;
             try {
                 const url = this.editingPost ? `/community/${this.editingPost.id}` : '/community';
                 const method = this.editingPost ? 'PUT' : 'POST';
@@ -757,7 +969,7 @@ function communityApp() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ title: this.editorTitle, content: this.editorContent, tags: this.editorTags }),
+                    body: JSON.stringify({ title: this.editorTitle, content: content, tags: this.editorTags, problem_id: this.problemId }),
                 });
                 const data = await res.json();
                 if (data.success) {
@@ -777,7 +989,12 @@ function communityApp() {
         },
 
         async saveEditPost() {
-            if (!this.editTitle.trim() || !this.editContent.trim()) return;
+            if (!this.editTitle.trim()) return;
+            let content = '';
+            if (this.cmEditorEdit) {
+                content = this.cmEditorEdit.getContent();
+            }
+            if (!content.trim()) return;
             try {
                 const res = await fetch(`/community/${this.viewingPost.id}`, {
                     method: 'PUT',
@@ -786,12 +1003,12 @@ function communityApp() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ title: this.editTitle, content: this.editContent, tags: this.editTags }),
+                    body: JSON.stringify({ title: this.editTitle, content: content, tags: this.editTags }),
                 });
                 const data = await res.json();
                 if (data.success) {
                     this.viewingPost.title = this.editTitle;
-                    this.viewingPost.content = this.editContent;
+                    this.viewingPost.content = content;
                     this.viewingPost.tags = this.editTags.map(t => ({name: t, slug: t.toLowerCase().replace(/\s+/g, '-')}));
                     this.editingInModal = false;
                 }

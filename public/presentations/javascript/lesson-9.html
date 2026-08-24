@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Тест по JavaScript — Слайды</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e2e8f0;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.bar{padding:12px 20px;background:rgba(15,23,42,.85);backdrop-filter:blur(16px);display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.bar .lg{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.bar h2{font-size:13px;font-weight:600;color:#94a3b8;flex:1}
+.bar .lt{font-size:13px;font-weight:700;color:#e2e8f0}
+.wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;position:relative;overflow:hidden}
+.slide{background:linear-gradient(145deg,#111827,#1a1a2e 50%,#16213e);border:1px solid rgba(99,102,241,.12);border-radius:20px;max-width:820px;width:100%;height:fit-content;min-height:380px;padding:40px 48px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.slide::before{content:"";position:absolute;top:-40%;right:-20%;width:350px;height:350px;background:radial-gradient(circle,rgba(99,102,241,.07),transparent 70%);pointer-events:none}
+.slide::after{content:"";position:absolute;bottom:-25%;left:-15%;width:280px;height:280px;background:radial-gradient(circle,rgba(139,92,246,.05),transparent 70%);pointer-events:none}
+.sn{position:absolute;top:16px;right:24px;font-size:10px;font-weight:600;color:rgba(255,255,255,.2);letter-spacing:1px;font-variant-numeric:tabular-nums}
+.ico{color:rgba(99,102,241,.35);margin-bottom:16px;position:relative;z-index:2}
+.slide h1{font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.3;margin-bottom:20px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe 40%,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:2}
+.sb{font-size:14px;color:#94a3b8;line-height:1.8;position:relative;z-index:2}
+.sb p{margin-bottom:10px}
+.sb ul{list-style:none;margin:0;padding:0}
+.sb li{padding:8px 0 8px 20px;border-bottom:1px solid rgba(255,255,255,.04);position:relative;font-size:14px;color:#cbd5e1}
+.sb li::before{content:"";position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.sb code{background:rgba(99,102,241,.12);color:#a5b4fc;padding:2px 7px;border-radius:5px;font-family:"JetBrains Mono",monospace;font-size:12px}
+.ft{padding:14px 20px;display:flex;justify-content:center;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.06);background:rgba(15,23,42,.5);backdrop-filter:blur(12px);flex-shrink:0}
+.ft button{padding:9px 24px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#e2e8f0;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.ft button:hover:not(:disabled){background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.35);color:#fff}
+.ft button:disabled{opacity:.25;cursor:not-allowed}
+.dots{display:flex;gap:5px;margin:0 8px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.1);cursor:pointer;transition:all .25s}
+.dot.on{background:#6366f1;width:20px;border-radius:3px}
+.prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#6366f1,#8b5cf6);transition:width .3s;z-index:99}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.slide:not([style*="display:none"]){animation:fadeIn .35s ease}
+@media(max-width:640px){.slide{padding:28px 20px;min-height:300px;border-radius:14px}.slide h1{font-size:20px}.sb{font-size:13px}}
+</style></head><body>
+<div class="prog" id="prog"></div>
+<div class="bar"><div class="lg">C</div><span class="lt">Тест по JavaScript</span><h2>CourseMaster Slides</h2></div>
+<div class="wrap" id="wrap"><div class="slide" data-n="1">
+    <div class="sn">1 / 2</div>
+    <div class="ico"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity=".6"/></svg></div>
+    <h1>Тест по JavaScript</h1>
+    <div class="sb"><p>Интерактивная презентация к уроку. Используйте клавиши ← → или свайпы для навигации.</p></div>
+</div><div class="slide" data-n="2" style="display:none">
+    <div class="sn">2 / 2</div>
+    <div class="ico"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity=".6"/></svg></div>
+    <h1>Тест по JavaScript</h1>
+    <div class="sb"><p>Тест по JavaScriptПроверьте свои знания по JavaScript.</p></div>
+</div></div>
+<div class="ft"><button id="pb" onclick="go(-1)" disabled>&#8592; Назад</button><div class="dots" id="dots"></div><button id="nb" onclick="go(1)">Вперёд &#8594;</button></div>
+<script>
+let c=1,n=2,ss=document.querySelectorAll(".slide"),dt=document.getElementById("dots"),pg=document.getElementById("prog");
+for(let i=1;i<=n;i++){let d=document.createElement("div");d.className="dot"+(i===1?" on":"");d.onclick=()=>show(i);dt.appendChild(d)}
+function show(i){if(i<1||i>n)return;ss.forEach(s=>s.style.display="none");ss[i-1].style.display="flex";c=i;
+document.querySelectorAll(".dot").forEach((d,j)=>d.classList.toggle("on",j===i-1));
+document.getElementById("pb").disabled=i===1;document.getElementById("nb").disabled=i===n;pg.style.width=(i/n*100)+"%"}
+function go(d){show(c+d)}
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key===" ")go(1);if(e.key==="ArrowLeft")go(-1)});
+let sx=0;document.addEventListener("touchstart",e=>sx=e.touches[0].clientX);
+document.addEventListener("touchend",e=>{let dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)dx<0?go(1):go(-1)});
+show(1);
+</script></body></html>

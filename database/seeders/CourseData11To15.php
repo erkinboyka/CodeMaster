@@ -136,6 +136,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
         ],
         'practices' => [
             [
+                'language' => 'bash',
                 'title' => 'Инициализация репозитория и первый коммит',
                 'instructions' => 'Создайте Git-репозиторий, добавьте README.md и сделайте первый коммит.',
                 'starter_code' => 'echo "# My Project" > README.md',
@@ -146,6 +147,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => 'Работа с ветками',
                 'instructions' => 'Создайте ветку feature, сделайте коммит, вернитесь на main.',
                 'starter_code' => 'git branch feature-login',
@@ -155,6 +157,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => 'Разрешение конфликтов',
                 'instructions' => 'Создайте две ветки с разными изменениями в одном файле, выполните merge и разрешите конфликт.',
                 'starter_code' => 'echo "setting1 = value1" > config.txt && git add . && git commit -m "Initial"',
@@ -164,6 +167,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => 'Stash: временное сохранение',
                 'instructions' => 'Сохраните изменения в stash, сделайте другую задачу, восстановите stash.',
                 'starter_code' => 'echo "work in progress" > draft.txt && git add draft.txt && git commit -m "Draft"',
@@ -173,6 +177,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => 'Rebase: линейная история',
                 'instructions' => 'Выполните rebase feature-ветки на main.',
                 'starter_code' => 'git checkout feature && git rebase main',
@@ -182,6 +187,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => '.gitignore',
                 'instructions' => 'Создайте .gitignore для node_modules, .env и логов.',
                 'starter_code' => '',
@@ -191,6 +197,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => 'Cherry-pick',
                 'instructions' => 'Перенесите коммит из hotfix в main через cherry-pick.',
                 'starter_code' => 'git checkout main',
@@ -200,6 +207,7 @@ git stash apply</code></pre><h3>Bisect</h3><p>Бинарный поиск ком
                 ],
             ],
             [
+                'language' => 'bash',
                 'title' => 'Тегирование',
                 'instructions' => 'Создайте annotated tag v1.0.',
                 'starter_code' => 'git tag -a v1.0 -m "Release 1.0"',
@@ -400,6 +408,7 @@ resource "aws_instance" "web" {
         ],
         'practices' => [
             [
+                'language' => 'yaml',
                 'title' => 'CI Pipeline в GitHub Actions',
                 'instructions' => 'Создайте .github/workflows/ci.yml для Node.js.',
                 'starter_code' => '',
@@ -407,6 +416,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat .github/workflows/ci.yml', 'expected' => 'Valid YAML', 'description' => 'Валидный YAML']],
             ],
             [
+                'language' => 'yaml',
                 'title' => 'Dockerfile для Node.js',
                 'instructions' => 'Создайте Dockerfile с multi-stage build.',
                 'starter_code' => '',
@@ -414,6 +424,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'docker build -t app .', 'expected' => 'Built', 'description' => 'Сборка образа']],
             ],
             [
+                'language' => 'yaml',
                 'title' => 'Конфигурация Prometheus',
                 'instructions' => 'Создайте prometheus.yml для мониторинга Node.js и PostgreSQL.',
                 'starter_code' => '',
@@ -421,6 +432,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat prometheus.yml', 'expected' => 'Valid config', 'description' => 'Валидная конфигурация']],
             ],
             [
+                'language' => 'yaml',
                 'title' => 'Terraform: EC2 инстанс',
                 'instructions' => 'Создайте main.tf для AWS EC2.',
                 'starter_code' => '',
@@ -428,6 +440,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'terraform validate', 'expected' => 'Valid', 'description' => 'Валидная конфигурация']],
             ],
             [
+                'language' => 'yaml',
                 'title' => 'Ansible Playbook',
                 'instructions' => 'Создайте playbook.yml для установки Node.js.',
                 'starter_code' => '',
@@ -435,6 +448,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'ansible-playbook --syntax-check playbook.yml', 'expected' => 'Valid', 'description' => 'Валидный синтаксис']],
             ],
             [
+                'language' => 'yaml',
                 'title' => 'GitLab CI Pipeline',
                 'instructions' => 'Создайте .gitlab-ci.yml для Python проекта.',
                 'starter_code' => '',
@@ -442,6 +456,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat .gitlab-ci.yml', 'expected' => 'Valid YAML', 'description' => 'Валидный YAML']],
             ],
             [
+                'language' => 'yaml',
                 'title' => 'Docker Compose',
                 'instructions' => 'Создайте docker-compose.yml с app, postgres, redis.',
                 'starter_code' => '',
@@ -449,6 +464,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'docker-compose config', 'expected' => 'Valid', 'description' => 'Валидная конфигурация']],
             ],
             [
+                'language' => 'json',
                 'title' => 'Grafana Dashboard JSON',
                 'instructions' => 'Создайте dashboard.json для HTTP метрик.',
                 'starter_code' => '',
@@ -611,6 +627,7 @@ resource "aws_instance" "web" {
         ],
         'practices' => [
             [
+                'language' => 'json',
                 'title' => 'Цветовая палитра',
                 'instructions' => 'Создайте цветовую палитру из 5 цветов для fintech приложения.',
                 'starter_code' => '',
@@ -618,6 +635,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'python -c "import json; d=json.load(open(\'palette.json\')); assert len(d)==5"', 'expected' => '5 colors', 'description' => '5 цветов']],
             ],
             [
+                'language' => 'text',
                 'title' => 'Wireframe страницы',
                 'instructions' => 'Опишите wireframe лендинга для SaaS-продукта.',
                 'starter_code' => '',
@@ -625,6 +643,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat wireframe.md', 'expected' => 'Header, Hero, Features, Pricing, Footer', 'description' => 'Все секции']],
             ],
             [
+                'language' => 'json',
                 'title' => 'Спецификация компонента кнопки',
                 'instructions' => 'Создайте спецификацию кнопки: размеры, цвета, состояния.',
                 'starter_code' => '',
@@ -632,6 +651,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat spec.json', 'expected' => 'sizes, states, colors', 'description' => 'Полная спецификация']],
             ],
             [
+                'language' => 'text',
                 'title' => 'Чек-лист юзабилити',
                 'instructions' => 'Создайте чек-лист из 10 пунктов для оценки юзабилити.',
                 'starter_code' => '',
@@ -639,6 +659,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'wc -l checklist.txt', 'expected' => '10', 'description' => '10 пунктов']],
             ],
             [
+                'language' => 'json',
                 'title' => 'Персона для e-commerce',
                 'instructions' => 'Создайте персону для интернет-магазина одежды.',
                 'starter_code' => '',
@@ -646,6 +667,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat persona.json', 'expected' => 'name, age, goals, frustrations', 'description' => 'Полная персона']],
             ],
             [
+                'language' => 'text',
                 'title' => 'WCAG аудит',
                 'instructions' => 'Проведите аудит доступности страницы по WCAG 2.1.',
                 'starter_code' => '',
@@ -653,6 +675,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat audit.txt', 'expected' => '10 items', 'description' => '10 пунктов аудита']],
             ],
             [
+                'language' => 'text',
                 'title' => 'User flow регистрации',
                 'instructions' => 'Опишите user flow для регистрации пользователя.',
                 'starter_code' => '',
@@ -660,6 +683,7 @@ resource "aws_instance" "web" {
                 'tests' => [['input' => 'cat flow.txt', 'expected' => '8 steps', 'description' => '8 шагов']],
             ],
             [
+                'language' => 'text',
                 'title' => 'Moodboard для бренда',
                 'instructions' => 'Опишите moodboard для бренда organic косметики.',
                 'starter_code' => '',
@@ -871,6 +895,7 @@ const response = await axios.get("/api/data");</code></pre>',
         ],
         'practices' => [
             [
+                'language' => 'javascript',
                 'title' => 'Компонент с хуками',
                 'instructions' => 'Создайте компонент-счётчик с useState и useEffect.',
                 'starter_code' => 'function Counter() {\n  // Ваш код\n}',
@@ -878,6 +903,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'renders counter', 'expected' => 'Счёт: 0', 'description' => 'Начальное значение']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Кастомный хук',
                 'instructions' => 'Создайте хук useLocalStorage для синхронизации с localStorage.',
                 'starter_code' => 'function useLocalStorage(key, initialValue) {\n  // Ваш код\n}',
@@ -885,6 +911,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'useLocalStorage("theme", "light")', 'expected' => '["light", fn]', 'description' => 'Хук работает']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Context Provider',
                 'instructions' => 'Создайте ThemeContext с провайдером и хуком useTheme.',
                 'starter_code' => 'const ThemeContext = createContext();\n\nfunction ThemeProvider({ children }) {\n  // Ваш код\n}',
@@ -892,6 +919,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'useTheme()', 'expected' => '{ theme, toggleTheme }', 'description' => 'Хук работает']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Компонент с API',
                 'instructions' => 'Создайте компонент, загружающий данные с API через useEffect.',
                 'starter_code' => 'function UserList() {\n  // Ваш код\n}',
@@ -899,6 +927,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'renders users', 'expected' => 'user list', 'description' => 'Список пользователей']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Маршрутизация',
                 'instructions' => 'Настройте React Router с маршрутами /, /about, /contacts.',
                 'starter_code' => 'function App() {\n  // Ваш код\n}',
@@ -906,6 +935,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'renders routes', 'expected' => '3 routes', 'description' => '3 маршрута']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'useReducer для формы',
                 'instructions' => 'Создайте форму регистрации с useReducer для управления состоянием.',
                 'starter_code' => 'function RegistrationForm() {\n  // Ваш код\n}',
@@ -913,6 +943,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'renders form', 'expected' => 'form with inputs', 'description' => 'Форма']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'useCallback и useMemo',
                 'instructions' => 'Оптимизируйте компонент списка с useCallback и useMemo.',
                 'starter_code' => 'function FilteredList({ items, filter }) {\n  // Ваш код\n}',
@@ -920,6 +951,7 @@ const response = await axios.get("/api/data");</code></pre>',
                 'tests' => [['input' => 'renders filtered list', 'expected' => 'filtered items', 'description' => 'Фильтрация']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'React.memo',
                 'instructions' => 'Оберните компонент в React.memo для предотвращения лишних ререндеров.',
                 'starter_code' => 'function ExpensiveComponent({ data }) {\n  // Тяжёлый рендер\n}',
@@ -1156,6 +1188,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
         ],
         'practices' => [
             [
+                'language' => 'javascript',
                 'title' => 'Express маршрут',
                 'instructions' => 'Создайте Express-сервер с CRUD маршрутами для пользователей.',
                 'starter_code' => 'const express = require("express");\nconst app = express();\napp.use(express.json());\n\n// CRUD маршруты\n\napp.listen(3000);',
@@ -1163,6 +1196,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'curl http://localhost:3000/users', 'expected' => '[]', 'description' => 'Пустой список']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Middleware для логирования',
                 'instructions' => 'Создайте middleware для логирования метода, URL и времени ответа.',
                 'starter_code' => 'app.use((req, res, next) => {\n  // Ваш код\n});',
@@ -1170,6 +1204,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'curl http://localhost:3000/test', 'expected' => 'GET /test 200 ...ms', 'description' => 'Лог']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'MongoDB запрос',
                 'instructions' => 'Создайте Mongoose-схему Product и найдите все продукты дороже 1000.',
                 'starter_code' => 'const productSchema = new mongoose.Schema({\n  // Ваш код\n});',
@@ -1177,6 +1212,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'await Product.find({ price: { $gt: 1000 } })', 'expected' => 'filtered products', 'description' => 'Фильтрация']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'JWT аутентификация',
                 'instructions' => 'Создайте middleware для проверки JWT токена.',
                 'starter_code' => 'function authMiddleware(req, res, next) {\n  // Ваш код\n}',
@@ -1184,6 +1220,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'authMiddleware({ headers: {} })', 'expected' => '401', 'description' => 'Нет токена']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'REST API эндпоинт',
                 'instructions' => 'Создайте GET эндпоинт /api/products с фильтрацией по категории.',
                 'starter_code' => 'app.get("/api/products", (req, res) => {\n  // Ваш код\n});',
@@ -1191,6 +1228,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'curl "http://localhost:3000/api/products?category=electronics"', 'expected' => 'filtered', 'description' => 'Фильтрация']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Rate limiting',
                 'instructions' => 'Настройте rate limiting: максимум 100 запросов за 15 минут.',
                 'starter_code' => 'const rateLimit = require("express-rate-limit");\n',
@@ -1198,6 +1236,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'limiter.windowMs', 'expected' => '900000', 'description' => '15 минут']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'Обработка ошибок Express',
                 'instructions' => 'Создайте глобальный обработчик ошибок Express.',
                 'starter_code' => '',
@@ -1205,6 +1244,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'app._router.stack.length', 'expected' => '> 0', 'description' => 'Middleware зарегистрирован']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'File upload с multer',
                 'instructions' => 'Настройте загрузку файлов через multer.',
                 'starter_code' => 'const multer = require("multer");\n',
@@ -1212,6 +1252,7 @@ app.use(cors({ origin: "https://myapp.com" }));</code></pre>',
                 'tests' => [['input' => 'upload.single("file")', 'expected' => 'middleware', 'description' => 'Middleware загрузки']],
             ],
             [
+                'language' => 'javascript',
                 'title' => 'WebSocket сервер',
                 'instructions' => 'Создайте WebSocket сервер для чата в реальном времени.',
                 'starter_code' => 'const WebSocket = require("ws");\n',

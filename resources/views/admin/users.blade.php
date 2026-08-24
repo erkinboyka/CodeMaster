@@ -41,7 +41,7 @@
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4">
                         <div class="flex items-center space-x-3">
-                            <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff' }}" class="w-9 h-9 rounded-full">
+                            <img src="{{ $user->avatar_url }}" class="w-9 h-9 rounded-full">
                             <div>
                                 <p class="text-sm font-medium text-gray-800">{{ $user->name }}</p>
                                 <p class="text-xs text-gray-400">{{ $user->email }}</p>

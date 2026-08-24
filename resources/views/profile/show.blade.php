@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', ($user->name ?? 'User') . ' - ' . __('Профиль') . ' - CodeMaster')
+@section('title', ($user->name ?? 'User') . ' - ' . __('section_profile') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -144,13 +144,13 @@
 @section('content')
 <div class="ps-hero">
     <div class="ps-hero__content">
-        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'U') . '&background=fff&color=6366f1&size=128' }}" class="ps-avatar" alt="{{ $user->name }}">
-        <h1 class="ps-hero__name">{{ $user->name }}</h1>
+        <img src="{{ $user->avatar_url }}" class="ps-avatar" alt="{{ $user->name }}">
+        <h1 class="ps-hero__name">{{ $user->name }} @if($user->country)<span style="font-size:20px;margin-left:8px" title="{{ country_name($user->country) }}">{!! country_flag($user->country) !!}</span>@endif</h1>
         <p class="ps-hero__sub">{{ $user->title ?? '' }}{{ $user->title && $user->location ? ' &bull; ' : '' }}{{ $user->location ?? '' }}</p>
         <div class="ps-hero__stats">
             <span><i class="fas fa-star"></i>Lv.{{ $user->level }} {{ $user->level_title }}</span>
             <span><i class="fas fa-trophy"></i>{{ number_format($user->total_xp) }} XP</span>
-            <span><i class="fas fa-certificate"></i>{{ $user->certificates_count ?? 0 }} {{ __('сертификатов') }}</span>
+            <span><i class="fas fa-certificate"></i>{{ $user->certificates_count ?? 0 }} {{ __('profile_certs') }}</span>
         </div>
         <div class="ps-hero__links">
             @if($user->github)
@@ -160,7 +160,7 @@
             <a href="{{ $user->linkedin }}" target="_blank" class="ps-hero__link"><i class="fab fa-linkedin" style="margin-right:0.3rem"></i>LinkedIn</a>
             @endif
             @if($user->website)
-            <a href="{{ $user->website }}" target="_blank" class="ps-hero__link"><i class="fas fa-globe" style="margin-right:0.3rem"></i>{{ __('Сайт') }}</a>
+            <a href="{{ $user->website }}" target="_blank" class="ps-hero__link"><i class="fas fa-globe" style="margin-right:0.3rem"></i>{{ __('profile_website') }}</a>
             @endif
         </div>
     </div>
@@ -172,21 +172,21 @@
             <div style="display:flex;flex-direction:column;gap:1.5rem">
                 @if($user->bio)
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-user" style="color:var(--accent)"></i>{{ __('О себе') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-user" style="color:var(--accent)"></i>{{ __('profile_about') }}</h3>
                     <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7">{{ $user->bio }}</p>
                 </div>
                 @endif
 
                 @if($user->experience->count())
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-briefcase" style="color:var(--accent)"></i>{{ __('Опыт работы') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-briefcase" style="color:var(--accent)"></i>{{ __('profile_experience_work') }}</h3>
                     <div class="ps-item-list">
                         @foreach($user->experience as $exp)
                         <div class="ps-item">
                             <div class="ps-item__icon ps-item__icon--accent"><i class="fas fa-building"></i></div>
                             <div>
                                 <div class="ps-item__name">{{ $exp->position }}</div>
-                                <div class="ps-item__sub">{{ $exp->company }} &bull; {{ $exp->start_date }} - {{ $exp->is_current ? __('Настоящее время') : ($exp->end_date ?? '') }}</div>
+                                <div class="ps-item__sub">{{ $exp->company }} &bull; {{ $exp->start_date }} - {{ $exp->is_current ? __('profile_now') : ($exp->end_date ?? '') }}</div>
                                 @if($exp->description)<p class="ps-item__desc">{{ $exp->description }}</p>@endif
                             </div>
                         </div>
@@ -197,14 +197,14 @@
 
                 @if($user->education->count())
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-graduation-cap" style="color:var(--accent-2)"></i>{{ __('Образование') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-graduation-cap" style="color:var(--accent-2)"></i>{{ __('profile_tab_education') }}</h3>
                     <div class="ps-item-list">
                         @foreach($user->education as $edu)
                         <div class="ps-item">
                             <div class="ps-item__icon ps-item__icon--purple"><i class="fas fa-graduation-cap"></i></div>
                             <div>
                                 <div class="ps-item__name">{{ $edu->degree }}{{ $edu->field ? ' &mdash; ' . $edu->field : '' }}</div>
-                                <div class="ps-item__sub">{{ $edu->institution }} &bull; {{ $edu->start_date }} - {{ $edu->end_date ?? __('Настоящее время') }}</div>
+                                <div class="ps-item__sub">{{ $edu->institution }} &bull; {{ $edu->start_date }} - {{ $edu->end_date ?? __('profile_now') }}</div>
                             </div>
                         </div>
                         @endforeach
@@ -214,7 +214,7 @@
 
                 @if($user->portfolio->count())
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-folder-open" style="color:var(--accent)"></i>{{ __('Портфолио') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-folder-open" style="color:var(--accent)"></i>{{ __('profile_tab_portfolio') }}</h3>
                     <div class="ps-port-grid">
                         @foreach($user->portfolio as $item)
                         <div class="ps-port-card">
@@ -244,7 +244,7 @@
 
                 @if($certificates->count())
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-certificate" style="color:#f59e0b"></i>{{ __('Сертификаты') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-certificate" style="color:#f59e0b"></i>{{ __('profile_tab_certificates') }}</h3>
                     <div style="display:flex;flex-direction:column;gap:0.5rem">
                         @foreach($certificates as $cert)
                         <a href="{{ route('certificate.show', $cert->cert_hash) }}" class="ps-cert-card">
@@ -263,7 +263,7 @@
             <div style="display:flex;flex-direction:column;gap:1.5rem">
                 @if($user->skills->count())
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-code" style="color:var(--accent)"></i>{{ __('Навыки') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-code" style="color:var(--accent)"></i>{{ __('profile_skills') }}</h3>
                     <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
                         @foreach($user->skills as $skill)
                         <span class="ps-skill">
@@ -276,21 +276,21 @@
                 @endif
 
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-chart-bar" style="color:var(--accent)"></i>{{ __('Статистика') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-chart-bar" style="color:var(--accent)"></i>{{ __('profile_stats') }}</h3>
                     <div class="ps-stat-row">
-                        <span class="ps-stat-row__label">{{ __('Всего XP') }}</span>
+                        <span class="ps-stat-row__label">{{ __('profile_total_xp') }}</span>
                         <span class="ps-stat-row__val ps-stat-row__val--accent">{{ number_format($user->total_xp) }}</span>
                     </div>
                     <div class="ps-stat-row">
-                        <span class="ps-stat-row__label">{{ __('Уровень') }}</span>
-                        <span class="ps-stat-row__val ps-stat-row__val--purple">{{ $user->level_badge }} {{ $user->level_title }} ({{ $user->level }})</span>
+                        <span class="ps-stat-row__label">{{ __('profile_level') }}</span>
+                        <span class="ps-stat-row__val ps-stat-row__val--purple">{!! $user->level_badge !!} {{ $user->level_title }} ({{ $user->level }})</span>
                     </div>
                     <div class="ps-stat-row">
-                        <span class="ps-stat-row__label">{{ __('Курсов пройдено') }}</span>
+                        <span class="ps-stat-row__label">{{ __('profile_completed_courses') }}</span>
                         <span class="ps-stat-row__val ps-stat-row__val--green">{{ $stats->completed_courses ?? 0 }}</span>
                     </div>
                     <div class="ps-stat-row">
-                        <span class="ps-stat-row__label">{{ __('Сертификатов') }}</span>
+                        <span class="ps-stat-row__label">{{ __('profile_certs') }}</span>
                         <span class="ps-stat-row__val ps-stat-row__val--yellow">{{ $user->certificates_count ?? 0 }}</span>
                     </div>
                     <div class="ps-progress">
@@ -307,7 +307,7 @@
 
                 @if($recentActivity->count())
                 <div class="ps-card">
-                    <h3 class="ps-card__title"><i class="fas fa-clock" style="color:var(--accent)"></i>{{ __('Активность') }}</h3>
+                    <h3 class="ps-card__title"><i class="fas fa-clock" style="color:var(--accent)"></i>{{ __('profile_tab_activity') }}</h3>
                     @foreach($recentActivity->take(5) as $activity)
                     <div class="ps-act-item">
                         <div class="ps-act-dot"></div>

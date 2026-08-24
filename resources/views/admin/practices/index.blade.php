@@ -59,7 +59,7 @@
                             @if($practice->difficulty === 'easy') bg-green-50 text-green-600
                             @elseif($practice->difficulty === 'medium') bg-yellow-50 text-yellow-600
                             @else bg-red-50 text-red-600 @endif">
-                            {{ ucfirst($practice->difficulty) }}
+                            {{ __('difficulty_' . $practice->difficulty) }}
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right">

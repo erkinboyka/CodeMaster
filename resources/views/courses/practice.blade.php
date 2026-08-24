@@ -11,6 +11,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/ruby/ruby.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/go/go.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/yaml/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" x-data="practiceApp()">
     <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
@@ -30,7 +35,7 @@
                 <div>
                     <h1 class="text-lg font-bold text-gray-900">{{ $task->title }}</h1>
                     <div class="flex items-center space-x-3 mt-1">
-                        <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ $task->difficulty === 'easy' ? 'bg-green-100 text-green-700' : ($task->difficulty === 'hard' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">{{ $task->difficulty }}</span>
+                        <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ $task->difficulty === 'easy' ? 'bg-green-100 text-green-700' : ($task->difficulty === 'hard' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">{{ __('difficulty_' . $task->difficulty) }}</span>
                         <span class="text-xs text-gray-500"><i class="fas fa-clock mr-1"></i>{{ $task->time_limit }} {{ __('min') }}</span>
                         <span class="text-xs text-gray-500"><i class="fas fa-code mr-1"></i>{{ $task->language }}</span>
                     </div>
@@ -74,6 +79,9 @@
                         <option value="sql">SQL</option>
                         <option value="mysql">MySQL</option>
                         <option value="html">HTML/CSS</option>
+                        <option value="yaml">YAML</option>
+                        <option value="json">JSON</option>
+                        <option value="text">Text</option>
                     </select>
                     <button @click="resetCode()" class="text-sm text-gray-500 hover:text-gray-700">
                         <i class="fas fa-undo mr-1"></i>{{ __('Reset') }}

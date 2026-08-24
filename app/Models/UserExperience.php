@@ -15,15 +15,13 @@ class UserExperience extends Model
         'company',
         'start_date',
         'end_date',
+        'is_current',
         'description',
     ];
 
     protected function casts(): array
     {
-        return [
-            'start_date' => 'date',
-            'end_date' => 'date',
-        ];
+        return [];
     }
 
     public function user(): BelongsTo

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Результат собеседования' . ' - CodeMaster')
+@section('title', __('interview_result_title') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -184,13 +184,13 @@
 @section('content')
 <div class="ir-res">
     <a href="{{ route('interview.index') }}" class="ir-res-back reveal-up">
-        <i class="fas fa-arrow-left"></i> Назад к собеседованиям
+        <i class="fas fa-arrow-left"></i> {{ __('interview_back_to_interviews') }}
     </a>
 
     @php
         $score = $interview->score ?? 0;
         $heroClass = $score >= 70 ? 'pass' : ($score >= 40 ? 'mid' : 'fail');
-        $verdict = $score >= 70 ? 'Отличный результат!' : ($score >= 40 ? 'Неплохо!' : 'Продолжай практиковаться!');
+        $verdict = $score >= 70 ? __('interview_verdict_excellent') : ($score >= 40 ? __('interview_verdict_good') : __('interview_verdict_continue'));
         $icon = $score >= 70 ? 'fa-trophy' : ($score >= 40 ? 'fa-star' : 'fa-rocket');
     @endphp
 
@@ -204,18 +204,18 @@
     <div class="ir-res-stats reveal-up" data-delay="0.1">
         <div class="ir-res-stat">
             <div class="ir-res-stat-icon" style="background:var(--accent-glow);color:var(--accent)"><i class="fas fa-layer-group"></i></div>
-            <div class="ir-res-stat-val">{{ match($interview->type) { 'technical' => 'Техническое', 'behavioral' => 'Поведенческое', 'coding' => 'Кодинг', 'system_design' => 'Проектирование систем', default => ucfirst(str_replace('_', ' ', $interview->type)) } }}</div>
-            <div class="ir-res-stat-label">Тип</div>
+            <div class="ir-res-stat-val">{{ match($interview->type) { 'technical' => __('interview_type_technical'), 'behavioral' => __('interview_type_behavioral'), 'coding' => __('interview_type_coding'), 'system_design' => __('interview_type_system_design'), default => ucfirst(str_replace('_', ' ', $interview->type)) } }}</div>
+            <div class="ir-res-stat-label">{{ __('interview_type_label') }}</div>
         </div>
         <div class="ir-res-stat">
             <div class="ir-res-stat-icon" style="background:rgba(234,179,8,0.1);color:var(--warning)"><i class="fas fa-signal"></i></div>
-            <div class="ir-res-stat-val">{{ match($interview->difficulty) { 'easy' => 'Лёгкий', 'medium' => 'Средний', 'hard' => 'Сложный', default => ucfirst($interview->difficulty) } }}</div>
-            <div class="ir-res-stat-label">Сложность</div>
+            <div class="ir-res-stat-val">{{ match($interview->difficulty) { 'easy' => __('interview_difficulty_easy'), 'medium' => __('interview_difficulty_medium'), 'hard' => __('interview_difficulty_hard'), default => ucfirst($interview->difficulty) } }}</div>
+            <div class="ir-res-stat-label">{{ __('interview_difficulty_label') }}</div>
         </div>
         <div class="ir-res-stat">
             <div class="ir-res-stat-icon" style="background:rgba(34,197,94,0.1);color:var(--success)"><i class="fas fa-check-circle"></i></div>
-            <div class="ir-res-stat-val" style="color:var(--success)">Завершено</div>
-            <div class="ir-res-stat-label">Статус</div>
+            <div class="ir-res-stat-val" style="color:var(--success)">{{ __('interview_status_completed_label') }}</div>
+            <div class="ir-res-stat-label">{{ __('interview_status_label') }}</div>
         </div>
     </div>
 
@@ -223,7 +223,7 @@
     <div class="ir-res-feedback reveal-up" data-delay="0.2">
         <div class="ir-res-fb-head">
             <i class="fas fa-robot"></i>
-            <div class="ir-res-fb-title">Обратная связь от AI</div>
+            <div class="ir-res-fb-title">{{ __('interview_ai_feedback') }}</div>
         </div>
         <div class="ir-res-fb-body">{{ $interview->feedback }}</div>
     </div>
@@ -231,10 +231,10 @@
 
     <div class="ir-res-actions reveal-up" data-delay="0.3">
         <a href="{{ route('interview.index') }}" class="ir-res-btn ir-res-btn-primary">
-            <i class="fas fa-play"></i> Новое собеседование
+            <i class="fas fa-play"></i> {{ __('interview_new_session') }}
         </a>
         <a href="{{ route('interview.index') }}" class="ir-res-btn ir-res-btn-secondary">
-            <i class="fas fa-list"></i> Все собеседования
+            <i class="fas fa-list"></i> {{ __('interview_all_sessions') }}
         </a>
     </div>
 </div>

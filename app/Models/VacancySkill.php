@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VacancySkill extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'vacancy_id',
         'skill_name',

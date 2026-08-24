@@ -160,7 +160,7 @@
         border-radius: 16px;
         background: var(--card);
         border: 1px solid var(--border);
-        overflow: hidden;
+        overflow: visible;
         transition: all 0.3s;
     }
     .ct-problem-card:hover {
@@ -467,6 +467,8 @@
         position: sticky;
         top: 24px;
         align-self: start;
+        overflow: visible;
+        z-index: 1;
     }
 
     .ct-heatmap-card {
@@ -474,6 +476,8 @@
         background: var(--card);
         border: 1px solid var(--border);
         padding: 20px;
+        overflow: visible;
+        position: relative;
     }
     .ct-heatmap-title {
         font-size: 13px;
@@ -489,6 +493,7 @@
         gap: 3px;
         overflow-x: auto;
         padding-bottom: 4px;
+        position: relative;
     }
     .ct-heatmap-week {
         display: flex;
@@ -544,19 +549,17 @@
     }
     .ct-heatmap-tooltip {
         display: none;
-        position: absolute;
-        bottom: calc(100% + 6px);
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 4px 8px;
-        border-radius: 6px;
+        position: fixed;
+        padding: 6px 12px;
+        border-radius: 8px;
         background: var(--text);
         color: var(--bg);
         font-size: 11px;
         font-weight: 600;
         white-space: nowrap;
-        z-index: 10;
+        z-index: 9999;
         pointer-events: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,.3);
     }
     .ct-heatmap-cell:hover .ct-heatmap-tooltip { display: block; }
 </style>
@@ -589,7 +592,7 @@
                     @else
                     <span class="ct-badge ct-badge-finished">{{ __('Finished') }}</span>
                     @endif
-                    <span class="ct-badge ct-badge-diff">{{ ucfirst($contest->difficulty) }}</span>
+                    <span class="ct-badge ct-badge-diff">{{ __('difficulty_' . $contest->difficulty) }}</span>
                 </div>
             </div>
             <div class="ct-timer" x-data="{ t: {{ $contest->getTimeRemainingAttribute() ?? 0 }} }" x-init="if(t > 0) setInterval(() => { if(t > 0) t-- }, 1000)">
@@ -652,8 +655,8 @@
                         <div class="ct-problem-info">
                             <div class="ct-problem-title">{{ $problem->title }}</div>
                             <div class="ct-problem-meta">
-                                <span class="ct-problem-tag" style="background:{{ $diffColor }}15;color:{{ $diffColor }}">{{ ucfirst($problem->difficulty) }}</span>
-                                <span class="ct-problem-tag" style="background:var(--accent-glow);color:var(--accent)">{{ $problem->points }} pts</span>
+                                <span class="ct-problem-tag" style="background:{{ $diffColor }}15;color:{{ $diffColor }}">{{ __('difficulty_' . $problem->difficulty) }}</span>
+                                <span class="ct-problem-tag" style="background:var(--accent-glow);color:var(--accent)">{{ $problem->points }} {{ __('pts') }}</span>
                             </div>
                         </div>
                     </div>
@@ -704,11 +707,11 @@
                 <div class="ct-info-title">{{ __('Info') }}</div>
                 <div class="ct-info-row">
                     <span class="ct-info-label">{{ __('Status') }}</span>
-                    <span class="ct-info-value">{{ ucfirst($contest->status) }}</span>
+                    <span class="ct-info-value">{{ __('Active') }}</span>
                 </div>
                 <div class="ct-info-row">
                     <span class="ct-info-label">{{ __('Difficulty') }}</span>
-                    <span class="ct-info-value">{{ ucfirst($contest->difficulty) }}</span>
+                    <span class="ct-info-value">{{ __('difficulty_' . $contest->difficulty) }}</span>
                 </div>
                 <div class="ct-info-row">
                     <span class="ct-info-label">{{ __('Time Limit') }}</span>
@@ -785,9 +788,9 @@
                     <div>
                         <label class="ct-form-label">{{ __('Difficulty') }} *</label>
                         <select name="difficulty" class="ct-form-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
+                            <option value="easy">{{ __('Easy') }}</option>
+                            <option value="medium" selected>{{ __('Medium') }}</option>
+                            <option value="hard">{{ __('Hard') }}</option>
                         </select>
                     </div>
                     <div>
@@ -850,6 +853,8 @@
 </div>
 @endif
 
+<div id="hm-tip" class="ct-heatmap-tooltip"></div>
+
 <script>
 function heatmap() {
     return {
@@ -864,6 +869,8 @@ function heatmap() {
             const weeks = 53;
             const startDate = new Date(today);
             startDate.setDate(startDate.getDate() - (weeks * 7 - 1) + (6 - startDate.getDay()));
+
+            const tip = document.getElementById('hm-tip');
 
             let html = '';
             let currentDate = new Date(startDate);
@@ -886,17 +893,27 @@ function heatmap() {
                     const isFuture = currentDate > today;
                     const opacity = isFuture ? 'opacity:0.3;pointer-events:none;' : '';
 
-                    html += `<div class="ct-heatmap-cell ct-heatmap-lvl-${isFuture ? 0 : lvl}" style="${opacity}">
-                        <div class="ct-heatmap-tooltip">${label}</div>
-                    </div>`;
+                    html += `<div class="ct-heatmap-cell ct-heatmap-lvl-${isFuture ? 0 : lvl}" style="${opacity}" data-tip="${label.replace(/"/g,'&quot;')}"></div>`;
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
                 html += '</div>';
             }
 
             grid.innerHTML = html;
+
+            grid.addEventListener('mousemove', function(e) {
+                const cell = e.target.closest('.ct-heatmap-cell');
+                if (!cell || !cell.dataset.tip) { tip.style.display = 'none'; return; }
+                tip.textContent = cell.dataset.tip;
+                tip.style.display = 'block';
+                const r = cell.getBoundingClientRect();
+                tip.style.left = (r.left + r.width / 2 - tip.offsetWidth / 2) + 'px';
+                tip.style.top = (r.top - tip.offsetHeight - 6) + 'px';
+            });
+            grid.addEventListener('mouseleave', function() { tip.style.display = 'none'; });
         }
     };
 }
 </script>
+
 @endsection

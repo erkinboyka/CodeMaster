@@ -11,11 +11,9 @@ class CommunityPost extends Model
 {
     protected $fillable = [
         'user_id',
+        'problem_id',
         'title',
         'content',
-        'likes_count',
-        'views_count',
-        'comments_count',
     ];
 
     protected $casts = [
@@ -27,6 +25,11 @@ class CommunityPost extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function problem(): BelongsTo
+    {
+        return $this->belongsTo(Problem::class);
     }
 
     public function comments(): HasMany

@@ -28,7 +28,7 @@ class GeminiService
         }
 
         $key = $this->apiKeys[$this->currentKeyIndex % count($this->apiKeys)];
-        $this->currentKeyIndex++;
+        $this->currentKeyIndex = ($this->currentKeyIndex + 1) % count($this->apiKeys);
 
         return $key;
     }

@@ -21,8 +21,9 @@ class RoadmapController extends Controller
     {
         $nodes = RoadmapNode::with('course', 'roadmapLessons', 'quizQuestions')
             ->where('roadmap_title', $title)
+            ->orderBy('y')
+            ->orderBy('x')
             ->get()
-            ->sortBy(fn($n) => [$n->y, $n->x])
             ->values();
 
         $completedNodeIds = RoadmapUserProgress::where('user_id', Auth::id())
@@ -58,8 +59,8 @@ class RoadmapController extends Controller
         $roadmapTitles = RoadmapNode::distinct()->pluck('roadmap_title')->filter()->values()->all();
         sort($roadmapTitles);
         $currentIndex = array_search($title, $roadmapTitles);
-        $prevRoadmap = $currentIndex > 0 ? $roadmapTitles[$currentIndex - 1] : null;
-        $nextRoadmap = $currentIndex < count($roadmapTitles) - 1 ? $roadmapTitles[$currentIndex + 1] : null;
+        $prevRoadmap = ($currentIndex !== false && $currentIndex > 0) ? $roadmapTitles[$currentIndex - 1] : null;
+        $nextRoadmap = ($currentIndex !== false && $currentIndex < count($roadmapTitles) - 1) ? $roadmapTitles[$currentIndex + 1] : null;
 
         $roadmap = (object) ['id' => $title, 'title' => $title, 'nodes' => $nodes];
 

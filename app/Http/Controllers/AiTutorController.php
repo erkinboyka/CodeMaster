@@ -38,14 +38,17 @@ class AiTutorController extends Controller
 
         $this->geminiService->trimUserChatMessages($userId, 50);
 
+        $sanitizedMessage = strip_tags($validated['message']);
+        $sanitizedMessage = str_replace(['<', '>'], ['', ''], $sanitizedMessage);
+
         ChatMessage::create([
             'user_id' => $userId,
             'sender' => 'user',
-            'message_text' => $validated['message'],
+            'message_text' => $sanitizedMessage,
             'sent_at' => now(),
         ]);
 
-        $contents = $this->geminiService->buildContents($userId, $validated['message'], $validated['context'] ?? null);
+        $contents = $this->geminiService->buildContents($userId, $sanitizedMessage, $validated['context'] ?? null);
 
         $response = $this->geminiService->callApi($contents);
 

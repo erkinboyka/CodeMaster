@@ -515,9 +515,9 @@
 
     @if($currentUser)
     <div class="rt-user-card">
-        <img src="{{ $currentUser->avatar ? asset('storage/' . $currentUser->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($currentUser->name ?? 'U') . '&background=6366f1&color=fff' }}" class="rt-user-avatar">
+        <img src="{{ $currentUser->avatar_url }}" class="rt-user-avatar">
         <div class="rt-user-info">
-            <div class="rt-user-level">{{ $currentUser->level_badge }} Lv.{{ $currentUser->level }} — {{ $currentUser->level_title }}</div>
+            <div class="rt-user-level">{!! $currentUser->level_badge !!} Lv.{{ $currentUser->level }} — {{ $currentUser->level_title }}</div>
             <div class="rt-user-xp">{{ number_format($currentUser->total_xp) }} XP</div>
             <div class="rt-user-tokens"><span class="rt-token-icon"><i class="fas fa-coins"></i></span> {{ $currentUser->ai_tokens }}</div>
         </div>
@@ -541,6 +541,9 @@
             </a>
             <a href="{{ route('ratings.index', ['tab' => 'tests']) }}" class="rt-tab {{ $tab === 'tests' ? 'active' : '' }}">
                 <i class="fas fa-flask"></i> {{ __('Tests') }}
+            </a>
+            <a href="{{ route('ratings.index', ['tab' => 'elo']) }}" class="rt-tab {{ $tab === 'elo' ? 'active' : '' }}">
+                <i class="fas fa-chess-king"></i> {{ __('ELO Rating') }}
             </a>
         </div>
         <form method="GET" action="{{ route('ratings.index', ['tab' => $tab]) }}" class="rt-search">
@@ -593,6 +596,23 @@
             <div class="rt-stat-label">{{ __('Players') }}</div>
         </div>
         @endif
+        @if($tab === 'elo')
+        <div class="rt-stat-card">
+            <div class="rt-stat-icon" style="background:var(--accent-glow);color:var(--accent)"><i class="fas fa-chess-king"></i></div>
+            <div class="rt-stat-val">{{ $users->max('rating') ?? 1200 }}</div>
+            <div class="rt-stat-label">{{ __('Highest Rating') }}</div>
+        </div>
+        <div class="rt-stat-card">
+            <div class="rt-stat-icon" style="background:rgba(34,197,94,0.1);color:#22c55e"><i class="fas fa-chart-line"></i></div>
+            <div class="rt-stat-val">{{ $users->avg('rating') ? round($users->avg('rating')) : 1200 }}</div>
+            <div class="rt-stat-label">{{ __('Average Rating') }}</div>
+        </div>
+        <div class="rt-stat-card">
+            <div class="rt-stat-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b"><i class="fas fa-users"></i></div>
+            <div class="rt-stat-val">{{ $users->total() }}</div>
+            <div class="rt-stat-label">{{ __('Ranked Players') }}</div>
+        </div>
+        @endif
     </div>
 
     <div class="rt-leaderboard">
@@ -604,6 +624,9 @@
             @if($tab === 'courses')
             <div style="text-align:center">{{ __('Certificates') }}</div>
             <div style="text-align:center">{{ __('Courses') }}</div>
+            @elseif($tab === 'elo')
+            <div style="text-align:center">{{ __('Rating') }}</div>
+            <div style="text-align:center">{{ __('Peak') }}</div>
             @else
             <div style="text-align:center">{{ __('Practice') }}</div>
             <div style="text-align:center">{{ __('Contests') }}</div>
@@ -629,15 +652,18 @@
                 @endif
             </div>
             <div class="rt-player">
-                <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff' }}" class="rt-player-avatar">
+                <img src="{{ $user->avatar_url }}" class="rt-player-avatar">
                 <div>
                     <a href="{{ route('profile.show', $user->id) }}" class="rt-player-name">{{ $user->name }}</a>
+                    @if($user->country)
+                        <span style="font-size:16px;margin-left:6px" title="{{ country_name($user->country) }}">{!! country_flag($user->country) !!}</span>
+                    @endif
                     <div class="rt-player-title">{{ $user->title ?? $user->email }}</div>
                 </div>
             </div>
             <div>
                 <span class="rt-level-badge" style="background:{{ $user->level_color }}15;color:{{ $user->level_color }}">
-                    {{ $user->level_badge }} Lv.{{ $user->level }}
+                    {!! $user->level_badge !!} Lv.{{ $user->level }}
                 </span>
                 <div class="rt-xp-bar">
                     <div class="rt-xp-bar-fill" style="width:{{ $user->level_progress }}%"></div>
@@ -653,6 +679,13 @@
             </div>
             <div class="rt-center">
                 <span class="rt-badge-num" style="background:var(--accent-glow);color:var(--accent)">{{ $user->completed_courses_count ?? 0 }}</span>
+            </div>
+            @elseif($tab === 'elo')
+            <div class="rt-center">
+                <span class="rt-badge-num" style="background:var(--accent-glow);color:var(--accent);font-weight:800;font-size:15px">{{ $user->rating ?? 1200 }}</span>
+            </div>
+            <div class="rt-center">
+                <span class="rt-badge-num" style="background:rgba(245,158,11,0.1);color:#f59e0b">{{ $user->rating_peak ?? 1200 }}</span>
             </div>
             @else
             <div class="rt-center">

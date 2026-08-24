@@ -291,7 +291,7 @@
                     </span>
                 </div>
                 <div class="absolute top-3 right-3 z-10">
-                    <span class="px-3 py-1 bg-white text-xs font-bold rounded-full shadow" style="color:var(--accent)">{{ $rm['duration'] }}</span>
+                    <span class="px-3 py-1 bg-white text-xs font-bold rounded-full shadow" style="color:var(--accent)">{{ __($rm['duration']) }}</span>
                 </div>
             </div>
             <div class="p-5">

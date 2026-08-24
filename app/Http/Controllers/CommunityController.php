@@ -6,9 +6,11 @@ use App\Models\CommunityPost;
 use App\Models\CommunityComment;
 use App\Models\CommunityPostLike;
 use App\Models\Tag;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CommunityController extends Controller
 {
@@ -16,9 +18,14 @@ class CommunityController extends Controller
     {
         $sort = $request->get('sort', 'newest');
         $tagSlug = $request->get('tag');
+        $problemId = $request->get('problem');
 
         $query = CommunityPost::with(['user', 'comments.user', 'tags'])
             ->withCount('comments');
+
+        if ($problemId) {
+            $query->where('problem_id', $problemId);
+        }
 
         if ($tagSlug) {
             $query->whereHas('tags', function ($q) use ($tagSlug) {
@@ -38,7 +45,13 @@ class CommunityController extends Controller
 
         $activeTag = $tagSlug ? Tag::where('slug', $tagSlug)->first() : null;
 
-        return view('community.index', compact('posts', 'sort', 'popularTags', 'activeTag'));
+        $latestNews = News::published()
+            ->with('user', 'tags')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('community.index', compact('posts', 'sort', 'popularTags', 'activeTag', 'latestNews'));
     }
 
     public function show($id)
@@ -85,12 +98,14 @@ class CommunityController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string|max:10000',
+            'problem_id' => 'nullable|integer|exists:problems,id',
             'tags' => 'nullable|array|max:5',
             'tags.*' => 'string|max:50',
         ]);
 
         $post = CommunityPost::create([
             'user_id' => Auth::id(),
+            'problem_id' => $validated['problem_id'] ?? null,
             'title' => $validated['title'],
             'content' => $validated['content'],
         ]);
@@ -238,7 +253,7 @@ class CommunityController extends Controller
             $name = trim($name);
             if ($name === '') continue;
 
-            $slug = \Str::slug($name);
+            $slug = Str::slug($name);
             $tag = Tag::firstOrCreate(
                 ['slug' => $slug],
                 ['name' => $name]

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Подготовка к собеседованию' . ' - CodeMaster')
+@section('title', __('interview_prep_title') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -399,21 +399,21 @@
     <div class="iv-hero-orb"></div>
     <div class="iv-hero-orb"></div>
 
-    <h1 class="reveal-up" data-delay="0">Подготовка к собеседованию</h1>
-    <p class="reveal-up" data-delay="0.1">Практикуйтесь с AI-собеседованиями и улучшайте свои навыки.</p>
+    <h1 class="reveal-up" data-delay="0">{{ __('interview_prep_title') }}</h1>
+    <p class="reveal-up" data-delay="0.1">{{ __('interview_prep_desc') }}</p>
 
     <div class="iv-hero-stats reveal-up" data-delay="0.2">
         <div class="iv-hero-stat">
             <div class="iv-hero-stat-val">{{ $interviews->count() }}</div>
-            <div class="iv-hero-stat-label">Всего</div>
+            <div class="iv-hero-stat-label">{{ __('interview_prep_total') }}</div>
         </div>
         <div class="iv-hero-stat">
             <div class="iv-hero-stat-val">{{ $interviews->where('status', 'completed')->count() }}</div>
-            <div class="iv-hero-stat-label">Завершено</div>
+            <div class="iv-hero-stat-label">{{ __('interview_prep_completed') }}</div>
         </div>
         <div class="iv-hero-stat">
             <div class="iv-hero-stat-val">{{ $interviews->where('status', 'in_progress')->count() }}</div>
-            <div class="iv-hero-stat-label">В процессе</div>
+            <div class="iv-hero-stat-label">{{ __('interview_prep_in_progress') }}</div>
         </div>
     </div>
 </section>
@@ -424,10 +424,10 @@
             <div class="iv-panel-head">
                 <div class="iv-panel-title">
                     <i class="fas fa-user-tie"></i>
-                    Твои собеседования
+                    {{ __('interview_prep_your') }}
                 </div>
                 <button onclick="document.getElementById('iv-modal').classList.add('open')" class="iv-new-btn">
-                    <i class="fas fa-plus"></i> Новое собеседование
+                    <i class="fas fa-plus"></i> {{ __('interview_prep_new') }}
                 </button>
             </div>
             <div class="iv-list">
@@ -446,25 +446,25 @@
                             @elseif($interview->status === 'in_progress')<i class="fas fa-spinner"></i>
                             @else<i class="fas fa-clock"></i>
                             @endif
-                            {{ match($interview->status) { 'completed' => 'Завершено', 'in_progress' => 'В процессе', default => 'Ожидание' } }}
+                            {{ match($interview->status) { 'completed' => __('interview_prep_status_completed'), 'in_progress' => __('interview_prep_status_in_progress'), default => __('interview_prep_status_pending') } }}
                         </span>
                     </div>
                     <div class="iv-card-tags">
-                        <span class="iv-tag iv-tag-type"><i class="fas {{ $typeIcon }}"></i> {{ match($interview->type) { 'technical' => 'Техническое', 'behavioral' => 'Поведенческое', 'coding' => 'Кодинг', 'system_design' => 'Проектирование систем', default => ucfirst(str_replace('_', ' ', $interview->type)) } }}</span>
-                        <span class="iv-tag {{ $diffClass }}"><i class="fas {{ $diffIcon }}"></i> {{ match($interview->difficulty) { 'easy' => 'Лёгкий', 'medium' => 'Средний', 'hard' => 'Сложный', default => ucfirst($interview->difficulty) } }}</span>
+                        <span class="iv-tag iv-tag-type"><i class="fas {{ $typeIcon }}"></i> {{ match($interview->type) { 'technical' => __('interview_prep_type_technical'), 'behavioral' => __('interview_prep_type_behavioral'), 'coding' => __('interview_prep_type_coding'), 'system_design' => __('interview_prep_type_system_design'), default => ucfirst(str_replace('_', ' ', $interview->type)) } }}</span>
+                        <span class="iv-tag {{ $diffClass }}"><i class="fas {{ $diffIcon }}"></i> {{ match($interview->difficulty) { 'easy' => __('interview_prep_diff_easy'), 'medium' => __('interview_prep_diff_medium'), 'hard' => __('interview_prep_diff_hard'), default => ucfirst($interview->difficulty) } }}</span>
                         <span class="iv-tag iv-tag-time"><i class="far fa-clock"></i> {{ $interview->created_at->diffForHumans() }}</span>
                     </div>
                     @if($interview->score !== null)
                     <div class="iv-score">
-                        <i class="fas fa-star"></i> Оценка: {{ $interview->score }}%
+                        <i class="fas fa-star"></i> {{ __('interview_prep_score') }} {{ $interview->score }}%
                     </div>
                     @endif
                 </a>
                 @empty
                 <div class="iv-empty">
                     <i class="fas fa-user-tie"></i>
-                    <p>Пока нет собеседований</p>
-                    <small>Начни своё первое!</small>
+                    <p>{{ __('interview_prep_empty') }}</p>
+                    <small>{{ __('interview_prep_empty_hint') }}</small>
                 </div>
                 @endforelse
             </div>
@@ -475,25 +475,25 @@
                 <div class="iv-panel-head">
                 <div class="iv-panel-title">
                     <i class="fas fa-lightbulb"></i>
-                    Советы по собеседованию
+                    {{ __('interview_prep_tips') }}
                 </div>
             </div>
             <div class="iv-tips">
                 <div class="iv-tip">
                     <div class="iv-tip-icon" style="background:rgba(234,179,8,0.1);color:var(--warning)"><i class="fas fa-comment-dots"></i></div>
-                    <div class="iv-tip-text">Практикуйтесь объяснять свой ход мыслей вслух</div>
+                    <div class="iv-tip-text">{{ __('interview_prep_tip_1') }}</div>
                 </div>
                 <div class="iv-tip">
                     <div class="iv-tip-icon" style="background:rgba(139,92,246,0.1);color:var(--accent-3)"><i class="fas fa-database"></i></div>
-                    <div class="iv-tip-text">Регулярно повторяйте структуры данных и алгоритмы</div>
+                    <div class="iv-tip-text">{{ __('interview_prep_tip_2') }}</div>
                 </div>
                 <div class="iv-tip">
                     <div class="iv-tip-icon" style="background:rgba(34,197,94,0.1);color:var(--success)"><i class="fas fa-pen-to-square"></i></div>
-                    <div class="iv-tip-text">Практикуйте написание кода на доске или бумаге</div>
+                    <div class="iv-tip-text">{{ __('interview_prep_tip_3') }}</div>
                 </div>
                     <div class="iv-tip">
                         <div class="iv-tip-icon" style="background:rgba(59,130,246,0.1);color:var(--info)"><i class="fas fa-building"></i></div>
-                        <div class="iv-tip-text">Исследуйте компанию перед собеседованием</div>
+                        <div class="iv-tip-text">{{ __('interview_prep_tip_4') }}</div>
                     </div>
                 </div>
             </div>
@@ -504,35 +504,40 @@
 <div id="iv-modal" class="iv-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
     <div class="iv-modal">
         <div class="iv-modal-head">
-            <div class="iv-modal-title"><i class="fas fa-plus-circle" style="color:var(--accent)"></i> Новое собеседование</div>
+            <div class="iv-modal-title"><i class="fas fa-plus-circle" style="color:var(--accent)"></i> {{ __('interview_prep_new_title') }}</div>
             <button class="iv-modal-close" onclick="document.getElementById('iv-modal').classList.remove('open')"><i class="fas fa-xmark"></i></button>
         </div>
         <form action="{{ route('interview.store') }}" method="POST">
             @csrf
             <div class="iv-modal-body">
                 <div class="iv-form-group">
-                    <label class="iv-form-label">Тип собеседования</label>
+                    <label class="iv-form-label">{{ __('interview_prep_type_label') }}</label>
                     <select name="type" required class="iv-form-select">
-                        <option value="technical">Техническое</option>
-                        <option value="behavioral">Поведенческое</option>
-                        <option value="coding">Кодинг</option>
-                        <option value="system_design">Проектирование систем</option>
+                        <option value="technical">{{ __('interview_prep_type_technical') }}</option>
+                        <option value="behavioral">{{ __('interview_prep_type_behavioral') }}</option>
+                        <option value="coding">{{ __('interview_prep_type_coding') }}</option>
+                        <option value="system_design">{{ __('interview_prep_type_system_design') }}</option>
                     </select>
                 </div>
                 <div class="iv-form-group">
-                    <label class="iv-form-label">Сложность</label>
+                    <label class="iv-form-label">{{ __('interview_prep_diff_label') }}</label>
                     <select name="difficulty" required class="iv-form-select">
-                        <option value="easy">Лёгкий</option>
-                        <option value="medium">Средний</option>
-                        <option value="hard">Сложный</option>
+                        <option value="easy">{{ __('interview_prep_diff_easy') }}</option>
+                        <option value="medium">{{ __('interview_prep_diff_medium') }}</option>
+                        <option value="hard">{{ __('interview_prep_diff_hard') }}</option>
                     </select>
                 </div>
             </div>
             <div class="iv-modal-foot">
-                <button type="submit" class="iv-btn-start"><i class="fas fa-play"></i> Начать собеседование</button>
-                <button type="button" onclick="document.getElementById('iv-modal').classList.remove('open')" class="iv-btn-cancel">Отмена</button>
+                <button type="submit" class="iv-btn-start"><i class="fas fa-play"></i> {{ __('interview_prep_start') }}</button>
+                <button type="button" onclick="document.getElementById('iv-modal').classList.remove('open')" class="iv-btn-cancel">{{ __('interview_prep_cancel') }}</button>
             </div>
         </form>
     </div>
 </div>
+
+<a href="{{ route('peer.index') }}" style="display:flex;align-items:center;justify-content:center;gap:8px;margin:2rem auto 0;padding:14px 28px;border-radius:12px;background:var(--card);border:2px dashed var(--border);color:var(--text);font-size:14px;font-weight:700;text-decoration:none;transition:all .3s;max-width:500px" onmouseover="this.style.borderColor='var(--success)';this.style.color='var(--success)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+    <i class="fas fa-users" style="font-size:18px;"></i>
+    {{ __('interview_prep_peer') }}
+</a><br><br><br>
 @endsection

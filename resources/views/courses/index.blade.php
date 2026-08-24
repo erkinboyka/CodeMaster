@@ -371,6 +371,7 @@
             'linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)',
         ];
         $gradient = $gradients[$id % count($gradients)];
+        $slidesCount = \App\Models\Lesson::where('course_id', $id)->whereNotNull('presentation_url')->where('presentation_url', '!=', '')->count();
 
         $catColors = match(true) {
             str_contains(strtolower($course->title), 'html') => ['#e34f26', '#f96d3b'],
@@ -408,7 +409,7 @@
                     <span class="cs-badge-pulse px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold rounded-lg">{{ $course->category }}</span>
                 </div>
                 <div class="absolute top-4 right-4 z-10">
-                    <span class="px-3 py-1.5 bg-white text-xs font-bold rounded-lg shadow-lg" style="color:{{ $catColors[0] }}">{{ $course->level }}</span>
+                    <span class="px-3 py-1.5 bg-white text-xs font-bold rounded-lg shadow-lg" style="color:{{ $catColors[0] }}">{{ __('courses_level_' . mb_strtolower($course->level)) }}</span>
                 </div>
             </div>
             <div class="p-5">
@@ -416,8 +417,11 @@
                 <p class="text-sm mb-2" style="color:var(--text-muted)">{{ $course->instructor }}</p>
                 <p class="text-sm mb-4 line-clamp-2" style="color:var(--text-muted)">{{ $course->description }}</p>
                 <div class="flex items-center justify-between text-xs mb-4" style="color:var(--text-muted)">
-                    <span><i class="fas fa-play-circle mr-1"></i>{{ $course->lessons->count() }} {{ __('lessons') }}</span>
-                    <span class="px-2 py-0.5 rounded-full" style="background:var(--bg-secondary)">{{ $course->level }}</span>
+                    <span class="flex items-center gap-2">
+                        <span><i class="fas fa-book-open mr-1"></i>{{ $course->lessons->count() }} {{ __('lessons') }}</span>
+                        @if($slidesCount > 0)<span><i class="fas fa-desktop mr-1"></i>{{ $slidesCount }} {{ __('slides') }}</span>@endif
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full" style="background:var(--bg-secondary)">{{ __('courses_level_' . mb_strtolower($course->level)) }}</span>
                 </div>
                 <a href="{{ route('courses.show', $course->id) }}" class="block w-full py-2.5 text-center text-sm font-semibold rounded-xl transition-all duration-300" style="color:var(--accent);border:2px solid var(--border)" onmouseover="this.style.background='var(--accent)';this.style.color='white';this.style.borderColor='var(--accent)'" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)'">
                     {{ __('View Course') }}

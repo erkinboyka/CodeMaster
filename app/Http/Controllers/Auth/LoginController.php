@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\GoogleAuthService;
+use App\Services\RecaptchaService;
+use App\Services\TotpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,10 +14,12 @@ use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
 {
     protected $googleAuthService;
+    protected $recaptchaService;
 
-    public function __construct(GoogleAuthService $googleAuthService)
+    public function __construct(GoogleAuthService $googleAuthService, RecaptchaService $recaptchaService)
     {
         $this->googleAuthService = $googleAuthService;
+        $this->recaptchaService = $recaptchaService;
     }
 
     public function showLoginForm()
@@ -29,6 +33,12 @@ class LoginController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
+
+        if ($request->has('g-recaptcha-response')) {
+            if (!$this->recaptchaService->verify($request->input('g-recaptcha-response'), $request->ip())) {
+                return back()->withErrors(['email' => 'reCAPTCHA verification failed. Please try again.'])->onlyInput('email');
+            }
+        }
 
         $user = User::where('email', $request->email)->first();
 
@@ -48,8 +58,16 @@ class LoginController extends Controller
                 return back()->withErrors(['email' => 'Your account has been blocked.']);
             }
 
+            if ($user->hasTwoFactorEnabled()) {
+                Auth::logout();
+                session()->put('2fa_user_id', $user->id);
+                session()->put('2fa_password_validated', true);
+                return redirect()->route('two-factor.challenge.show');
+            }
+
             $user->resetFailedLogins();
             $user->update(['last_login' => now()]);
+            $user->recordActivity();
 
             $request->session()->regenerate();
             return redirect()->intended(route('dashboard'));
@@ -103,6 +121,7 @@ class LoginController extends Controller
             }
 
             Auth::login($user);
+            $user->recordActivity();
 
             $request->session()->regenerate();
             return redirect()->intended(route('dashboard'));

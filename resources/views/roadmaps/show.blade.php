@@ -30,7 +30,7 @@
         </div>
         @endif
 
-        <div class="rm-badge reveal-up" data-delay="0">ROADMAP STUDIO</div>
+        <div class="rm-badge reveal-up" data-delay="0">{{ __('ROADMAP STUDIO') }}</div>
         <h1 class="rm-title reveal-up" data-delay="0.1">{{ $roadmap->title }}</h1>
         <div class="rm-stats reveal-up" data-delay="0.2">
             <span>{{ $totalNodes }} {{ __('topics') }}</span>
@@ -65,16 +65,16 @@
                          data-exam="{{ $node->is_exam ? '1' : '0' }}"
                          data-materials="{{ addslashes(json_encode($node->materials ?? [])) }}"
                          style="left:{{ $node->x }}px;top:{{ $node->y }}px;">
-                        <div class="rm-node-topic">{{ $node->topic ?? 'Topic' }}</div>
+                        <div class="rm-node-topic">{{ $node->topic ?? __('Topic') }}</div>
                         <div class="rm-node-name">{{ $node->title }}</div>
                         <div class="rm-node-tags">
                             @if($node->is_exam)
-                            <span class="rm-tag rm-tag--exam">EXAM</span>
+                            <span class="rm-tag rm-tag--exam">{{ __('EXAM') }}</span>
                             @elseif($node->course_id)
-                            <span class="rm-tag rm-tag--course">COURSE</span>
+                            <span class="rm-tag rm-tag--course">{{ __('COURSE') }}</span>
                             @endif
                             @if($isDone)
-                            <span class="rm-tag rm-tag--done">DONE</span>
+                            <span class="rm-tag rm-tag--done">{{ __('DONE') }}</span>
                             @endif
                         </div>
                     </div>
@@ -129,7 +129,7 @@
 .rm-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--rm-text);margin:.75rem 0 0}
 .rm-stats{margin-top:.5rem;color:var(--rm-text-dim);font-size:.875rem;display:flex;gap:8px;justify-content:center}
 .rm-main{background:var(--rm-card);border:1px solid var(--rm-border);border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.25);padding:2rem;min-height:70vh;width:100%;max-width:80rem;margin:0 auto}
-.rm-canvas{position:relative;width:100%;height:780px;overflow:auto;border-radius:.75rem;cursor:grab;user-select:none}
+.rm-canvas{position:relative;width:100%;height:1400px;overflow:auto;border-radius:.75rem;cursor:grab;user-select:none}
 .rm-canvas:active{cursor:grabbing}
 .rm-svg{position:absolute;top:0;left:0;pointer-events:none}
 .rm-nodes{position:absolute;top:0;left:0}
@@ -170,6 +170,9 @@
 .rm-materials a{color:var(--rm-accent);text-decoration:underline;text-underline-offset:2px;transition:.2s}
 .rm-materials a:hover{opacity:.8}
 .rm-quiz{display:flex;flex-direction:column;gap:8px}
+.rm-quiz-progress{padding:8px 16px;background:rgba(56,189,248,.08);border-radius:8px;font-size:13px;font-weight:600;color:var(--rm-accent);margin-bottom:8px;text-align:center}
+.rm-quiz-q{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--rm-border)}
+.rm-quiz-q:last-child{border-bottom:none;margin-bottom:0}
 .rm-quiz-result{margin-top:8px;font-size:13px}
 .rm-quiz-opt{display:block;border:1px solid var(--rm-border);border-radius:8px;padding:10px 14px;cursor:pointer;transition:.2s;font-size:14px;color:var(--rm-text);background:var(--rm-card)}
 .rm-quiz-opt:hover{border-color:var(--rm-accent)}
@@ -182,7 +185,7 @@
 .rm-btn--green:hover{background:#4ade80}
 .rm-hidden{display:none!important}
 .rm-read-done{background:#22c55e!important;color:#fff!important}
-@@media(max-width:640px){.rm-main{padding:1rem}.rm-canvas{height:500px}}
+@@media(max-width:640px){.rm-main{padding:1rem}.rm-canvas{height:1200px}}
 </style>
 
 <script>
@@ -366,16 +369,27 @@
                 }).join('');
             }else miniEl.innerHTML='<p style="color:var(--rm-text-dim);font-style:italic">{{ __("Exam is being prepared.") }}</p>';
         }else{
-            // Show first quiz question as mini test
+            // Show all quiz questions as mini test (5 questions)
             if(nodeQs.length>0){
-                var q=nodeQs[0];var opts=typeof q.options==='string'?JSON.parse(q.options):(q.options||[]);
-                miniEl.innerHTML='<p style="margin-bottom:10px;font-weight:600;font-size:15px">'+q.question+'</p>'+
-                    opts.map(function(o,i){var u='mq'+curId+'-'+i;return '<div class="rm-quiz-opt" onclick="rmSel(this,\''+u+'\')"><input type="radio" name="rmMini" value="'+o+'" id="'+u+'" style="display:none"><label for="'+u+'">'+o+'</label></div>'}).join('');
+                miniEl.innerHTML='<div class="rm-quiz-progress"><span id="rmQuizCount">0</span>/'+nodeQs.length+' {{ __("answered") }}</div>'+
+                nodeQs.map(function(q,i){
+                    var opts=typeof q.options==='string'?JSON.parse(q.options):(q.options||[]);
+                    return '<div class="rm-quiz-q" id="rmQQ'+i+'"><p style="margin-bottom:10px;font-weight:600;font-size:15px">'+(i+1)+'. '+q.question+'</p>'+
+                    opts.map(function(o,j){var u='mq'+curId+'-'+i+'-'+j;return '<div class="rm-quiz-opt" onclick="rmSel(this,\''+u+'\')"><input type="radio" name="rmM'+i+'" value="'+o+'" id="'+u+'" style="display:none"><label for="'+u+'">'+o+'</label></div>'}).join('')+'</div>';
+                }).join('');
             }else miniEl.innerHTML='<p style="color:var(--rm-text-dim);font-style:italic">{{ __("Quiz is being prepared.") }}</p>';
         }
     };
 
-    window.rmSel=function(div,uid){var r=document.getElementById(uid);if(r)r.checked=true;div.parentElement.querySelectorAll('.rm-quiz-opt').forEach(function(s){s.classList.remove('rm-sel')});div.classList.add('rm-sel')};
+    window.rmSel=function(div,uid){
+        var r=document.getElementById(uid);if(r)r.checked=true;
+        div.parentElement.querySelectorAll('.rm-quiz-opt').forEach(function(s){s.classList.remove('rm-sel')});
+        div.classList.add('rm-sel');
+        // Update answered count
+        var cnt=0;
+        document.querySelectorAll('.rm-quiz-q').forEach(function(q){var ch=q.querySelector('input[type="radio"]:checked');if(ch)cnt++});
+        var el=document.getElementById('rmQuizCount');if(el)el.textContent=cnt;
+    };
     window.rmClose=function(){modal.classList.remove('open');document.body.style.overflow='';curId=null};
     modal.addEventListener('click',function(e){if(e.target===modal)rmClose()});
     document.addEventListener('keydown',function(e){if(e.key==='Escape')rmClose()});
@@ -440,16 +454,31 @@
                 fetch('/roadmap/complete-node',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},body:JSON.stringify({node_id:curId})}).then(function(r){return r.json()}).then(function(d){if(d.percent!==undefined)location.reload()});
             }else{res.textContent='{{ __("Exam failed:") }} '+pct+'% ('+ok+'/'+nodeQs.length+')';res.style.color='#f43f5e'}
         }else{
-            // Check mini test (first question only)
-            var ch=document.querySelector('input[name="rmMini"]:checked');
-            if(!ch){res.textContent='{{ __("Select an answer.") }}';res.style.color=RM.accent;return}
-            if(!nodeQs.length)return;
-            if(ch.value===nodeQs[0].correct_answer){
-                res.textContent='{{ __("Correct! Node completed.") }}';res.style.color='#22c55e';
+            // Check mini test (all 5 questions)
+            if(!nodeQs.length){res.textContent='{{ __("No quiz available.") }}';res.style.color=RM.textDim;return}
+            var ok=0;
+            for(var i=0;i<nodeQs.length;i++){
+                var ch=document.querySelector('input[name="rmM'+i+'"]:checked');
+                if(ch&&ch.value===nodeQs[i].correct_answer)ok++;
+            }
+            var total=nodeQs.length;
+            var pct=Math.round((ok/total)*100);
+            // Highlight correct/wrong answers
+            nodeQs.forEach(function(q,i){
+                var opts=document.querySelectorAll('input[name="rmM'+i+'"]');
+                opts.forEach(function(inp){
+                    var wrap=inp.closest('.rm-quiz-opt');
+                    if(inp.value===q.correct_answer){wrap.style.borderColor='#22c55e';wrap.style.background='rgba(34,197,94,.1)'}
+                    else if(inp.checked&&inp.value!==q.correct_answer){wrap.style.borderColor='#f43f5e';wrap.style.background='rgba(244,63,94,.1)'}
+                });
+            });
+            if(ok===total){res.textContent='{{ __("Perfect! All correct:") }} '+ok+'/'+total+' {{ __("Node completed!") }}';res.style.color='#22c55e';
                 fetch('/roadmap/complete-node',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},body:JSON.stringify({node_id:curId})}).then(function(r){return r.json()}).then(function(d){if(d.percent!==undefined)location.reload()});
-            }else{res.textContent='{{ __("Wrong answer. Try again.") }}';res.style.color='#f43f5e'}
+            }else{res.textContent='{{ __("Score:") }} '+ok+'/'+total+' ('+pct+'%). {{ __("Answer the wrong ones correctly.") }}';res.style.color=pct>=50?'#eab308':'#f43f5e'}
         }
     };
 })();
 </script>
+
+@include('components.ai-assistant', ['context' => 'roadmap', 'contextTitle' => $roadmap->title ?? ''])
 @endsection

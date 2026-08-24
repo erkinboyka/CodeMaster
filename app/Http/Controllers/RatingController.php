@@ -15,6 +15,8 @@ class RatingController extends Controller
 
         if ($tab === 'tests') {
             $users = $this->getTestLeaderboard($request);
+        } elseif ($tab === 'elo') {
+            $users = $this->getEloLeaderboard($request);
         } else {
             $users = $this->getCourseLeaderboard($request);
         }
@@ -67,6 +69,24 @@ class RatingController extends Controller
 
         $users = $query->orderByDesc('total_xp')
             ->orderByDesc('practice_passed_count')
+            ->paginate(20);
+
+        return $users;
+    }
+
+    protected function getEloLeaderboard(Request $request)
+    {
+        $query = User::query()
+            ->select('users.*')
+            ->where('is_blocked', false)
+            ->where('rating', '>', 1200);
+
+        if ($request->has('search') && $request->search) {
+            $search = str_replace(['%', '_'], ['\\%', '\\_'], $request->search);
+            $query->where('name', 'like', '%' . $search . '%', 'and');
+        }
+
+        $users = $query->orderByDesc('rating')
             ->paginate(20);
 
         return $users;

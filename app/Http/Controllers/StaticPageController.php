@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Course;
+use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
 class StaticPageController extends Controller
@@ -19,6 +22,17 @@ class StaticPageController extends Controller
             abort(404);
         }
 
-        return view('static.' . $page, ['title' => $this->pages[$page]]);
+        $data = ['title' => $this->pages[$page]];
+
+        if ($page === 'about') {
+            $data['stats'] = [
+                'students' => User::count(),
+                'courses' => Course::count(),
+                'countries' => User::where('country_name', '!=', '')->distinct('country_name')->count('country_name'),
+                'vacancies' => Vacancy::count(),
+            ];
+        }
+
+        return view('static.' . $page, $data);
     }
 }

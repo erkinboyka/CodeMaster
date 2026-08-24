@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Политика конфиденциальности' . ' - CodeMaster')
+@section('title', __('privacy.page_title') . ' - CodeMaster')
 
 @section('head')
 <style>
@@ -275,29 +275,29 @@
     <div class="sp-hero-content">
         <div class="sp-hero-badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Защита данных
+            {{ __('privacy.hero_badge') }}
         </div>
-        <h1 class="sp-hero-title">Политика конфиденциальности</h1>
-        <p class="sp-hero-subtitle">Как мы собираем, используем и защищаем вашу персональную информацию.</p>
+        <h1 class="sp-hero-title">{{ __('privacy.hero_title') }}</h1>
+        <p class="sp-hero-subtitle">{{ __('privacy.hero_subtitle') }}</p>
         <div class="sp-hero-date">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Дата вступления в силу: 10 августа 2026 г.
+            {{ __('privacy.hero_date') }}
         </div>
     </div>
 </section>
 
 <div class="sp-layout">
     <nav class="sp-toc">
-        <h2 class="sp-toc-title">Содержание</h2>
+        <h2 class="sp-toc-title">{{ __('privacy.toc_title') }}</h2>
         <ul class="sp-toc-list">
-            <li><a href="#section-1" class="sp-toc-link"><span class="sp-toc-num">1</span> Собираемая информация</a></li>
-            <li><a href="#section-2" class="sp-toc-link"><span class="sp-toc-num">2</span> Как мы используем информацию</a></li>
-            <li><a href="#section-3" class="sp-toc-link"><span class="sp-toc-num">3</span> Хранение данных</a></li>
-            <li><a href="#section-4" class="sp-toc-link"><span class="sp-toc-num">4</span> Обмен информацией</a></li>
-            <li><a href="#section-5" class="sp-toc-link"><span class="sp-toc-num">5</span> Cookies</a></li>
-            <li><a href="#section-6" class="sp-toc-link"><span class="sp-toc-num">6</span> Ваши права</a></li>
-            <li><a href="#section-7" class="sp-toc-link"><span class="sp-toc-num">7</span> Безопасность</a></li>
-            <li><a href="#section-8" class="sp-toc-link"><span class="sp-toc-num">8</span> Контакты</a></li>
+            <li><a href="#section-1" class="sp-toc-link"><span class="sp-toc-num">1</span> {{ __('privacy.toc_item_1') }}</a></li>
+            <li><a href="#section-2" class="sp-toc-link"><span class="sp-toc-num">2</span> {{ __('privacy.toc_item_2') }}</a></li>
+            <li><a href="#section-3" class="sp-toc-link"><span class="sp-toc-num">3</span> {{ __('privacy.toc_item_3') }}</a></li>
+            <li><a href="#section-4" class="sp-toc-link"><span class="sp-toc-num">4</span> {{ __('privacy.toc_item_4') }}</a></li>
+            <li><a href="#section-5" class="sp-toc-link"><span class="sp-toc-num">5</span> {{ __('privacy.toc_item_5') }}</a></li>
+            <li><a href="#section-6" class="sp-toc-link"><span class="sp-toc-num">6</span> {{ __('privacy.toc_item_6') }}</a></li>
+            <li><a href="#section-7" class="sp-toc-link"><span class="sp-toc-num">7</span> {{ __('privacy.toc_item_7') }}</a></li>
+            <li><a href="#section-8" class="sp-toc-link"><span class="sp-toc-num">8</span> {{ __('privacy.toc_item_8') }}</a></li>
         </ul>
     </nav>
 
@@ -305,68 +305,68 @@
         <section id="section-1" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">1</div>
-                <h2 class="sp-section-title">Собираемая информация</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_1_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>Мы можем собирать следующие категории персональных данных при использовании нашего сервиса:</p>
+                <p>{{ __('privacy.section_1_para_1') }}</p>
                 <ul>
-                    <li><strong>Регистрационные данные:</strong> имя пользователя, адрес электронной почты и пароль, необходимые для создания и управления учётной записью.</li>
-                    <li><strong>Данные профиля:</strong> аватар, описание, ссылки на социальные сети и другая информация, которую вы решите предоставить.</li>
-                    <li><strong>Данные об использовании:</strong> информация о взаимодействии с сервисом, включая посещённые страницы, время сессии и действия в интерфейсе.</li>
-                    <li><strong>Техническая информация:</strong> IP-адрес, тип и версия браузера, операционная система, идентификаторы устройств.</li>
+                    <li>{!! __('privacy.section_1_item_1') !!}</li>
+                    <li>{!! __('privacy.section_1_item_2') !!}</li>
+                    <li>{!! __('privacy.section_1_item_3') !!}</li>
+                    <li>{!! __('privacy.section_1_item_4') !!}</li>
                 </ul>
-                <p>Мы не несём ответственности за информацию, которую вы публикуете открыто в рамках функционала сервиса.</p>
+                <p>{{ __('privacy.section_1_para_2') }}</p>
             </div>
         </section>
 
         <section id="section-2" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">2</div>
-                <h2 class="sp-section-title">Как мы используем информацию</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_2_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>Собранные данные используются исключительно в следующих целях:</p>
+                <p>{{ __('privacy.section_2_para_1') }}</p>
                 <ul>
-                    <li><strong>Предоставление сервиса:</strong> обеспечение корректной работы функционала, авторизация и управление учётной записью.</li>
-                    <li><strong>Улучшение качества:</strong> анализ способов использования для оптимизации интерфейса и разработки новых возможностей.</li>
-                    <li><strong>Коммуникация:</strong> отправка уведомлений о важных изменениях в сервисе, ответы на ваши обращения.</li>
-                    <li><strong>Безопасность:</strong> обнаружение и предотвращение мошеннических действий, защита от несанкционированного доступа.</li>
-                    <li><strong>Юридические обязательства:</strong> выполнение требований применимого законодательства.</li>
+                    <li>{!! __('privacy.section_2_item_1') !!}</li>
+                    <li>{!! __('privacy.section_2_item_2') !!}</li>
+                    <li>{!! __('privacy.section_2_item_3') !!}</li>
+                    <li>{!! __('privacy.section_2_item_4') !!}</li>
+                    <li>{!! __('privacy.section_2_item_5') !!}</li>
                 </ul>
-                <p>Мы не осуществляем автоматизированное принятие решений, оказывающих юридическое или иное существенное воздействие на вас.</p>
+                <p>{{ __('privacy.section_2_para_2') }}</p>
             </div>
         </section>
 
         <section id="section-3" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">3</div>
-                <h2 class="sp-section-title">Хранение данных</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_3_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>Ваши персональные данные хранятся на защищённых серверах с использованием современных технологий шифрования. Мы принимаем все разумные меры для обеспечения сохранности и конфиденциальности информации.</p>
-                <p>Срок хранения данных определяется целями их обработки:</p>
+                <p>{{ __('privacy.section_3_para_1') }}</p>
+                <p>{{ __('privacy.section_3_para_2') }}</p>
                 <ul>
-                    <li>Данные учётной записи хранятся на протяжении всего периода использования сервиса и <strong>30 дней</strong> после удаления аккаунта.</li>
-                    <li>Логи активности хранятся в течение <strong>90 дней</strong> и далее удаляются в обезличенном виде.</li>
-                    <li>Данные, необходимые для выполнения юридических обязательств, могут храниться в установленном законом порядке.</li>
+                    <li>{!! __('privacy.section_3_item_1') !!}</li>
+                    <li>{!! __('privacy.section_3_item_2') !!}</li>
+                    <li>{{ __('privacy.section_3_item_3') }}</li>
                 </ul>
-                <p>По истечении сроков хранения данные безвозвратно удаляются или обезличиваются.</p>
+                <p>{{ __('privacy.section_3_para_3') }}</p>
             </div>
         </section>
 
         <section id="section-4" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">4</div>
-                <h2 class="sp-section-title">Обмен информацией</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_4_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>Мы не продаём и не передаём ваши персональные данные третьим лицам без вашего явного согласия, за исключением следующих случаев:</p>
+                <p>{{ __('privacy.section_4_para_1') }}</p>
                 <ul>
-                    <li><strong>Технические партнёры:</strong> компании, предоставляющие инфраструктуру и сервисы хранения данных, действующие от нашего имени и обязанные соблюдать конфиденциальность.</li>
-                    <li><strong>По требованию закона:</strong> если раскрывать данные требуется на основании правового акта, судебного решения или запроса уполномоченного государственного органа.</li>
-                    <li><strong>Защита интересов:</strong> для предотвращения угрозы безопасности, мошенничества или нарушения правил использования сервиса.</li>
+                    <li>{!! __('privacy.section_4_item_1') !!}</li>
+                    <li>{!! __('privacy.section_4_item_2') !!}</li>
+                    <li>{!! __('privacy.section_4_item_3') !!}</li>
                 </ul>
-                <p>В случае реорганизации, слияния или приобретения ваша информация может быть передана правопреемнику с уведомлением.</p>
+                <p>{{ __('privacy.section_4_para_2') }}</p>
             </div>
         </section>
 
@@ -376,65 +376,65 @@
                 <h2 class="sp-section-title">Cookies</h2>
             </div>
             <div class="sp-section-body">
-                <p>Сервис использует файлы cookie и аналогичные технологии для обеспечения работоспособности, аналитики и персонализации.</p>
+                <p>{{ __('privacy.section_5_para_1') }}</p>
                 <ul>
-                    <li><strong>Строго необходимые cookie:</strong> обеспечивают базовую функциональность, включая аутентификацию и настройки безопасности. Отключение данных cookie невозможно без потери работоспособности.</li>
-                    <li><strong>Аналитические cookie:</strong> помогают понять, как пользователи взаимодействуют с сервисом, и используются для улучшения качества.</li>
-                    <li><strong>Функциональные cookie:</strong> запоминают ваши предпочтения и настройки для предоставления персонализированного опыта.</li>
+                    <li>{!! __('privacy.section_5_item_1') !!}</li>
+                    <li>{!! __('privacy.section_5_item_2') !!}</li>
+                    <li>{!! __('privacy.section_5_item_3') !!}</li>
                 </ul>
-                <p>Вы можете управлять настройками cookie через параметры вашего браузера. Обратите внимание, что отключение определённых cookie может повлиять на функциональность сервиса.</p>
+                <p>{{ __('privacy.section_5_para_2') }}</p>
             </div>
         </section>
 
         <section id="section-6" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">6</div>
-                <h2 class="sp-section-title">Ваши права</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_6_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>В соответствии с применимым законодательством о защите данных вы имеете следующие права:</p>
+                <p>{{ __('privacy.section_6_para_1') }}</p>
                 <ul>
-                    <li><strong>Право на доступ:</strong> получение информации о обрабатываемых персональных данных и копии таких данных.</li>
-                    <li><strong>Право на исправление:</strong> требование устранения неточных или неполных персональных данных.</li>
-                    <li><strong>Право на удаление:</strong> требование удаления персональных данных при отсутствии правовых основ для их дальнейшей обработки.</li>
-                    <li><strong>Право на ограничение:</strong> ограничение обработки персональных данных в определённых случаях.</li>
-                    <li><strong>Право на перенос:</strong> получение персональных данных в структурированном, машиночитаемом формате.</li>
-                    <li><strong>Право на отзыв согласия:</strong> отмена ранее данного согласия на обработку персональных данных.</li>
+                    <li>{!! __('privacy.section_6_item_1') !!}</li>
+                    <li>{!! __('privacy.section_6_item_2') !!}</li>
+                    <li>{!! __('privacy.section_6_item_3') !!}</li>
+                    <li>{!! __('privacy.section_6_item_4') !!}</li>
+                    <li>{!! __('privacy.section_6_item_5') !!}</li>
+                    <li>{!! __('privacy.section_6_item_6') !!}</li>
                 </ul>
-                <p>Для реализации ваших прав свяжитесь с нами любым удобным способом, указанным в разделе «Контакты».</p>
+                <p>{!! __('privacy.section_6_para_2') !!}</p>
             </div>
         </section>
 
         <section id="section-7" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">7</div>
-                <h2 class="sp-section-title">Безопасность</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_7_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>Мы серьёзно относимся к защите ваших данных и применяем комплексный подход к обеспечению безопасности:</p>
+                <p>{{ __('privacy.section_7_para_1') }}</p>
                 <ul>
-                    <li><strong>Шифрование:</strong> все данные передаются по защищённому каналу TLS 1.3, а конфиденциальная информация хранится в зашифрованном виде.</li>
-                    <li><strong>Контроль доступа:</strong> доступ к персональным данным имеют только авторизованные сотрудники, прошедшие проверку и обучение.</li>
-                    <li><strong>Мониторинг:</strong> непрерывное отслеживание инфраструктуры для выявления и реагирования на потенциальные угрозы.</li>
-                    <li><strong>Тестирование:</strong> регулярное проведение аудитов безопасности и тестирование на проникновение.</li>
+                    <li>{!! __('privacy.section_7_item_1') !!}</li>
+                    <li>{!! __('privacy.section_7_item_2') !!}</li>
+                    <li>{!! __('privacy.section_7_item_3') !!}</li>
+                    <li>{!! __('privacy.section_7_item_4') !!}</li>
                 </ul>
-                <p>В случае утечки данных, создающей угрозу вашим правам, мы уведомим вас и соответствующие надзорные органы в установленные законом сроки.</p>
+                <p>{{ __('privacy.section_7_para_2') }}</p>
             </div>
         </section>
 
         <section id="section-8" class="sp-section">
             <div class="sp-section-header">
                 <div class="sp-section-num">8</div>
-                <h2 class="sp-section-title">Контакты</h2>
+                <h2 class="sp-section-title">{{ __('privacy.section_8_title') }}</h2>
             </div>
             <div class="sp-section-body">
-                <p>Если у вас возникли вопросы, замечания или запросы, касающиеся настоящей Политики конфиденциальности или обработки ваших персональных данных, пожалуйста, свяжитесь с нами:</p>
+                <p>{{ __('privacy.section_8_para_1') }}</p>
                 <ul>
-                    <li><strong>Электронная почта:</strong> privacy@codemaster.dev</li>
-                    <li><strong>Тема письма:</strong> указывайте «Вопрос по конфиденциальности» для ускоренной обработки обращения.</li>
+                    <li>{!! __('privacy.section_8_item_1') !!}</li>
+                    <li>{!! __('privacy.section_8_item_2') !!}</li>
                 </ul>
-                <p>Мы постараемся ответить на ваш запрос в течение <strong>30 календарных дней</strong> с момента его получения. При необходимости срок ответа может быть продлён с уведомлением.</p>
-                <p>Настоящая политика может быть обновлена. При внесении существенных изменений мы уведомим вас по электронной почте или иным доступным способом.</p>
+                <p>{!! __('privacy.section_8_para_2') !!}</p>
+                <p>{{ __('privacy.section_8_para_3') }}</p>
             </div>
         </section>
     </div>

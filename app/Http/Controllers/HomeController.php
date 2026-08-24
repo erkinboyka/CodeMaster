@@ -7,6 +7,7 @@ use App\Models\Vacancy;
 use App\Models\User;
 use App\Models\UserApplication;
 use App\Models\Lesson;
+use App\Models\Review;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,6 @@ class HomeController extends Controller
         $totalLessons = Lesson::count();
         $totalApplications = UserApplication::count();
 
-        // Real community data from DB
         $communityStats = [
             'students' => $totalUsers,
             'courses' => $totalCourses,
@@ -29,17 +29,17 @@ class HomeController extends Controller
             'applications' => $totalApplications,
         ];
 
-        // Get real recent users for community cards
+        $reviews = Review::with('user')->where('is_public', true)->latest()->take(6)->get();
+
         $recentUsers = User::latest()->take(3)->get()->map(function ($user) {
             $initial = mb_substr($user->name, 0, 1);
-            $roles = ['Fullstack Developer', 'Frontend Developer', 'Backend Developer', 'UI/UX Designer', 'DevOps Engineer', 'Data Analyst'];
-            $contents = [
-                'Начал изучать программирование на CodeMaster!',
-                'Завершил курс и получил сертификат 🎉',
-                'Прошёл собеседование и получил оффер!',
-                'AI-помощник очень помог с практикой 🚀',
-                'Отличная платформа для начинающих!',
-                'Уже 3 месяца здесь усь — результаты отличные!',
+            $roles = [
+                t('home_role_fullstack'),
+                t('home_role_frontend'),
+                t('home_role_backend'),
+                t('home_role_designer'),
+                t('home_role_devops'),
+                t('home_role_data_analyst'),
             ];
             $tagSets = [
                 ['HTML', 'CSS', 'JavaScript'],
@@ -55,7 +55,6 @@ class HomeController extends Controller
                 'name' => $user->name,
                 'role' => $roles[$idx],
                 'initial' => $initial,
-                'content' => $contents[$user->id % count($contents)],
                 'tags' => $tagSets[$idx % count($tagSets)],
                 'color' => $colors[$idx % count($colors)],
             ];
@@ -65,7 +64,7 @@ class HomeController extends Controller
             'courses', 'vacancies',
             'totalUsers', 'totalCourses', 'totalVacancies',
             'totalLessons', 'totalApplications',
-            'communityStats', 'recentUsers'
+            'communityStats', 'recentUsers', 'reviews'
         ));
     }
 }

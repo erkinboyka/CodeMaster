@@ -11,6 +11,7 @@ class UserEducation extends Model
         'user_id',
         'degree',
         'institution',
+        'field',
         'start_date',
         'end_date',
         'description',
@@ -18,10 +19,7 @@ class UserEducation extends Model
 
     protected function casts(): array
     {
-        return [
-            'start_date' => 'date',
-            'end_date' => 'date',
-        ];
+        return [];
     }
 
     public function user(): BelongsTo

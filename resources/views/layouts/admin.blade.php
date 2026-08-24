@@ -51,14 +51,40 @@
         }
     </script>
     <link rel="stylesheet" href="{{ asset('css/innova.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
         [x-cloak] { display: none !important; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+        .admin-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.875rem; }
+        .admin-table tr:hover td { background: color-mix(in srgb, var(--accent) 3%, var(--card)); }
+        .admin-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg, 12px); padding: 1.5rem; }
+        .admin-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .admin-badge-success { background: color-mix(in srgb, #22c55e 15%, transparent); color: #22c55e; }
+        .admin-badge-danger { background: color-mix(in srgb, #ef4444 15%, transparent); color: #ef4444; }
+        .admin-badge-warning { background: color-mix(in srgb, #f59e0b 15%, transparent); color: #f59e0b; }
+        .admin-badge-info { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
+        .admin-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; cursor: pointer; border: none; }
+        .admin-btn-primary { background: var(--accent); color: white; }
+        .admin-btn-primary:hover { background: var(--accent-hover); }
+        .admin-btn-danger { background: #ef4444; color: white; }
+        .admin-btn-danger:hover { background: #dc2626; }
+        .admin-btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .admin-btn-ghost:hover { background: var(--bg-secondary); color: var(--text); }
+        .admin-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--bg); color: var(--text); font-size: 0.875rem; transition: border-color 0.15s; }
+        .admin-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+        .admin-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem; }
+        .admin-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text); margin-bottom: 0.375rem; }
+        .admin-form-group { margin-bottom: 1rem; }
+        .admin-sidebar-active { background: var(--card); color: var(--accent) !important; border-right: 3px solid var(--accent); }
+        .admin-sidebar-active i { color: var(--accent); }
     </style>
     <style id="theme-tailwind-overrides">
         .bg-indigo-600{background:var(--accent)!important}
@@ -80,6 +106,33 @@
         .hover\:bg-indigo-50:hover{background:color-mix(in srgb, var(--accent) 10%, var(--card))!important}
         .hover\:text-gray-700:hover,.hover\:text-white:hover{color:var(--text)!important}
         .hover\:text-indigo-600:hover{color:var(--accent)!important}
+        .border-gray-100{border-color:var(--border)!important}
+        .bg-gray-50{background:var(--bg-secondary)!important}
+        .divide-gray-100>*>*{border-color:var(--border)!important}
+        .text-purple-600{color:var(--accent-2)!important}
+        .bg-purple-50{background:color-mix(in srgb, var(--accent-2) 15%, transparent)!important}
+        .text-blue-600{color:var(--accent-3)!important}
+        .bg-blue-50{background:color-mix(in srgb, var(--accent-3) 15%, transparent)!important}
+        .text-green-400{color:var(--success)!important}
+        .bg-green-400{background:var(--success)!important}
+        .text-red-400{color:var(--danger)!important}
+        .bg-red-400{background:var(--danger)!important}
+        .bg-red-50{background:color-mix(in srgb, var(--danger) 15%, transparent)!important}
+        .bg-red-100{background:color-mix(in srgb, var(--danger) 20%, transparent)!important}
+        .text-yellow-600{color:var(--warning)!important}
+        .bg-yellow-50{background:color-mix(in srgb, var(--warning) 15%, transparent)!important}
+        .bg-yellow-100{background:color-mix(in srgb, var(--warning) 20%, transparent)!important}
+        .text-green-600{color:var(--success)!important}
+        .bg-green-50{background:color-mix(in srgb, var(--success) 15%, transparent)!important}
+        .bg-green-100{background:color-mix(in srgb, var(--success) 20%, transparent)!important}
+        .text-orange-600{color:#f97316!important}
+        .bg-orange-50{background:rgba(249,115,22,0.15)!important}
+        .bg-orange-100{background:rgba(249,115,22,0.2)!important}
+        .bg-purple-100{background:color-mix(in srgb, var(--accent-2) 20%, transparent)!important}
+        .bg-blue-100{background:color-mix(in srgb, var(--accent-3) 20%, transparent)!important}
+        .text-blue-700{color:var(--accent-3)!important}
+        .focus\:ring-indigo-500:focus{box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent)!important;border-color:var(--accent)!important}
+        .focus\:border-indigo-500:focus{border-color:var(--accent)!important}
     </style>
     @yield('head')
 </head>
@@ -124,6 +177,26 @@
                 <a href="{{ route('admin.vacancies') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.vacancies') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
                     <i class="fas fa-briefcase w-6 text-center"></i>
                     <span x-show="sidebarOpen" class="ml-3 whitespace-nowrap">{{ __('Vacancies') }}</span>
+                </a>
+                <a href="{{ route('admin.contests') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.contests*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-trophy w-6 text-center"></i>
+                    <span x-show="sidebarOpen" class="ml-3 whitespace-nowrap">{{ __('Contests') }}</span>
+                </a>
+                <a href="{{ route('admin.interview-prep') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.interview-prep*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-comments w-6 text-center"></i>
+                    <span x-show="sidebarOpen" class="ml-3 whitespace-nowrap">{{ __('Interview Prep') }}</span>
+                </a>
+                <a href="{{ route('admin.news.index') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.news*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-newspaper w-6 text-center"></i>
+                    <span x-show="sidebarOpen" class="ml-3 whitespace-nowrap">{{ __('News') }}</span>
+                </a>
+                <a href="{{ route('admin.notifications') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.notifications*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-envelope w-6 text-center"></i>
+                    <span x-show="sidebarOpen" class="ml-3 whitespace-nowrap">{{ __('Notifications') }}</span>
+                </a>
+                <a href="{{ route('admin.roadmap-list') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.roadmap-list*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-sitemap w-6 text-center"></i>
+                    <span x-show="sidebarOpen" class="ml-3 whitespace-nowrap">{{ __('Roadmap Lists') }}</span>
                 </a>
                 <hr style="border-color:var(--border)" class="my-2">
                 <a href="{{ route('home') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="color:var(--text-muted)">
@@ -180,6 +253,21 @@
                 <a href="{{ route('admin.vacancies') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.vacancies') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
                     <i class="fas fa-briefcase w-6 text-center"></i> {{ __('Vacancies') }}
                 </a>
+                <a href="{{ route('admin.contests') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.contests*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-trophy w-6 text-center"></i> {{ __('Contests') }}
+                </a>
+                <a href="{{ route('admin.interview-prep') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.interview-prep*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-comments w-6 text-center"></i> {{ __('Interview Prep') }}
+                </a>
+                <a href="{{ route('admin.news.index') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.news*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-newspaper w-6 text-center"></i> {{ __('News') }}
+                </a>
+                <a href="{{ route('admin.notifications') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.notifications*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-envelope w-6 text-center"></i> {{ __('Notifications') }}
+                </a>
+                <a href="{{ route('admin.roadmap-list') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="{{ request()->routeIs('admin.roadmap-list*') ? 'background:var(--card);color:var(--accent)' : 'color:var(--text-muted)' }}">
+                    <i class="fas fa-sitemap w-6 text-center"></i> {{ __('Roadmap Lists') }}
+                </a>
                 <hr style="border-color:var(--border)" class="my-2">
                 <a href="{{ route('home') }}" class="flex items-center px-4 py-3 text-sm font-medium transition" style="color:var(--text-muted)">
                     <i class="fas fa-arrow-left w-6 text-center"></i> {{ __('Back to Site') }}
@@ -196,10 +284,13 @@
                 <div class="flex items-center space-x-4">
                     <button class="relative p-2 rounded-lg transition" style="color:var(--text-muted)">
                         <i class="fas fa-bell"></i>
-                        <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">3</span>
+                        @php $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('is_read', false)->count(); @endphp
+                        @if($unreadCount > 0)
+                        <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>
+                        @endif
                     </button>
                     <div class="flex items-center space-x-3">
-                        <img src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff' }}" class="w-8 h-8 rounded-full">
+                        <img src="{{ Auth::user()->avatar_url }}" class="w-8 h-8 rounded-full">
                         <div>
                             <p class="text-sm font-medium" style="color:var(--text)">{{ Auth::user()->name ?? 'Admin' }}</p>
                             <p class="text-xs" style="color:var(--text-muted)">{{ __('Administrator') }}</p>

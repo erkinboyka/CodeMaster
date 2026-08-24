@@ -46,7 +46,7 @@
                         <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">{{ ucfirst($course->category) }}</span>
                     </td>
                     <td class="px-6 py-4">
-                        <span class="text-sm text-gray-600">{{ $course->level ?? '-' }}</span>
+                        <span class="text-sm text-gray-600">{{ $course->level ? __('courses_level_' . mb_strtolower($course->level)) : '-' }}</span>
                     </td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex items-center justify-end space-x-2">

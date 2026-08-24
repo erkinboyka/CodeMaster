@@ -32,6 +32,11 @@ class SetLocale
             App::setLocale($locale);
         }
 
+        // The Tajik catalogue is being expanded. Until a Tajik UI string is
+        // available, show its complete Russian equivalent instead of exposing
+        // untranslated English keys to visitors.
+        app('translator')->setFallback($locale === 'tg' ? 'ru' : 'en');
+
         return $next($request);
     }
 }
