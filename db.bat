@@ -24,8 +24,8 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [2/4] Running database migrations...
-"%PHP%" artisan migrate --force
+echo [2/4] Running database migrations (fresh - all tables dropped)...
+"%PHP%" artisan migrate:fresh --force
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
@@ -35,8 +35,8 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [3/4] Seeding database...
-C:\OSPanel\modules\PHP-8.3\PHP\php.exe artisan db:seed --class=ProblemSeeder
+echo [3/4] Seeding database (all seeders via DatabaseSeeder)...
+"%PHP%" artisan db:seed --force
 
 if %ERRORLEVEL% NEQ 0 (
     echo.

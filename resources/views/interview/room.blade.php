@@ -197,7 +197,9 @@ html,body{background:var(--bg)!important;color-scheme:dark}
     $qExample = $question['example'] ?? '';
     $qStarter = $question['starter_code'] ?? '';
     $qLang = $question['language'] ?? 'python';
-    $qOptions = $question['options'] ?? [];
+    if (empty($qOptions ?? null)) {
+        $qOptions = $question['options'] ?? [];
+    }
     if (is_string($qOptions)) { $d = json_decode($qOptions, true); $qOptions = is_array($d) ? $d : []; }
     $qExpected = $question['expected_key_points'] ?? [];
     if (is_string($qExpected)) { $d = json_decode($qExpected, true); $qExpected = is_array($d) ? $d : []; }
@@ -383,9 +385,9 @@ html,body{background:var(--bg)!important;color-scheme:dark}
             </div>
             <form id="irSubmitForm" action="{{ route('interview.answer', $interview->id) }}" method="POST" style="display:none">
                 @csrf
-                <input type="hidden" name="answer" :value="ans">
+                <input type="hidden" name="answer" :value="effAns()">
             </form>
-            <button class="ir-btn pri" @click="qi >= 4 ? end() : submit()" :disabled="qi < 4 && (!ans || !ans.trim())">
+            <button class="ir-btn pri" @click="qi >= 4 ? end() : submit()" :disabled="qi < 4 && (!effAns() || !effAns().trim())">
                 <i class="fas" :class="qi >= 4 ? 'fa-flag-checkered' : 'fa-paper-plane'"></i>
                 <span x-text="qi >= 4 ? '{{ __('interview_finish') }}' : '{{ __('interview_submit') }}'"></span>
             </button>
@@ -451,6 +453,7 @@ function irRoom(){
         timer: 0,
         tab: 'q',
         ans: '',
+        qtype: @json($qType),
         code: @json($qStarter),
         lang: @json($qLang),
         mic: false,
@@ -694,8 +697,12 @@ function irRoom(){
 
         next(){ this.goTo(this.qi + 1); },
 
+        effAns(){
+            return this.qtype === 'code_writing' ? (this.code || '') : (this.ans || '');
+        },
+
         submit(){
-            if(!this.ans || !this.ans.trim()) return;
+            if(!this.effAns() || !this.effAns().trim()) return;
             document.getElementById('irSubmitForm').submit();
         },
 
@@ -710,7 +717,7 @@ function irRoom(){
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({answer: this.ans || ''})
+                body: JSON.stringify({answer: this.effAns()})
             })
             .then(()=>{ window.location='{{ route("interview.result", $interview->id) }}'; })
             .catch(()=>{ window.location='{{ route("interview.result", $interview->id) }}'; });

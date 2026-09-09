@@ -80,7 +80,7 @@ class Judge0Service
         return strtolower(trim($lang));
     }
 
-    public function runPractice(string $lang, string $code, array $tests): array
+    public function runPractice(string $lang, string $code, array $tests, ?string $functionName = null): array
     {
         $normalized = $this->normalizeLanguage($lang);
 
@@ -88,12 +88,26 @@ class Judge0Service
             return $this->runSqlLocal($code, $tests);
         }
 
+        if (empty($tests)) {
+            return [
+                'status' => 'wrong_answer',
+                'results' => [],
+                'total_tests' => 0,
+                'passed_tests' => 0,
+            ];
+        }
+
+        // Function-style задачи (def twoSum(...) / function twoSum...):
+        // оборачиваем код пользователя драйвером, который парсит stdin,
+        // вызывает функцию и печатает нормализованный результат.
+        $driverCode = $this->buildDriver($normalized, $code, $functionName);
+
         $languageId = $this->resolveLanguageId($lang);
         $results = [];
 
         foreach ($tests as $index => $test) {
             $payload = [
-                'source_code' => $code,
+                'source_code' => $driverCode,
                 'language_id' => $languageId,
                 'stdin' => $test['input'] ?? '',
                 'expected_output' => $test['expected'] ?? $test['output'] ?? '',
@@ -112,7 +126,7 @@ class Judge0Service
                 'description' => $test['description'] ?? 'Test ' . ($index + 1),
                 'passed' => $passed,
                 'input' => $test['input'] ?? '',
-                'expected' => $test['expected'] ?? '',
+                'expected' => $test['expected'] ?? $test['output'] ?? '',
                 'output' => $result['stdout'] ?? '',
                 'error' => $result['stderr'] ?? null,
                 'time' => $result['time'] ?? null,
@@ -128,6 +142,92 @@ class Judge0Service
             'total_tests' => count($tests),
             'passed_tests' => collect($results)->where('passed', true)->count(),
         ];
+    }
+
+    /**
+     * Строит исполняемый код: пользовательский код + драйвер вызова функции.
+     * Драйвер добавляется только для python/javascript при известном имени функции,
+     * иначе код исполняется как есть (stdin/stdout контракт).
+     */
+    protected function buildDriver(string $normalizedLang, string $code, ?string $functionName): string
+    {
+        $functionName = trim((string) $functionName);
+        if ($functionName === '' || !preg_match('/^[A-Za-z_]\w*$/', $functionName)) {
+            return $code;
+        }
+
+        if ($normalizedLang === 'python' || $normalizedLang === 'py') {
+            $driver = <<<'PYDRIVER'
+_CM_IMPORT_SYS = __import__('sys')
+_CM_IMPORT_JSON = __import__('json')
+_CM_IMPORT_AST = __import__('ast')
+def _cm_split(s):
+    parts, cur, depth, instr, q = [], '', 0, False, ''
+    for ch in s:
+        if instr:
+            cur += ch
+            if ch == q:
+                instr = False
+        elif ch == '"' or ch == "'":
+            instr, q, cur = True, ch, cur + ch
+        elif ch in '[{(':
+            depth += 1
+            cur += ch
+        elif ch in ']})':
+            depth -= 1
+            cur += ch
+        elif ch == ',' and depth == 0:
+            parts.append(cur)
+            cur = ''
+        else:
+            cur += ch
+    parts.append(cur)
+    return parts
+def _cm_parse(s):
+    s = s.strip()
+    try:
+        return _CM_IMPORT_AST.literal_eval(s)
+    except Exception:
+        return s
+def _cm_norm(v):
+    if v is True:
+        return 'true'
+    if v is False:
+        return 'false'
+    if v is None:
+        return 'null'
+    if isinstance(v, (list, tuple, dict)):
+        try:
+            return _CM_IMPORT_JSON.dumps(list(v) if isinstance(v, tuple) else v, separators=(',', ':'))
+        except Exception:
+            return str(v)
+    return str(v)
+_cm_raw = _CM_IMPORT_SYS.stdin.read().strip()
+_cm_args = [_cm_parse(p) for p in _cm_split(_cm_raw)]
+_cm_res = CMFUNC(*_cm_args)
+if _cm_res is None and _cm_args:
+    _cm_res = _cm_args[0]
+print(_cm_norm(_cm_res))
+PYDRIVER;
+            return rtrim($code) . "\n" . str_replace('CMFUNC', $functionName, $driver);
+        }
+
+        if ($normalizedLang === 'javascript' || $normalizedLang === 'js') {
+            $driver = <<<'JSDRIVER'
+const _cmFs = require('fs');
+function _cmSplit(s){const parts=[];let cur='',depth=0,inS=false,q='';for(const ch of s){if(inS){cur+=ch;if(ch===q)inS=false}else if(ch==='"'||ch==="'"){inS=true;q=ch;cur+=ch}else if(ch==='['||ch==='{'||ch==='('){depth++;cur+=ch}else if(ch===']'||ch==='}'||ch===')'){depth--;cur+=ch}else if(ch===','&&depth===0){parts.push(cur);cur=''}else{cur+=ch}}parts.push(cur);return parts}
+function _cmParse(s){s=s.trim();try{return JSON.parse(s)}catch(e){if((s.startsWith('"')&&s.endsWith('"'))||(s.startsWith("'")&&s.endsWith("'")))return s.slice(1,-1);const n=Number(s);return isNaN(n)?s:n}}
+function _cmNorm(v){if(v===true)return 'true';if(v===false)return 'false';if(v==null)return 'null';if(typeof v==='object')return JSON.stringify(v);return String(v)}
+const _cmRaw=_cmFs.readFileSync(0,'utf8').trim();
+const _cmArgs=_cmSplit(_cmRaw).map(_cmParse);
+let _cmRes=CMFUNC(..._cmArgs);
+if(_cmRes===undefined&&_cmArgs.length)_cmRes=_cmArgs[0];
+console.log(_cmNorm(_cmRes));
+JSDRIVER;
+            return rtrim($code) . "\n" . str_replace('CMFUNC', $functionName, $driver);
+        }
+
+        return $code;
     }
 
     public function runSqlPractice(string $engine, string $code, array $tests): array

@@ -80,7 +80,7 @@ class GeminiService
             }
         }
 
-        return ['candidates' => [['content' => ['parts' => [['text' => 'Service temporarily unavailable. Please try again later.']]]]]];
+        return ['candidates' => []];
     }
 
     public function buildContents(int $userId, string $message, ?string $context = null): array

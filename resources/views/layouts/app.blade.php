@@ -6,6 +6,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', __('CodeMaster') . ' - ' . __('IT Education & Career Platform'))</title>
     <meta name="description" content="@yield('description', __('CodeMaster - your gateway to IT education, career development, courses, roadmaps, contests and job opportunities.'))">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="alternate icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="theme-color" content="#0b1220">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -46,8 +53,8 @@
     </script>
     <link rel="stylesheet" href="{{ asset('css/innova.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin-fire-streak.css') }}">
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="{{ asset('vendor/alpine/collapse.min.js') }}"></script>
+    <script defer src="{{ asset('vendor/alpine/alpine.min.js') }}"></script>
     <script src="{{ asset('build/assets/app-DUr89oQr.js') }}" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -58,8 +65,49 @@
             document.documentElement.setAttribute('data-theme', l ? t + '-light' : t);
         })();
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="{{ asset('vendor/tinymce/tinymce.min.js') }}"></script>
+    <script>
+        /* CDN fallback: если локальные либы недоступны — догрузить с CDN */
+        window.addEventListener('load', function() {
+            function loadSrc(src, onload) {
+                var s = document.createElement('script');
+                s.src = src;
+                if (onload) s.onload = onload;
+                document.head.appendChild(s);
+            }
+            if (typeof window.Alpine === 'undefined') {
+                loadSrc('https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js', function() {
+                    loadSrc('https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js');
+                });
+            }
+            if (typeof window.tinymce === 'undefined') {
+                loadSrc('https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js');
+            }
+        });
+    </script>
     <style>[x-cloak]{display:none!important}</style>
+    <style id="tinymce-fullscreen-fix">
+        /* Фулскрин TinyMCE — поверх всего сайта */
+        .tox.tox-tinymce.tox-fullscreen { z-index: 100000 !important; }
+        /* Пока редактор в фулскрине — прячем фикс-шапку и плавающие кнопки */
+        body:has(.tox-fullscreen) .nav,
+        body:has(.tox-fullscreen) #mobileMenuPanel,
+        body:has(.tox-fullscreen) .ai-assistant-fab,
+        body:has(.tox-fullscreen) .cd-mobilebar { display: none !important; }
+    </style>
+    <style id="header-lazy">
+        /* До инициализации Alpine дропдауны держит закрытыми [x-cloak] выше.
+           Когда Alpine не загрузился (CDN заблокирован) — прячем по классу и даём hover-фолбэк */
+        html.no-alpine .nav-dropdown-menu,
+        html.no-alpine .lang-dropdown,
+        html.no-alpine .theme-dropdown,
+        html.no-alpine .notif-dropdown,
+        html.no-alpine .lc-user-dropdown,
+        html.no-alpine .nav-notif-badge { display: none; }
+        html.no-alpine .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        html.no-alpine .lang-switcher:hover .lang-dropdown,
+        html.no-alpine .theme-switcher:hover .theme-dropdown { display: block; }
+    </style>
     <style>
         .reveal-up, .reveal-down, .reveal-left, .reveal-right, .reveal-scale {
             opacity: 0;
@@ -79,6 +127,28 @@
 
         .reveal-up.no-init, .reveal-down.no-init, .reveal-left.no-init, .reveal-right.no-init, .reveal-scale.no-init {
             opacity: 0;
+        }
+    </style>
+    <style id="ios-smooth">
+        :root { --ease-ios: cubic-bezier(.32,.72,0,1); }
+        html { scroll-behavior: smooth; }
+        body { -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
+        button, [role="button"], input[type="submit"], input[type="button"] {
+            transition: transform .18s var(--ease-ios), background .25s var(--ease-ios), border-color .25s var(--ease-ios), color .25s var(--ease-ios), box-shadow .25s var(--ease-ios), opacity .2s;
+        }
+        button:active, [role="button"]:active, input[type="submit"]:active, input[type="button"]:active { transform: scale(.95); }
+        a { transition: color .25s var(--ease-ios), background .25s var(--ease-ios), border-color .25s var(--ease-ios), opacity .2s, box-shadow .25s var(--ease-ios); }
+        input, select, textarea { transition: border-color .25s var(--ease-ios), box-shadow .25s var(--ease-ios), background .25s var(--ease-ios); }
+        input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px var(--accent-glow, rgba(99,102,241,.15)); }
+        @keyframes iosPop { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes iosFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes iosUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+        .ios-pop { animation: iosPop .32s var(--ease-ios); }
+        .ios-fade { animation: iosFade .25s ease; }
+        .ios-up { animation: iosUp .38s var(--ease-ios); }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+            html { scroll-behavior: auto; }
         }
     </style>
     <style id="theme-tailwind-overrides">
@@ -143,9 +213,9 @@
         $showReview = !$lastShown || now()->diffInHours(\Carbon\Carbon::parse($lastShown)) >= 48;
     @endphp
     @if($showReview)
-    <div x-data="{ open: true }" x-show="open" x-cloak style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div x-data="{ open: true }" x-show="open" x-cloak x-transition.opacity.duration.250ms style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px">
         <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)" @click="open=false;fetch('{{ route('reviews.dismiss') }}',{method:'POST',headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}','Accept':'application/json'}})"></div>
-        <div style="position:relative;z-index:1;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:440px;width:100%;box-shadow:0 25px 80px rgba(0,0,0,0.4)">
+        <div x-transition.scale.duration.250ms style="position:relative;z-index:1;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:440px;width:100%;box-shadow:0 25px 80px rgba(0,0,0,0.4)">
             <button @click="open=false;fetch('{{ route('reviews.dismiss') }}',{method:'POST',headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}','Accept':'application/json'}})" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px">&times;</button>
             <div style="text-align:center;margin-bottom:20px">
                 <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px">
@@ -465,6 +535,9 @@
 
         setTimeout(function() {
             if (typeof Alpine === 'undefined') {
+                // Alpine не загрузился: html.no-alpine из #header-lazy держит дропдауны
+                // закрытыми и включает hover-фолбэк, так что снимать x-cloak безопасно
+                document.documentElement.classList.add('no-alpine');
                 document.querySelectorAll('[x-cloak]').forEach(function(el) {
                     el.removeAttribute('x-cloak');
                 });

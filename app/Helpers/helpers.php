@@ -2,6 +2,32 @@
 
 use App\Services\I18nService;
 
+if (!function_exists('clean')) {
+    function clean(?string $html): string
+    {
+        if (!$html) return '';
+        $allowed = '<p><br><strong><b><em><i><u><s><del><ins><sub><sup><a><ul><ol><li><h1><h2><h3><h4><h5><h6><pre><code><blockquote><table><thead><tbody><tr><th><td><div><span><img><hr><details><summary>';
+        return strip_tags($html, $allowed);
+    }
+}
+
+if (!function_exists('level_tier')) {
+    /**
+     * Tier рамки профиля по уровню:
+     * 1 — Начинающий (1-4), 2 — Студент (5-9), 3 — Опытный (10-14),
+     * 4 — Продвинутый (15-29), 5 — Эксперт (30+)
+     */
+    function level_tier($level): int
+    {
+        $level = (int) $level;
+        if ($level >= 30) return 5;
+        if ($level >= 15) return 4;
+        if ($level >= 10) return 3;
+        if ($level >= 5) return 2;
+        return 1;
+    }
+}
+
 if (!function_exists('t')) {
     function t(string $key, string $default = ''): string
     {
@@ -23,60 +49,12 @@ if (!function_exists('langUrl')) {
     }
 }
 
-if (!function_exists('normalizeMojibakeText')) {
-    function normalizeMojibakeText(string $text): string
-    {
-        $mojibakeMap = [
-            'Ð' => 'Д', 'Ñ' => 'Н',
-        ];
-
-        $result = $text;
-        foreach ($mojibakeMap as $moji => $real) {
-            $result = str_replace($moji, $real, $result);
-        }
-
-        if (preg_match('/[\x80-\xFF]{2,}/', $result)) {
-            $decoded = @mb_convert_encoding($result, 'UTF-8', 'CP1251');
-            if ($decoded && mb_check_encoding($decoded, 'UTF-8')) {
-                return $decoded;
-            }
-        }
-
-        return $result;
-    }
-}
-
-if (!function_exists('getAvatarUrl')) {
-    function getAvatarUrl(string $name): string
-    {
-        $initials = '';
-        $parts = explode(' ', trim($name));
-        foreach ($parts as $part) {
-            if ($part !== '') {
-                $initials .= mb_strtoupper(mb_substr($part, 0, 1));
-            }
-            if (mb_strlen($initials) >= 2) {
-                break;
-            }
-        }
-
-        if ($initials === '') {
-            $initials = 'U';
-        }
-
-        $hash = md5($name);
-        $hue = hexdec(substr($hash, 0, 3)) % 360;
-
-        return "https://ui-avatars.com/api/?name=" . urlencode($initials) . "&background=hsl({$hue},60%,50%)&color=fff&bold=true&size=128";
-    }
-}
-
 if (!function_exists('country_flag')) {
     function country_flag(?string $code): string
     {
         if (!$code || strlen($code) !== 2) return '';
         $l = strtolower($code);
-        return '<img src="https://flagcdn.com/48x36/' . $l . '.png" alt="' . strtoupper($code) . '" width="24" height="18" style="display:inline;vertical-align:middle;margin-right:4px;border-radius:3px" loading="lazy">';
+        return '<img src="https://flagcdn.com/48x36/' . $l . '.png" alt="' . e(strtoupper($code)) . '" width="24" height="18" style="display:inline;vertical-align:middle;margin-right:4px;border-radius:3px" loading="lazy">';
     }
 }
 

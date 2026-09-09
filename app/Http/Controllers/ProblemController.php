@@ -53,7 +53,8 @@ class ProblemController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $search = str_replace(['%', '_'], ['\\%', '\\_'], $request->search);
+            $query->where('title', 'like', '%' . $search . '%');
         }
 
         $problems = $query->orderBy('id')->paginate(50)->withQueryString();
@@ -93,6 +94,7 @@ class ProblemController extends Controller
 
         $siblingProblems = Problem::select('id', 'title', 'difficulty', 'slug')
             ->orderBy('id')
+            ->limit(200)
             ->get();
 
         return view('problems.show', compact('problem', 'userProgress', 'siblingProblems', 'submissions'));
@@ -109,7 +111,21 @@ class ProblemController extends Controller
         $code = $request->code;
         $language = $request->language;
 
-        $judgeResult = $this->judge0->runPractice($language, $code, $tests);
+        if (empty($tests)) {
+            return response()->json([
+                'success' => false,
+                'all_passed' => false,
+                'results' => [],
+                'total_time_ms' => 0,
+                'total_memory_kb' => 0,
+                'passed_tests' => 0,
+                'total_tests' => 0,
+                'status' => 'no_tests',
+                'message' => 'No test cases available for this problem yet.',
+            ]);
+        }
+
+        $judgeResult = $this->judge0->runPractice($language, $code, $tests, $problem->function_name);
 
         $allPassed = $judgeResult['status'] === 'accepted';
         $passedTests = $judgeResult['passed_tests'];
@@ -155,10 +171,12 @@ class ProblemController extends Controller
 
             $existing = $problem->users()->where('user_id', Auth::id())->first();
 
-            if ($status === 'solved') {
-                $problem->increment('solved_count');
+            $alreadySolved = $existing && $existing->pivot->solved_at;
 
-                $alreadySolved = $existing && $existing->pivot->solved_at;
+            if ($status === 'solved') {
+                if (!$alreadySolved) {
+                    $problem->increment('solved_count');
+                }
                 if (!$alreadySolved) {
                     $isDaily = DailyChallenge::where('challenge_date', now()->toDateString())
                         ->where('problem_id', $problem->id)
@@ -180,11 +198,20 @@ class ProblemController extends Controller
 
             if ($existing) {
                 $existing->pivot->attempts = $existing->pivot->attempts + 1;
-                if ($status === 'solved' && !$existing->pivot->solved_at) {
-                    $existing->pivot->status = 'solved';
-                    $existing->pivot->solved_at = now();
-                    $existing->pivot->best_time_ms = $maxRuntime;
-                    $existing->pivot->best_memory_kb = $maxMemory;
+                if ($status === 'solved') {
+                    if (!$existing->pivot->solved_at) {
+                        $existing->pivot->status = 'solved';
+                        $existing->pivot->solved_at = now();
+                        $existing->pivot->best_time_ms = $maxRuntime;
+                        $existing->pivot->best_memory_kb = $maxMemory;
+                    } else {
+                        if ($existing->pivot->best_time_ms === null || $maxRuntime < $existing->pivot->best_time_ms) {
+                            $existing->pivot->best_time_ms = $maxRuntime;
+                        }
+                        if ($existing->pivot->best_memory_kb === null || $maxMemory < $existing->pivot->best_memory_kb) {
+                            $existing->pivot->best_memory_kb = $maxMemory;
+                        }
+                    }
                 }
                 $existing->pivot->save();
             } else {

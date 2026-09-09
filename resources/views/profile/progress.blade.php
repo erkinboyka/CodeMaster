@@ -2,49 +2,74 @@
 @section('title', __('Progress Dashboard'))
 
 @section('head')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="{{ asset('vendor/chart/chart.umd.min.js') }}"></script>
 <style>
-    .pd-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-    .pd-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-    .pd-card__head{padding:14px 18px 10px;font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+    .pd-page{position:relative}
+    .pd-page::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+        background:radial-gradient(ellipse 45% 30% at 12% 0%, var(--accent-glow) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 28% at 92% 85%, rgba(139,92,246,.07) 0%, transparent 60%)}
+    .pd-wrap{position:relative;z-index:1}
+    .pd-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+    .pd-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;
+        box-shadow:0 12px 34px rgba(0,0,0,.08);transition:transform .3s,box-shadow .3s,border-color .3s,opacity .5s ease;
+        opacity:0;transform:translateY(20px)}
+    .pd-card.in{opacity:1;transform:none}
+    .pd-card:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(0,0,0,.13);border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}
+    .pd-card__head{padding:15px 20px 12px;font-size:12px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.8px;font-family:var(--font-mono)}
     .pd-card__head i{font-size:14px}
-    .pd-card__body{padding:16px 18px}
+    .pd-card__body{padding:18px 20px}
     .pd-card__body canvas{max-height:220px}
-    .pd-stat{padding:18px;border-radius:14px;border:1px solid var(--border);background:var(--bg-2);text-align:center;transition:all .2s}
-    .pd-stat:hover{border-color:color-mix(in srgb,var(--accent) 30%,var(--border));transform:translateY(-2px)}
-    .pd-stat__val{font-size:28px;font-weight:800;line-height:1}
-    .pd-stat__label{font-size:11px;color:var(--text-muted);margin-top:4px}
-    .pd-stat__sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+    .pd-stat{padding:20px 16px;border-radius:18px;border:1px solid var(--border);background:var(--card);
+        text-align:center;box-shadow:0 10px 28px rgba(0,0,0,.08);position:relative;overflow:hidden;
+        transition:transform .3s,box-shadow .3s,border-color .3s,opacity .5s ease;
+        opacity:0;transform:translateY(20px)}
+    .pd-stat.in{opacity:1;transform:none}
+    .pd-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+        background:linear-gradient(90deg,var(--accent),#8b5cf6,transparent);opacity:0;transition:opacity .3s}
+    .pd-stat:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--border));transform:translateY(-3px)}
+    .pd-stat:hover::before{opacity:1}
+    .pd-stat__val{font-size:30px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+    .pd-stat__label{font-size:10px;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700}
+    .pd-stat__sub{font-size:10px;color:var(--text-muted);margin-top:3px;font-family:var(--font-mono)}
     .pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
     .pd-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
     .pd-full{grid-column:1/-1}
-    .pd-mini{font-size:11px;color:var(--text-muted);margin-top:6px}
+    .pd-mini{font-size:11px;color:var(--text-muted);margin-top:6px;font-family:var(--font-mono)}
     .pd-bar{height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-top:6px}
-    .pd-bar__fill{height:100%;border-radius:4px;transition:width .6s}
-    .pd-skill{display:flex;align-items:center;gap:8px;padding:6px 0}
-    .pd-skill__name{font-size:12px;color:var(--text);width:90px;flex-shrink:0}
+    .pd-bar__fill{height:100%;border-radius:4px;transition:width .6s;box-shadow:0 0 8px var(--accent-glow)}
+    .pd-skill{display:flex;align-items:center;gap:8px;padding:7px 0}
+    .pd-skill__name{font-size:12px;color:var(--text);width:90px;flex-shrink:0;font-weight:600}
     .pd-skill__bar{flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden}
     .pd-skill__fill{height:100%;border-radius:3px}
-    .pd-skill__lvl{font-size:10px;color:var(--text-muted);width:60px;text-align:right;flex-shrink:0}
-    .pd-sub{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .pd-skill__lvl{font-size:10px;color:var(--text-muted);width:60px;text-align:right;flex-shrink:0;font-family:var(--font-mono);text-transform:uppercase}
+    .pd-sub{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid var(--border);
+        border-radius:8px;transition:background .15s}
+    .pd-sub:hover{background:var(--bg-secondary)}
     .pd-sub:last-child{border-bottom:none}
-    .pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor}
     .pd-sub__title{font-size:12px;font-weight:600;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .pd-sub__meta{font-size:10px;color:var(--text-muted);flex-shrink:0}
+    .pd-sub__meta{font-size:10px;color:var(--text-muted);flex-shrink:0;font-family:var(--font-mono)}
+    .pd-head-ico{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#8b5cf6);
+        display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;
+        box-shadow:0 12px 30px var(--accent-glow-strong);animation:pdFloat 5s ease-in-out infinite}
+    @@keyframes pdFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
     @media(max-width:768px){.pd-hero{grid-template-columns:repeat(2,1fr)}.pd-grid,.pd-grid-3{grid-template-columns:1fr}}
 </style>
 @endsection
 
 @section('content')
-<div style="max-width:1100px;margin:0 auto;padding:24px 16px">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">
+<div class="pd-page"><div class="pd-wrap" style="max-width:1100px;margin:0 auto;padding:110px 16px 80px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px">
+        <div class="pd-head-ico">
             <i class="fas fa-chart-line"></i>
         </div>
-        <div>
-            <h1 style="font-size:22px;font-weight:800;color:var(--text)">{{ __('Progress Dashboard') }}</h1>
-            <p style="font-size:13px;color:var(--text-muted)">{{ __('Your complete learning analytics') }}</p>
+        <div style="min-width:0">
+            <h1 style="font-size:24px;font-weight:900;color:var(--text);letter-spacing:-.5px;margin:0">{{ __('Progress Dashboard') }}</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin:2px 0 0">{{ __('Your complete learning analytics') }} • <span style="font-family:var(--font-mono)">{{ now()->format('d M Y') }}</span></p>
         </div>
+        <a href="{{ route('profile.index') }}" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:13px;font-weight:700;text-decoration:none;transition:all .25s;flex-shrink:0" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <i class="fas fa-user"></i>{{ __('Profile') }}
+        </a>
     </div>
 
     {{-- ═══════ HERO STATS ═══════ --}}
@@ -266,13 +291,26 @@
             </div>
         </div>
     </div>
-</div>
+</div></div>
 
 @push('scripts')
 <script>
 const ACCENT = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6366f1';
 const ACCENT2 = getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim() || '#a855f7';
 const chartDefaults = { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} };
+
+/* theme charts to match site */
+if (window.Chart) {
+    Chart.defaults.font.family = "'Inter',system-ui,sans-serif";
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = 'rgba(148,163,184,.12)';
+    Chart.defaults.plugins.tooltip.backgroundColor = '#0f172a';
+    Chart.defaults.plugins.tooltip.padding = 12;
+    Chart.defaults.plugins.tooltip.cornerRadius = 10;
+    Chart.defaults.plugins.tooltip.titleFont = { weight: '700' };
+    Chart.defaults.animation.duration = 900;
+    Chart.defaults.animation.easing = 'easeOutQuart';
+}
 
 function daysAgo(n){ const d=[]; for(let i=n-1;i>=0;i--){ const dt=new Date(); dt.setDate(dt.getDate()-i); d.push(dt.toLocaleDateString('en',{month:'short',day:'numeric'})); } return d; }
 
@@ -319,6 +357,35 @@ const actLabels = {!! json_encode(array_keys($activityByType)) !!};
 const actData = {!! json_encode(array_values($activityByType)) !!};
 const actColors = ['#6366f1','#f59e0b','#22c55e','#3b82f6','#ef4444','#ec4899','#8b5cf6','#14b8a6'];
 new Chart(document.getElementById('chartActivityTypes'),{type:'doughnut',data:{labels:actLabels,datasets:[{data:actData,backgroundColor:actColors.slice(0,actLabels.length),borderWidth:0}]},options:{...chartDefaults,cutout:'50%',plugins:{legend:{position:'right',labels:{boxWidth:8,font:{size:10},color:'var(--text)'}}}}});
+
+/* cards + stats reveal */
+(function() {
+    var els = document.querySelectorAll('.pd-card,.pd-stat');
+    if ('IntersectionObserver' in window && els.length) {
+        var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(en) {
+                if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+            });
+        }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+        els.forEach(function(x, i) { x.style.transitionDelay = (i % 4 * 0.06) + 's'; io.observe(x); });
+        setTimeout(function() { els.forEach(function(x) { x.classList.add('in'); }); }, 4000);
+    } else {
+        els.forEach(function(x) { x.classList.add('in'); });
+    }
+    /* animated hero counters */
+    document.querySelectorAll('.pd-stat__val').forEach(function(el) {
+        var target = parseInt((el.textContent || '0').replace(/[^\d]/g, ''), 10) || 0;
+        var t0 = null;
+        function step(t) {
+            if (!t0) t0 = t;
+            var p = Math.min(1, (t - t0) / 1300);
+            var e = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(target * e).toLocaleString('en-US');
+            if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    });
+})();
 </script>
 @endpush
 @endsection

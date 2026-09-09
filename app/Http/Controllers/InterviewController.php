@@ -61,9 +61,9 @@ class InterviewController extends Controller
 
         session([
             'interview_id' => $interview->id,
-            'interview_question_index' => 0,
-            'interview_questions' => [],
-            'interview_current_question' => null,
+            $this->skey($interview->id, 'question_index') => 0,
+            $this->skey($interview->id, 'questions') => [],
+            $this->skey($interview->id, 'current_question') => null,
         ]);
 
         return redirect()->route('interview.room', $interview->id);
@@ -77,20 +77,20 @@ class InterviewController extends Controller
             return redirect()->route('interview.result', $interview->id);
         }
 
-        $questionIndex = (int) $request->query('q', session('interview_question_index', 0));
-        $questions = session('interview_questions', []);
+        $questionIndex = (int) $request->query('q', session($this->skey($id, 'question_index'), 0));
+        $questions = session($this->skey($id, 'questions'), []);
 
         if ($questionIndex >= count($questions)) {
             $question = $this->generateQuestion($interview, $questions);
             $questions[] = $question;
             session([
-                'interview_question_index' => $questionIndex,
-                'interview_current_question' => $question,
-                'interview_questions' => $questions,
+                $this->skey($id, 'question_index') => $questionIndex,
+                $this->skey($id, 'current_question') => $question,
+                $this->skey($id, 'questions') => $questions,
             ]);
         } else {
             $question = $questions[$questionIndex];
-            session(['interview_question_index' => $questionIndex]);
+            session([$this->skey($id, 'question_index') => $questionIndex]);
         }
 
         $startedAt = $interview->started_at ? $interview->started_at->timestamp : now()->timestamp;
@@ -114,15 +114,20 @@ class InterviewController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        $questionIndex = session('interview_question_index', 0);
-        $questions = session('interview_questions', []);
+        $questionIndex = session($this->skey($id, 'question_index'), 0);
+        $questions = session($this->skey($id, 'questions'), []);
 
-        $currentQuestion = $questions[$questionIndex] ?? session('interview_current_question');
+        $currentQuestion = $questions[$questionIndex] ?? session($this->skey($id, 'current_question'));
 
-        $evaluation = $this->evaluateAnswer($interview, $currentQuestion, $request->answer);
+        if (!is_array($currentQuestion)) {
+            return redirect()->route('interview.room', $interview->id);
+        }
+
+        $answer = (string) $request->input('answer', '');
+        $evaluation = $this->evaluateAnswer($interview, $currentQuestion, $answer);
 
         $questions[$questionIndex] = array_merge($currentQuestion, [
-            'user_answer' => $request->answer,
+            'user_answer' => $answer,
             'evaluation' => $evaluation,
         ]);
 
@@ -134,8 +139,8 @@ class InterviewController extends Controller
         }
 
         session([
-            'interview_question_index' => $nextIndex,
-            'interview_questions' => $questions,
+            $this->skey($id, 'question_index') => $nextIndex,
+            $this->skey($id, 'questions') => $questions,
         ]);
 
         return redirect('/interview/' . $interview->id . '?q=' . $nextIndex);
@@ -169,11 +174,11 @@ class InterviewController extends Controller
         }
 
         $answer = $request->input('answer', '');
-        $questions = session('interview_questions', []);
-        $questionIndex = session('interview_question_index', 0);
+        $questions = session($this->skey($id, 'questions'), []);
+        $questionIndex = session($this->skey($id, 'question_index'), 0);
 
         if ($answer && trim($answer) !== '') {
-            $currentQuestion = $questions[$questionIndex] ?? session('interview_current_question');
+            $currentQuestion = $questions[$questionIndex] ?? session($this->skey($id, 'current_question'));
             if ($currentQuestion) {
                 $evaluation = $this->evaluateAnswer($interview, $currentQuestion, $answer);
                 $questions[$questionIndex] = array_merge($currentQuestion, [
@@ -235,6 +240,15 @@ class InterviewController extends Controller
         $reply = $response['candidates'][0]['content']['parts'][0]['text'] ?? 'Sorry, I could not generate a response.';
 
         return response()->json(['reply' => $reply]);
+    }
+
+    /**
+     * Ключ сессии, изолированный под конкретное интервью,
+     * чтобы две вкладки не перезаписывали друг друга.
+     */
+    protected function skey(int $id, string $name): string
+    {
+        return "interview_{$id}_{$name}";
     }
 
     protected function generateQuestion(Interview $interview, array $previousQuestions = []): array
@@ -502,7 +516,7 @@ PROMPT;
             'completed_at' => now(),
         ]);
 
-        session()->forget(['interview_id', 'interview_question_index', 'interview_current_question', 'interview_questions']);
+        session()->forget(['interview_id', $this->skey($interview->id, 'question_index'), $this->skey($interview->id, 'current_question'), $this->skey($interview->id, 'questions')]);
 
         return redirect()->route('interview.result', $interview->id);
     }

@@ -15,9 +15,10 @@ class AdminNewsController extends Controller
         $query = News::with('user', 'tags')->latest();
 
         if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+            $escapedSearch = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+            $query->where(function ($q) use ($escapedSearch) {
+                $q->where('title', 'like', "%{$escapedSearch}%")
+                  ->orWhere('content', 'like', "%{$escapedSearch}%");
             });
         }
 

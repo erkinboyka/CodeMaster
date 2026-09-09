@@ -109,7 +109,7 @@
                 <div x-show="activeTab === 'content'" x-cloak>
                     @if($lesson->content)
                     <div class="lesson-theory-header"><i class="fas fa-file-alt"></i> {{ __('Theory') }}</div>
-                    <div class="lesson-theory-content prose prose-indigo max-w-none">{!! $lesson->content !!}</div>
+                    <div class="lesson-theory-content prose prose-indigo max-w-none">{!! clean($lesson->content) !!}</div>
                     @endif
                 </div>
 

@@ -154,10 +154,14 @@ class PeerInterviewController extends Controller
         $isHost = $room->isHost(Auth::id());
 
         if ($isHost) {
-            $allowed = ['status', 'score', 'feedback'];
-            foreach ($allowed as $field) {
-                if ($request->has($field)) {
-                    $task->$field = $request->$field;
+            $validated = $request->validate([
+                'status' => 'sometimes|in:active,in_progress,done,review,skipped',
+                'score' => 'sometimes|nullable|integer|min:0|max:10',
+                'feedback' => 'sometimes|nullable|string|max:2000',
+            ]);
+            foreach (['status', 'score', 'feedback'] as $field) {
+                if (array_key_exists($field, $validated)) {
+                    $task->$field = $validated[$field];
                 }
             }
             $task->save();
@@ -342,6 +346,45 @@ class PeerInterviewController extends Controller
         return response()->json(['ok' => true]);
     }
 
+    // ─── RUN CODE (Judge0, общий редактор) ────────────────────
+
+    public function runCode(Request $request, $code)
+    {
+        $room = PeerInterviewRoom::where('room_code', $code)->firstOrFail();
+
+        if (!$room->isParticipant(Auth::id())) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string|max:50000',
+            'language' => 'nullable|string|max:30',
+            'stdin' => 'nullable|string|max:10000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $judge0 = app(\App\Services\Judge0Service::class);
+        $language = $request->input('language', $room->code_language ?? 'python');
+
+        $result = $judge0->submitAndWait([
+            'source_code' => $request->code,
+            'language_id' => $judge0->resolveLanguageId($language),
+            'stdin' => $request->input('stdin', ''),
+        ]);
+
+        return response()->json([
+            'ok' => true,
+            'stdout' => $result['stdout'] ?? '',
+            'stderr' => $result['stderr'] ?? '',
+            'status' => $result['status']['description'] ?? 'Unknown',
+            'time' => $result['time'] ?? null,
+            'memory' => $result['memory'] ?? null,
+        ]);
+    }
+
     // ─── CHAT ───────────────────────────────────────────────
 
     public function sendMessage(Request $request, $code)
@@ -354,14 +397,14 @@ class PeerInterviewController extends Controller
 
         $validator = Validator::make($request->all(), [
             'text' => 'nullable|string|max:2000',
-            'file' => 'nullable|file|max:10240',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,pdf,doc,docx,zip,rar,txt,mp4,mov,webm,m4a,mp3,wav,ogg|max:10240',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        if (!$request->has('text') && !$request->hasFile('file')) {
+        if (!$request->filled('text') && !$request->hasFile('file')) {
             return response()->json(['error' => 'Message text or file is required'], 422);
         }
 
@@ -421,7 +464,7 @@ class PeerInterviewController extends Controller
 
         if ($request->isMethod('post')) {
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:sdp,ice,chat,end,tasks,code',
+                'type' => 'required|in:sdp,ice,chat,end,tasks,code,board',
                 'data' => 'required',
             ]);
 
@@ -434,7 +477,7 @@ class PeerInterviewController extends Controller
 
             if ($type === 'sdp') {
                 $field = $isHost ? 'host_sdp' : 'guest_sdp';
-                $room->update([$field => $data]);
+                $room->update([$field => is_string($data) ? $data : json_encode($data)]);
             } elseif ($type === 'ice') {
                 $field = $isHost ? 'host_ice' : 'guest_ice';
                 $existing = $isHost ? $room->host_ice : $room->guest_ice;
@@ -443,6 +486,22 @@ class PeerInterviewController extends Controller
                 $room->update([$field => $iceList]);
             } elseif ($type === 'end') {
                 $this->endInterview($room);
+            } elseif ($type === 'board') {
+                $board = is_string($data) ? $data : json_encode($data);
+                if (strlen($board) > 500000) {
+                    return response()->json(['error' => 'Board too large'], 422);
+                }
+                $rev = (int) $request->input('rev', 0);
+                $room->refresh();
+                if ($rev > (int) $room->board_rev) {
+                    $room->update(['board_content' => $board, 'board_rev' => $rev]);
+                    return response()->json(['ok' => true, 'rev' => $rev]);
+                }
+                return response()->json([
+                    'ok' => false,
+                    'rev' => (int) $room->board_rev,
+                    'board_content' => $room->board_content,
+                ]);
             } elseif ($type === 'chat') {
                 // Legacy: ignore old client-side chat signals
             }
@@ -461,9 +520,9 @@ class PeerInterviewController extends Controller
 
         if ($pollType === 'sdp' || $pollType === 'all') {
             if ($isHost) {
-                $response['guest_sdp'] = $room->guest_sdp;
+                $response['guest_sdp'] = $this->decodeSdp($room->guest_sdp);
             } else {
-                $response['host_sdp'] = $room->host_sdp;
+                $response['host_sdp'] = $this->decodeSdp($room->host_sdp);
             }
         }
 
@@ -484,6 +543,11 @@ class PeerInterviewController extends Controller
             $response['code_language'] = $room->code_language;
         }
 
+        if ($pollType === 'board' || $pollType === 'all') {
+            $response['board_content'] = $room->board_content;
+            $response['board_rev'] = (int) $room->board_rev;
+        }
+
         if ($pollType === 'messages' || $pollType === 'all') {
             $msgQuery = $room->messages()->with('user');
             if ($afterId > 0) {
@@ -499,6 +563,20 @@ class PeerInterviewController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    /**
+     * SDP хранится TEXT-строкой: массивы кодируем, на чтении декодируем обратно.
+     */
+    protected function decodeSdp($value)
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $decoded;
+            }
+        }
+        return $value;
     }
 
     // ─── LEAVE / END ────────────────────────────────────────

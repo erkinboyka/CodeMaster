@@ -159,6 +159,7 @@ function aiAssistant() {
 
         formatMessage(text) {
             if (!text) return '';
+            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             text = text.replace(/`(.*?)`/g, '<code>$1</code>');
             text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');

@@ -99,7 +99,7 @@
             <form @submit.prevent="sendMessage()" class="flex items-center space-x-3">
                 <label class="p-2 text-gray-400 hover:text-indigo-600 cursor-pointer transition relative">
                     <i class="fas fa-paperclip text-lg"></i>
-                    <input type="file" class="hidden" @change="handleFile($event)" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
+                    <input type="file" class="hidden" @change="handleFile($event)" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar">
                 </label>
                 <label class="p-2 text-gray-400 hover:text-indigo-600 cursor-pointer transition">
                     <i class="fas fa-image text-lg"></i>
@@ -212,8 +212,8 @@ function chatApp() {
         linkify(text) {
             if (!text) return '';
             var urlRe = /(https?:\/\/[^\s<]+)/g;
-            var escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return escaped.replace(urlRe, '<a href="$1" target="_blank" class="underline hover:text-indigo-300">$1</a>');
+            var escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            return escaped.replace(urlRe, '<a href="$1" target="_blank" rel="noopener" class="underline hover:text-indigo-300">$1</a>');
         },
 
         openLightbox(url) {

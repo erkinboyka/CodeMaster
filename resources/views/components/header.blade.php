@@ -13,7 +13,7 @@
                     <span class="nav-link-bracket">{</span>
                     <i class="fas fa-chevron-down nav-dropdown-arrow"></i>
                 </a>
-                <div class="nav-dropdown-menu" x-show="dropdownEduc" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="nav-dropdown-menu" x-show="dropdownEduc" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
                     <a href="{{ route('courses.index') }}" class="nav-dropdown-link">
                         <span class="nav-dropdown-prefix">$</span>
                         <i class="fas fa-book"></i> {{ __('Courses') }}
@@ -49,7 +49,7 @@
                     <span class="nav-link-bracket">{</span>
                     <i class="fas fa-chevron-down nav-dropdown-arrow"></i>
                 </a>
-                <div class="nav-dropdown-menu" x-show="dropdownVacs" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="nav-dropdown-menu" x-show="dropdownVacs" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
                     <a href="{{ route('vacancies.index') }}" class="nav-dropdown-link">
                         <span class="nav-dropdown-prefix">$</span>
                         <i class="fas fa-briefcase"></i> {{ __('Vacancies') }}
@@ -72,7 +72,7 @@
                     <i class="fas fa-globe" style="font-size:11px;opacity:0.6"></i>
                     <span x-text="currentLang.toUpperCase()">Тоҷикӣ</span>
                 </button>
-                <div class="lang-dropdown" x-show="langOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="lang-dropdown" x-show="langOpen" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
                     <a href="/lang/ru" class="lang-option" :class="currentLang === 'ru' ? 'active' : ''" @click="langOpen = false">
                         <span class="nav-dropdown-prefix">$  </span>  Русский
                     </a>
@@ -89,7 +89,7 @@
                 <button class="nav-icon-btn" @click="themeOpen = !themeOpen" title="{{ __('ml_switch_theme') }}">
                     <i class="fas fa-palette"></i>
                 </button>
-                <div class="theme-dropdown" x-show="themeOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="theme-dropdown" x-show="themeOpen" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
                     <button class="theme-option" :class="currentTheme === 'neon' ? 'active' : ''" @click="setTheme('neon')">
                         <span class="theme-dot" style="background:linear-gradient(135deg,#00F5D4,#7C3AED)"></span>
                         CodeMaster Neon
@@ -161,12 +161,12 @@
             <div class="nav-notif" @click.away="notifOpen = false">
                 <button class="nav-icon-btn" @click="notifOpen = !notifOpen; if(!notifLoaded) loadNotifs()" title="{{ __('ml_notifications') }}">
                     <i class="fas fa-bell"></i>
-                    <span class="nav-notif-badge" x-show="unreadCount > 0" x-text="unreadCount"></span>
+                    <span class="nav-notif-badge" x-show="unreadCount > 0" x-cloak x-text="unreadCount"></span>
                 </button>
-                <div class="notif-dropdown" x-show="notifOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="notif-dropdown" x-show="notifOpen" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
                     <div class="notif-dropdown-header">
                         <i class="fas fa-bell" style="font-size:12px;margin-right:6px"></i>{{ __('Notifications') }}
-                        <button x-show="unreadCount > 0" @click="markAllRead()" style="margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.8);font-size:11px;cursor:pointer">{{ __('Mark all read') }}</button>
+                        <button x-show="unreadCount > 0" x-cloak @click="markAllRead()" style="margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.8);font-size:11px;cursor:pointer">{{ __('Mark all read') }}</button>
                     </div>
                     <template x-if="notifications.length === 0">
                         <div class="notif-empty">
@@ -194,7 +194,7 @@
                 <button class="user-avatar-btn" @click="userOpen = !userOpen">
                     <img src="{{ Auth::user()->avatar_url }}" alt="{{ __('ml_avatar') }}" class="user-avatar-img">
                 </button>
-                <div class="lc-user-dropdown" x-show="userOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="lc-user-dropdown" x-show="userOpen" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 -translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 scale-95">
                     <div class="lc-ud-divider"></div>
                     <div class="lc-ud-user">
                         <img src="{{ Auth::user()->avatar_url }}" class="lc-ud-user-avatar">

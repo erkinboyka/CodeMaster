@@ -298,7 +298,7 @@
                                     </div>
                                     <div class="test-case-col">
                                         <div class="test-case-label2">{{ __('Expected') }}</div>
-                                        <div class="test-case-val" x-text="tc.expected"></div>
+                                        <div class="test-case-val" x-text="tc.expected || tc.output || ''"></div>
                                     </div>
                                 </div>
                             </div>
@@ -327,6 +327,9 @@
                                 {{ __('Time') }}: <span x-text="lastResult.total_time_ms + 'ms'"></span> |
                                 {{ __('Memory') }}: <span x-text="(lastResult.total_memory_kb / 1024).toFixed(1) + 'MB'"></span>
                             </div>
+                            <template x-if="lastResult.message">
+                                <div class="text-xs mt-1" style="color:var(--warning)" x-text="lastResult.message"></div>
+                            </template>
                         </div>
                         <template x-for="(r, i) in lastResult.results" :key="i">
                             <div class="test-case">
@@ -545,7 +548,7 @@ function problemApp() {
             this.savingNote = false;
         },
 
-        async runCode() {
+        async executeCode() {
             this.loading = true;
             this.activeTab = 'results';
             const codeToSend = monacoEditor ? monacoEditor.getValue() : '';
@@ -564,6 +567,14 @@ function problemApp() {
                 console.error(e);
             }
             this.loading = false;
+        },
+
+        async runCode() {
+            await this.executeCode();
+        },
+
+        async submitCode() {
+            await this.executeCode();
         },
 
         showSubmission(sub) {
@@ -592,7 +603,7 @@ function collabApp() {
                 if (data.url) {
                     this.collabSession = { code: data.code, url: data.url };
                     this.collabParticipants = this.collabParticipants.length ? this.collabParticipants : [
-                        { name: '{{ Auth::user()->name }}', role: 'host' }
+                        { name: '{{ Auth::user()?->name ?? '' }}', role: 'host' }
                     ];
                 }
             } catch (e) {

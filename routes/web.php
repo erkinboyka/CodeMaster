@@ -21,6 +21,7 @@ use App\Http\Controllers\PracticeController;
 use App\Http\Controllers\AiTutorController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PeerInterviewController;
+use App\Http\Controllers\AiCourseController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -87,12 +88,27 @@ Route::post('/two-factor/recovery', [TwoFactorController::class, 'verifyRecovery
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Courses
+    // Courses (порядок важен: конкретные пути ДО wildcard {id})
     Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
-    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show');
+    // AI Courses — конкретные
+    Route::get('/courses/create', [AiCourseController::class, 'create'])->name('courses.create');
+    Route::post('/courses', [AiCourseController::class, 'store'])->name('courses.store');
+    Route::get('/courses/my', [AiCourseController::class, 'myCourses'])->name('courses.my');
+    Route::get('/courses/available', [AiCourseController::class, 'available'])->name('courses.available');
     Route::post('/courses/complete-lesson', [CourseController::class, 'completeLesson'])->name('courses.completeLesson');
-    Route::get('/courses/{id}/exam', [CourseController::class, 'exam'])->name('courses.exam');
-    Route::post('/courses/{id}/exam/submit', [CourseController::class, 'submitExam'])->name('courses.exam.submit');
+    Route::get('/courses/{course}/generating', [AiCourseController::class, 'generating'])->name('courses.generating');
+    Route::get('/courses/{course}/status', [AiCourseController::class, 'status'])->name('courses.status');
+    Route::get('/courses/{course}/step/{step}', [AiCourseController::class, 'showStep'])->name('courses.step');
+    Route::post('/courses/{course}/step/{step}/complete', [AiCourseController::class, 'completeStep'])->name('courses.step.complete');
+    Route::post('/courses/{course}/step/{step}/test/{test}', [AiCourseController::class, 'submitTest'])->name('courses.step.test');
+    Route::post('/courses/{course}/step/{step}/generate', [AiCourseController::class, 'generateContent'])->name('courses.step.generate')->middleware('throttle:ai');
+    Route::post('/courses/{course}/generate-all', [AiCourseController::class, 'generateAllContent'])->name('courses.generateAll')->middleware('throttle:ai');
+    Route::post('/courses/{course}/subscribe', [AiCourseController::class, 'subscribe'])->name('courses.subscribe');
+    Route::post('/courses/{course}/unsubscribe', [AiCourseController::class, 'unsubscribe'])->name('courses.unsubscribe');
+    // Legacy wildcard — только числовые id, чтобы не съедать create/my/available
+    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show')->whereNumber('id');
+    Route::get('/courses/{id}/exam', [CourseController::class, 'exam'])->name('courses.exam')->whereNumber('id');
+    Route::post('/courses/{id}/exam/submit', [CourseController::class, 'submitExam'])->name('courses.exam.submit')->whereNumber('id');
 
     // Lessons
     Route::get('/courses/{courseId}/lessons/{lessonId}', [\App\Http\Controllers\LessonController::class, 'show'])->name('courses.lesson');
@@ -165,16 +181,23 @@ Route::middleware('auth')->group(function () {
 
     // Roadmaps
     Route::get('/roadmaps', [RoadmapController::class, 'index'])->name('roadmaps.index');
-    Route::get('/roadmap/{title}', [RoadmapController::class, 'show'])->name('roadmap.show')->where('title', '.*');
+    Route::get('/roadmaps/create', [RoadmapController::class, 'create'])->name('roadmaps.create');
+    Route::post('/roadmaps', [RoadmapController::class, 'store'])->name('roadmaps.store');
+    Route::get('/roadmaps/{slug}/generating', [RoadmapController::class, 'generating'])->name('roadmaps.generating');
+    Route::get('/roadmaps/{slug}/status', [RoadmapController::class, 'status'])->name('roadmaps.status');
+    Route::post('/roadmap/course/{courseId}/generate-steps', [RoadmapController::class, 'generateCourseSteps'])->name('roadmap.course.generateSteps');
+    Route::get('/roadmap/course/{courseId}/steps-status', [RoadmapController::class, 'courseStepsStatus'])->name('roadmap.course.stepsStatus');
+    Route::get('/roadmap/{slug}', [RoadmapController::class, 'show'])->name('roadmap.show');
     Route::post('/roadmap/complete-node', [RoadmapController::class, 'completeNode'])->name('roadmap.completeNode');
+    Route::post('/roadmap/enroll', [RoadmapController::class, 'enroll'])->name('roadmap.enroll');
 
     // Community
     Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
-    Route::post('/community', [CommunityController::class, 'store'])->name('community.store');
+    Route::post('/community', [CommunityController::class, 'store'])->name('community.store')->middleware('throttle:community');
     Route::get('/community/{id}', [CommunityController::class, 'show'])->name('community.show');
     Route::put('/community/{id}', [CommunityController::class, 'update'])->name('community.update');
     Route::delete('/community/{id}', [CommunityController::class, 'destroy'])->name('community.destroy');
-    Route::post('/community/comment', [CommunityController::class, 'comment'])->name('community.comment');
+    Route::post('/community/comment', [CommunityController::class, 'comment'])->name('community.comment')->middleware('throttle:community');
     Route::post('/community/{id}/like', [CommunityController::class, 'like'])->name('community.like');
     Route::get('/community/tags/all', [CommunityController::class, 'tags'])->name('community.tags');
 
@@ -194,13 +217,14 @@ Route::middleware('auth')->group(function () {
 
     // Peer Interview (WebRTC)
     Route::get('/peer', [PeerInterviewController::class, 'index'])->name('peer.index');
-    Route::post('/peer/create', [PeerInterviewController::class, 'create'])->name('peer.create');
+    Route::post('/peer/create', [PeerInterviewController::class, 'create'])->name('peer.create')->middleware('throttle:peer');
     Route::get('/peer/join', [PeerInterviewController::class, 'joinForm'])->name('peer.joinForm');
     Route::post('/peer/join', [PeerInterviewController::class, 'join'])->name('peer.join');
     Route::get('/peer/{code}', [PeerInterviewController::class, 'room'])->name('peer.room');
     Route::match(['get','post'], '/peer/{code}/signal', [PeerInterviewController::class, 'signaling'])->name('peer.signal')->middleware('throttle:peer');
     Route::post('/peer/{code}/leave', [PeerInterviewController::class, 'leave'])->name('peer.leave');
     Route::post('/peer/{code}/code', [PeerInterviewController::class, 'updateCode'])->name('peer.code.update')->middleware('throttle:peer');
+    Route::post('/peer/{code}/run', [PeerInterviewController::class, 'runCode'])->name('peer.code.run')->middleware('throttle:peer');
     Route::post('/peer/{code}/message', [PeerInterviewController::class, 'sendMessage'])->name('peer.message.send')->middleware('throttle:peer');
     Route::post('/peer/{code}/task', [PeerInterviewController::class, 'addTask'])->name('peer.task.add');
     Route::put('/peer/{code}/task/{taskId}', [PeerInterviewController::class, 'updateTask'])->name('peer.task.update');
@@ -222,7 +246,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/contests/{id}', [ContestController::class, 'destroy'])->name('contests.destroy');
     Route::get('/contests/{id}/leaderboard', [ContestController::class, 'leaderboard'])->name('contests.leaderboard');
     Route::post('/contests/{id}/problems', [ContestController::class, 'storeProblem'])->name('contests.problems.store');
-    Route::post('/contest/submit', [ContestController::class, 'submit'])->name('contest.submit');
+    Route::post('/contest/submit', [ContestController::class, 'submit'])->name('contest.submit')->middleware('throttle:contest');
 
     // Notifications
     Route::post('/notifications/mark-read', [NotificationController::class, 'markRead'])->name('notifications.markRead');
@@ -244,14 +268,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/practice/submit', [PracticeController::class, 'submit'])->name('practice.submit');
 
     // AI Tutor
-    Route::post('/ai/chat', [AiTutorController::class, 'chat'])->name('ai.chat');
+    Route::post('/ai/chat', [AiTutorController::class, 'chat'])->name('ai.chat')->middleware('throttle:ai');
     Route::get('/ai/history', [AiTutorController::class, 'getChat'])->name('ai.history');
     Route::post('/ai/clear', [AiTutorController::class, 'clearChat'])->name('ai.clear');
 
     // Problems (LeetCode-style)
     Route::get('/problems', [ProblemController::class, 'index'])->name('problems.index');
     Route::get('/problems/{problem:slug}', [ProblemController::class, 'show'])->name('problems.show');
-    Route::post('/problems/{problem:slug}/submit', [ProblemController::class, 'submit'])->name('problems.submit');
+    Route::post('/problems/{problem:slug}/submit', [ProblemController::class, 'submit'])->name('problems.submit')->middleware('throttle:submit');
     Route::get('/problems/{problem:slug}/submissions', [ProblemController::class, 'submissions'])->name('problems.submissions');
     Route::get('/problems/{problem:slug}/performance', [ProblemController::class, 'performance'])->name('problems.performance');
     Route::post('/problems/{problem:slug}/collab', [ProblemController::class, 'createCollab'])->name('problems.collab.create');

@@ -41,9 +41,15 @@ class VacancyController extends Controller
             });
         }
 
-        $vacancies = $query->latest()->paginate(12);
+        $stats = [
+            'total' => (clone $query)->count(),
+            'companies' => (clone $query)->distinct()->count('company'),
+            'remote' => (clone $query)->where('type', 'remote')->count(),
+        ];
 
-        return view('vacancies.index', compact('vacancies'));
+        $vacancies = $query->latest()->paginate(12)->withQueryString();
+
+        return view('vacancies.index', compact('vacancies', 'stats'));
     }
 
     public function show($id)

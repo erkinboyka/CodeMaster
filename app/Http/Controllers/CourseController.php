@@ -49,6 +49,27 @@ class CourseController extends Controller
         $course = Course::with(['lessons' => fn($q) => $q->orderBy('order_num')])->findOrFail($id);
         $user = Auth::user();
 
+        // AI-курсы (steps) открываются через тот же URL /courses/{id},
+        // т.к. отдельного роута для AiCourseController::show нет.
+        // Чтобы не светить приватные курсы и не падать на отсутствующих relations:
+        $isAi = (bool) ($course->ai_generated || $course->steps()->exists());
+        if ($isAi) {
+            if ($course->type === 'private' && $course->user_id !== $user->id) {
+                abort(403);
+            }
+            // Догружаем то, что ждёт courses.show в AI-ветке.
+            $course->load(['courseSkills', 'steps.tests', 'steps.vocabularies', 'steps.exams', 'steps.slides', 'owner']);
+            $enrollment = \App\Models\StudentCourse::where('user_id', $user->id)->where('course_id', $id)->first();
+            $stepIds = $course->steps->pluck('id')->toArray();
+            $completedStepIds = \App\Models\StepStudent::where('user_id', $user->id)
+                ->whereIn('step_id', $stepIds)->where('is_completed', true)->pluck('step_id')->toArray();
+            $isOwner = $course->user_id === $user->id;
+        } else {
+            $enrollment = null;
+            $completedStepIds = [];
+            $isOwner = $course->user_id === $user->id;
+        }
+
         $progress = UserCourseProgress::where('user_id', $user->id)
             ->where('course_id', $id)
             ->first();
@@ -76,7 +97,8 @@ class CourseController extends Controller
 
         return view('courses.show', compact(
             'course', 'progress', 'completedLessonIds', 'totalLessons',
-            'percent', 'exam', 'certificate', 'modules', 'nextLesson', 'instructorUser'
+            'percent', 'exam', 'certificate', 'modules', 'nextLesson', 'instructorUser',
+            'enrollment', 'completedStepIds', 'isOwner', 'isAi'
         ));
     }
 

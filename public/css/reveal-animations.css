@@ -1,0 +1,20 @@
+/* CodeMaster — Scroll Reveal Animations */
+.reveal-up, .reveal-down, .reveal-left, .reveal-right, .reveal-scale {
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.reveal-up { transform: translateY(50px); }
+.reveal-down { transform: translateY(-50px); }
+.reveal-left { transform: translateX(-50px); }
+.reveal-right { transform: translateX(50px); }
+.reveal-scale { transform: scale(0.92); }
+
+.reveal-up.visible, .reveal-down.visible, .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+}
+
+.reveal-up.no-init, .reveal-down.no-init, .reveal-left.no-init, .reveal-right.no-init, .reveal-scale.no-init {
+    opacity: 0;
+}

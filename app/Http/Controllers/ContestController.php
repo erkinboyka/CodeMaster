@@ -55,6 +55,8 @@ class ContestController extends Controller
         if (Auth::check()) {
             $subs = ContestSubmission::where('contest_id', $id)
                 ->where('user_id', Auth::id())
+                ->orderByDesc('status')
+                ->orderBy('id')
                 ->get()
                 ->keyBy('task_id');
             $userSubmissions = $subs;
@@ -84,6 +86,8 @@ class ContestController extends Controller
         if (Auth::check()) {
             $subs = ContestSubmission::where('contest_id', $contestId)
                 ->where('user_id', Auth::id())
+                ->orderByDesc('status')
+                ->orderBy('id')
                 ->get()
                 ->keyBy('task_id');
             $userSubmissions = $subs;
@@ -222,8 +226,8 @@ class ContestController extends Controller
         $validated = $request->validate([
             'contest_id' => 'required|integer',
             'problem_id' => 'required|integer',
-            'code' => 'required|string',
-            'language' => 'required|string',
+            'code' => 'required|string|max:50000',
+            'language' => 'required|string|max:30',
         ]);
 
         $contest = Contest::findOrFail($validated['contest_id']);
@@ -238,7 +242,8 @@ class ContestController extends Controller
         $result = $this->judge0Service->runPractice(
             $validated['language'],
             $validated['code'],
-            $problem->tests_json ?? []
+            $problem->tests_json ?? [],
+            $problem->function_name
         );
 
         $rawStatus = $result['status'] ?? 'error';
@@ -268,15 +273,19 @@ class ContestController extends Controller
         ]);
 
         if ($normalizedStatus === 'accepted') {
-            $xpEarned = DB::transaction(function () use ($user, $contest, $validated) {
-                $alreadySolved = ContestSubmission::where('user_id', $user->id)
+            $userId = Auth::id();
+            $xpEarned = DB::transaction(function () use ($userId, $contest, $validated) {
+                $alreadySolved = ContestSubmission::where('user_id', $userId)
                     ->where('contest_id', $validated['contest_id'])
                     ->where('task_id', $validated['problem_id'])
                     ->where('status', 'accepted')
                     ->exists();
 
                 if (!$alreadySolved) {
-                    return $this->gamificationService->awardContestXp($user, $contest->title);
+                    $user = \App\Models\User::find($userId);
+                    if ($user) {
+                        return $this->gamificationService->awardContestXp($user, $contest->title);
+                    }
                 }
                 return 0;
             });
@@ -296,7 +305,7 @@ class ContestController extends Controller
             ->selectRaw('user_id, COUNT(DISTINCT task_id) as solved, MAX(created_at) as last_submit')
             ->where('status', 'accepted')
             ->groupBy('user_id')
-            ->with('user:id,name,email')
+            ->with('user:id,name')
             ->orderByDesc('solved')
             ->orderBy('last_submit')
             ->get();

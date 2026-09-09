@@ -21,11 +21,15 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-echo [2/3] Starting Laravel server on http://localhost:8000
+echo [2/3] Starting services...
 echo.
 
 start "CodeMaster Vite" cmd /c "cd /d %PROJECT% && npx vite --host"
-start "CodeMaster Queue" cmd /c "cd /d %PROJECT% && %PHP% artisan queue:work --stop-when-empty"
+start "CodeMaster Queue" cmd /c "cd /d %PROJECT% && %PHP% artisan queue:work --verbose"
+
+echo [3/3] Starting Laravel server on http://localhost:8000
+echo.
+
 %PHP% artisan serve --host=0.0.0.0 --port=8000
 
 pause

@@ -16,14 +16,14 @@
                 <div class="flex items-start justify-between mb-6">
                     <div class="flex items-start space-x-4">
                         <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <span class="text-xl font-bold text-indigo-600">{{ substr($vacancy->company, 0, 2) }}</span>
+                            <span class="text-xl font-bold text-indigo-600">{{ mb_strtoupper(mb_substr($vacancy->company ?? 'C', 0, 2)) }}</span>
                         </div>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ $vacancy->title }}</h1>
                             <p class="text-gray-500">{{ $vacancy->company }} • {{ $vacancy->location }}</p>
                         </div>
                     </div>
-                    <span class="px-4 py-1.5 text-sm font-medium rounded-full {{ $vacancy->type === 'remote' ? 'bg-green-50 text-green-600' : ($vacancy->type === 'hybrid' ? 'bg-yellow-50 text-yellow-600' : 'bg-blue-50 text-blue-600') }}">{{ ucfirst($vacancy->type) }}</span>
+                    <span class="px-4 py-1.5 text-sm font-medium rounded-full {{ $vacancy->type === 'remote' ? 'bg-green-50 text-green-600' : ($vacancy->type === 'hybrid' ? 'bg-yellow-50 text-yellow-600' : 'bg-blue-50 text-blue-600') }}">{{ __($vacancy->type) }}</span>
                 </div>
 
                 <div class="flex flex-wrap gap-6 mb-6 pb-6 border-b border-gray-100">
@@ -114,7 +114,7 @@
                     <h3 class="font-bold text-gray-900">{{ __('Company Info') }}</h3>
                     <div class="flex items-center space-x-3">
                         <div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center">
-                            <span class="text-lg font-bold text-indigo-600">{{ substr($vacancy->company, 0, 2) }}</span>
+                            <span class="text-lg font-bold text-indigo-600">{{ mb_strtoupper(mb_substr($vacancy->company ?? 'C', 0, 2)) }}</span>
                         </div>
                         <div>
                             <p class="font-semibold text-gray-800">{{ $vacancy->company }}</p>

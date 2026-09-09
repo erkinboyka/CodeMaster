@@ -18,6 +18,7 @@ class PeerMessage extends Model
         'file_name',
         'file_type',
         'file_size',
+        'created_at',
     ];
 
     protected $casts = [

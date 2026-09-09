@@ -21,6 +21,8 @@ class PeerInterviewRoom extends Model
         'guest_name',
         'code_content',
         'code_language',
+        'board_content',
+        'board_rev',
         'started_at',
         'ended_at',
         'total_score',

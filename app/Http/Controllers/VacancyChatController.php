@@ -11,12 +11,24 @@ use Illuminate\Support\Facades\Storage;
 
 class VacancyChatController extends Controller
 {
+    /**
+     * Чат доступен соискателю, владельцу вакансии и админу.
+     */
+    protected function canAccess(UserApplication $application): bool
+    {
+        $user = Auth::user();
+        if (!$user) return false;
+        if ($user->id === $application->user_id) return true;
+        if ($user->role === 'admin') return true;
+        return $application->vacancy && $user->id === $application->vacancy->owner_id;
+    }
+
     public function show(Request $request, $applicationId)
     {
         $application = UserApplication::with(['vacancy', 'user'])
             ->findOrFail($applicationId);
 
-        if (Auth::id() !== $application->user_id && !Auth::user()->is_admin) {
+        if (!$this->canAccess($application)) {
             abort(403);
         }
 
@@ -50,12 +62,12 @@ class VacancyChatController extends Controller
         $request->validate([
             'application_id' => 'required|exists:user_applications,id',
             'message_text' => 'required_without:file|max:5000',
-            'file' => 'nullable|file|max:10240',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,pdf,doc,docx,xls,xlsx,zip,rar,txt,mp4,mov,webm,m4a,mp3,wav,ogg|max:10240',
         ]);
 
-        $application = UserApplication::findOrFail($request->application_id);
+        $application = UserApplication::with('vacancy')->findOrFail($request->application_id);
 
-        if (Auth::id() !== $application->user_id && !Auth::user()->is_admin) {
+        if (!$this->canAccess($application)) {
             abort(403);
         }
 
@@ -120,13 +132,12 @@ class VacancyChatController extends Controller
     {
         $request->validate([
             'application_id' => 'required|exists:user_applications,id',
-            'file' => 'required|file|max:10240',
-            'description' => 'nullable|string|max:500',
+            'file' => 'required|file|mimes:jpg,jpeg,png,webp,gif,pdf,doc,docx,xls,xlsx,zip,rar,txt,mp4,mov,webm,m4a,mp3,wav,ogg|max:10240',
         ]);
 
-        $application = UserApplication::findOrFail($request->application_id);
+        $application = UserApplication::with('vacancy')->findOrFail($request->application_id);
 
-        if (Auth::id() !== $application->user_id && !Auth::user()->is_admin) {
+        if (!$this->canAccess($application)) {
             abort(403);
         }
 
@@ -134,12 +145,11 @@ class VacancyChatController extends Controller
         $path = $file->store('vacancy-docs/' . $application->id, 'public');
 
         $document = $application->documents()->create([
-            'user_id' => Auth::id(),
+            'uploader_id' => Auth::id(),
             'file_path' => $path,
-            'file_name' => $file->getClientOriginalName(),
-            'file_type' => $file->getMimeType(),
-            'file_size' => $file->getSize(),
-            'description' => $request->description,
+            'original_name' => $file->getClientOriginalName(),
+            'mime_type' => $file->getMimeType(),
+            'size_bytes' => $file->getSize(),
         ]);
 
         return response()->json(['success' => true, 'document' => $document]);

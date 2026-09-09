@@ -13,10 +13,10 @@
         --ed-surface: var(--bg-elevated, var(--bg-secondary));
     }
     * { box-sizing: border-box; }
-    body { margin: 0; overflow: hidden; height: 100vh; }
+    body { overflow: hidden; }
     [x-cloak] { display: none !important; }
 
-    .cp-layout { display: flex; height: 100vh; font-family: 'Inter', system-ui, sans-serif; background: var(--ed-bg); }
+    .cp-layout { display: flex; height: calc(100vh - 64px); font-family: 'Inter', system-ui, sans-serif; background: var(--ed-bg); }
 
     /* Sidebar */
     .cp-sidebar { width: 260px; min-width: 260px; background: var(--ed-card); border-right: 1px solid var(--ed-border); display: flex; flex-direction: column; }
@@ -308,7 +308,7 @@
                     <option value="ruby">Ruby</option>
                     <option value="go">Go</option>
                 </select>
-                <button class="cp-submit-btn" :class="running && 'loading'" @click="submitCode()" :disabled="running">
+                <button id="cpSubmitBtn" class="cp-submit-btn" :class="running && 'loading'" @click="submitCode()" :disabled="running">
                     <template x-if="!running"><i class="fas fa-paper-plane"></i></template>
                     <template x-if="running"><i class="fas fa-spinner fa-spin"></i></template>
                     <span x-text="running ? '{{ __("Running...") }}' : '{{ __("Submit") }}'"></span>
@@ -528,6 +528,12 @@
 </div>
 
 <script>
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        const btn = document.getElementById('cpSubmitBtn');
+        if (btn && !btn.disabled) { e.preventDefault(); btn.click(); }
+    }
+});
 function problemApp() {
     return {
         language: '{{ $problem->language }}',

@@ -47,7 +47,19 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('peer', function (Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(300);
+        });
+
+        RateLimiter::for('community', function (Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(10);
+        });
+
+        RateLimiter::for('contest', function (Request $request) {
             return \Illuminate\Cache\RateLimiting\Limit::perMinute(30);
+        });
+
+        RateLimiter::for('submit', function (Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(20);
         });
     }
 }

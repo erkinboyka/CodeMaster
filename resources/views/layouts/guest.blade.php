@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="alternate icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="theme-color" content="#0b1220">
     <title>@yield('title', __('CodeMaster') . ' - ' . __('Authentication'))</title>
     <script>
         (function() {
@@ -51,8 +58,23 @@
         }
     </script>
     <link rel="stylesheet" href="{{ asset('css/innova.css') }}">
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="{{ asset('vendor/alpine/collapse.min.js') }}"></script>
+    <script defer src="{{ asset('vendor/alpine/alpine.min.js') }}"></script>
+    <script>
+        /* CDN fallback: если локальный Alpine недоступен — догрузить с CDN */
+        window.addEventListener('load', function() {
+            if (typeof window.Alpine === 'undefined') {
+                var c = document.createElement('script');
+                c.src = 'https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js';
+                c.onload = function() {
+                    var s = document.createElement('script');
+                    s.src = 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js';
+                    document.head.appendChild(s);
+                };
+                document.head.appendChild(c);
+            }
+        });
+    </script>
     <script src="{{ asset('build/assets/app-DUr89oQr.js') }}" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">

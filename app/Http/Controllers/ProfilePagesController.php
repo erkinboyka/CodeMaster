@@ -212,7 +212,27 @@ class ProfilePagesController extends Controller
             ->orderByDesc('updated_at')
             ->get();
 
-        return view('profile.notebook', compact('notes'));
+        // История попыток по задачам, к которым привязаны заметки:
+        // problem_id => ['attempts' => N, 'solved' => bool, 'last' => Carbon|null]
+        $subStats = [];
+        $problemIds = $notes->whereNotNull('problem_id')->pluck('problem_id')->unique()->values()->all();
+        if (!empty($problemIds)) {
+            $subs = ProblemSubmission::where('user_id', Auth::id())
+                ->whereIn('problem_id', $problemIds)
+                ->orderByDesc('created_at')
+                ->get(['problem_id', 'status', 'created_at']);
+            foreach ($subs as $s) {
+                if (!isset($subStats[$s->problem_id])) {
+                    $subStats[$s->problem_id] = ['attempts' => 0, 'solved' => false, 'last' => $s->created_at];
+                }
+                $subStats[$s->problem_id]['attempts']++;
+                if ($s->status === 'solved') {
+                    $subStats[$s->problem_id]['solved'] = true;
+                }
+            }
+        }
+
+        return view('profile.notebook', compact('notes', 'subStats'));
     }
 
     public function storeNote(Request $request)

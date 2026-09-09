@@ -1126,6 +1126,55 @@
             transform: translateX(-50%) translateY(0)
         }
 
+        .pr-btn:active,
+        .pr-ctrl:active,
+        .pr-end:active,
+        .pr-add-btn:active,
+        .pr-chat-sd:active,
+        .pr-back:active,
+        .pr-code:active {
+            transform: scale(.92)
+        }
+
+        .pr-chat-msgs,
+        .pr-tasks {
+            scroll-behavior: smooth
+        }
+
+        @keyframes prFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .pr-add-form.open {
+            animation: prFadeUp .28s ease
+        }
+
+        .pr-task-solution,
+        .pr-task-feedback,
+        .pr-solve-form,
+        .pr-review-form {
+            animation: prFadeUp .25s ease
+        }
+
+        .pr-chat-msg {
+            animation: prFadeUp .25s ease
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important
+            }
+        }
+
         @media(max-width:900px) {
             .pr-left {
                 width: 200px
@@ -1171,6 +1220,8 @@
                 </div>
                 <div class="pr-hdr-r">
                     <span class="pr-code" @click="copyCode()" title="{{ __('peer.copy_code') }}">{{ $room->room_code }}</span>
+                    <button class="pr-end" style="border-color:var(--accent);color:var(--accent)" @click="showInvite = true"><i class="fas fa-user-plus" style="margin-right:3px"></i>
+                        {{ __('peer.invite') }}</button>
                     <div class="pr-tmr"><i class="fas fa-clock"></i><span class="pr-tmr-v" x-text="fmt(timer)"></span></div>
                     <button class="pr-end" @click="end()"><i class="fas fa-phone-slash" style="margin-right:3px"></i>
                         {{ __('interview_end') }}</button>
@@ -1203,9 +1254,12 @@
                                 :class="camOn ? 'fas fa-video' : 'fas fa-video-slash'"></i></button>
                         <button class="pr-ctrl" :class="speakerOn ? '' : 'off'" @click="toggleSpeaker()"><i
                                 :class="speakerOn ? 'fas fa-volume-up' : 'fas fa-volume-mute'"></i></button>
-                        <button class="pr-ctrl" @click="showChat = !showChat" title="{{ __('interview_chat') }}"><i
+                        <button class="pr-ctrl" :class="showChat ? 'on' : ''" @click="showChat = !showChat" title="{{ __('interview_chat') }}"><i
                                 class="fas fa-comment-dots"></i></button>
                         <button class="pr-ctrl" @click="copyCode()"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div style="padding:0 8px 8px">
+                        <button class="pr-btn pr-btn--accent" style="width:100%;justify-content:center" @click="showInvite = true"><i class="fas fa-user-plus"></i> {{ __('peer.invite') }}</button>
                     </div>
                 </div>
                 <div class="pr-center">
@@ -1215,6 +1269,8 @@
                                 x-show="tasks.length > 0"></span></button>
                         <button class="pr-tab" :class="activeTab === 'code' ? 'on' : ''" @click="activeTab = 'code'"><i
                                 class="fas fa-code"></i> {{ __('peer.code_editor') }}</button>
+                        <button class="pr-tab" :class="activeTab === 'board' ? 'on' : ''" @click="activeTab = 'board'; $nextTick(() => initBoard())"><i
+                                class="fas fa-chalkboard"></i> {{ __('peer.whiteboard') }}</button>
                     </div>
                     @if($isHost)
                         <div class="pr-progress" x-show="tasks.length > 0">
@@ -1224,8 +1280,7 @@
                             <div class="pr-progress-text" x-text="progressText"></div>
                         </div>
                     @endif
-                    <br><br><br><br><br>
-                    <div class="pr-tasks" x-show="activeTab === 'tasks'">
+                    <div class="pr-tasks" x-show="activeTab === 'tasks'" x-transition.opacity.duration.200ms>
                         <template x-if="tasks.length === 0">
                             <div class="pr-empty"><i class="fas fa-clipboard-list"></i>{{ __('peer.no_tasks_add') }}</div>
                         </template>
@@ -1310,7 +1365,7 @@
                             </div>
                         </template>
                     </div>
-                    <div class="pr-editor" x-show="activeTab === 'code'" style="flex:1">
+                    <div class="pr-editor" x-show="activeTab === 'code'" x-transition.opacity.duration.200ms style="flex:1">
                         <div class="pr-editor-bar">
                             <div class="pr-editor-dots">
                                 <div class="pr-editor-dot"></div>
@@ -1318,7 +1373,7 @@
                                 <div class="pr-editor-dot"></div>
                             </div>
                             <span class="pr-editor-name">solution</span>
-                            <select class="pr-editor-lang" x-model="codeLang" @change="saveCode()">
+                            <select class="pr-editor-lang" x-model="codeLang" @change="changeCodeLang()">
                                 <option value="python">Python</option>
                                 <option value="javascript">JavaScript</option>
                                 <option value="java">Java</option>
@@ -1331,6 +1386,47 @@
                         </div>
                         <textarea x-ref="codeEditor" x-model="codeContent" @input="onCodeInput()"
                             placeholder="{{ __('peer.write_solution_here') }}" spellcheck="false"></textarea>
+                        <div style="display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--border);align-items:center;flex-wrap:wrap">
+                            <button class="pr-btn pr-btn--success" @click="runCode()" :disabled="codeRunning"><i
+                                    :class="codeRunning ? 'fas fa-spinner fa-spin' : 'fas fa-play'"></i> {{ __('peer.run_code') }}</button>
+                            <input class="pr-add-input" type="text" x-model="codeStdin" :placeholder="'stdin'"
+                                style="flex:1;min-width:120px">
+                        </div>
+                        <div x-show="codeOutput" style="padding:8px 10px;border-top:1px solid var(--border);max-height:160px;overflow-y:auto">
+                            <div class="pr-add-label">stdout</div>
+                            <pre x-text="codeOutput" style="font-family:'Courier New',monospace;font-size:11px;color:var(--text-secondary);white-space:pre-wrap;margin:0"></pre>
+                            <div x-show="codeError" class="pr-add-label" style="color:var(--danger);margin-top:4px">stderr</div>
+                            <pre x-show="codeError" x-text="codeError" style="font-family:'Courier New',monospace;font-size:11px;color:var(--danger);white-space:pre-wrap;margin:0"></pre>
+                        </div>
+                    </div>
+                    <div class="pr-editor" x-show="activeTab === 'board'" x-transition.opacity.duration.200ms style="flex:1">
+                        <div class="pr-editor-bar" style="flex-wrap:wrap;row-gap:6px">
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <button class="pr-btn" :class="boardTool === 'pen' ? 'pr-btn--accent' : ''" @click="boardTool = 'pen'; boardEraser = false" :title="'{{ __('peer.tool_pen') }}'"><i class="fas fa-pen"></i></button>
+                                <button class="pr-btn" :class="boardTool === 'line' ? 'pr-btn--accent' : ''" @click="boardTool = 'line'; boardEraser = false" :title="'{{ __('peer.tool_line') }}'"><i class="fas fa-minus"></i></button>
+                                <button class="pr-btn" :class="boardTool === 'arrow' ? 'pr-btn--accent' : ''" @click="boardTool = 'arrow'; boardEraser = false" :title="'{{ __('peer.tool_arrow') }}'"><i class="fas fa-arrow-right"></i></button>
+                                <button class="pr-btn" :class="boardTool === 'rect' ? 'pr-btn--accent' : ''" @click="boardTool = 'rect'; boardEraser = false" :title="'{{ __('peer.tool_rect') }}'"><i class="far fa-square"></i></button>
+                                <button class="pr-btn" :class="boardTool === 'circle' ? 'pr-btn--accent' : ''" @click="boardTool = 'circle'; boardEraser = false" :title="'{{ __('peer.tool_circle') }}'"><i class="far fa-circle"></i></button>
+                                <button class="pr-btn" :class="boardTool === 'text' ? 'pr-btn--accent' : ''" @click="boardTool = 'text'; boardEraser = false" :title="'{{ __('peer.tool_text') }}'"><i class="fas fa-font"></i></button>
+                                <button class="pr-btn" :class="boardEraser ? 'pr-btn--accent' : ''" @click="boardEraser = !boardEraser" :title="'{{ __('peer.tool_eraser') }}'"><i class="fas fa-eraser"></i></button>
+                            </div>
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <template x-for="c in boardColors" :key="c">
+                                    <button @click="boardColor = c; boardEraser = false" :style="'width:22px;height:22px;border-radius:50%;background:' + c + ';border:' + (boardColor === c && !boardEraser ? '2px solid var(--accent)' : '1px solid var(--border)') + ';cursor:pointer'"></button>
+                                </template>
+                            </div>
+                            <input type="range" min="1" max="12" x-model="boardWidth" style="width:70px" title="width">
+                            <button class="pr-btn" @click="undoBoard()" :disabled="!boardUndo.length" title="Undo"><i class="fas fa-undo"></i></button>
+                            <button class="pr-btn" :class="boardGrid ? 'pr-btn--accent' : ''" @click="boardGrid = !boardGrid; redrawBoard()" title="Grid"><i class="fas fa-th"></i></button>
+                            <button class="pr-btn" @click="exportBoard()" title="PNG"><i class="fas fa-download"></i></button>
+                            <button class="pr-btn pr-btn--danger" @click="clearBoard()"><i class="fas fa-trash"></i> {{ __('peer.board_clear') }}</button>
+                            <span style="margin-left:auto;font-size:10px;color:var(--text-muted)" x-text="(boardStrokes.length || 0) + ' · ' + (boardSynced ? '{{ __('peer.board_synced') }}' : '{{ __('peer.board_syncing') }}')"></span>
+                        </div>
+                        <div style="flex:1;position:relative;min-height:300px;display:flex">
+                            <canvas x-ref="boardCanvas" style="flex:1;width:100%;min-height:300px;background:var(--bg);cursor:crosshair;touch-action:none"></canvas>
+                            <input x-ref="boardTextInput" x-model="boardTextValue" x-show="boardTextOpen" @keydown.enter="commitBoardText()" @keydown.escape="boardTextOpen = false"
+                                style="position:absolute;padding:4px 8px;border:1px dashed var(--accent);background:var(--bg-elevated);color:var(--text);font-size:14px;border-radius:4px;outline:0;min-width:120px" />
+                        </div>
                     </div>
                     <div class="pr-add" x-show="activeTab === 'tasks' && isHost">
                         <button class="pr-add-toggle" @click="showAddForm = !showAddForm" x-show="!showAddForm"><i
@@ -1375,7 +1471,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pr-right" :class="showChat ? 'mob-open' : ''">
+                <div class="pr-right" :class="showChat ? 'mob-open' : ''" x-show="showChat" x-transition.opacity.duration.250ms>
                     <div class="pr-chat-hdr"><i class="fas fa-comment-dots"></i><span>{{ __('interview_chat') }}</span></div>
                     <div class="pr-chat-msgs" x-ref="chatBox">
                         <template x-for="(m, i) in messages" :key="m.id || i">
@@ -1383,16 +1479,16 @@
                                 <div class="pr-chat-name" x-text="m.user_id == currentUserId ? '{{ __("peer.you") }}' : m.user_name"></div>
                                 <div class="pr-chat-bubble">
                                     <template x-if="m.message_type === 'image' && m.file_url">
-                                        <div style="margin-bottom:6px"><img :src="m.file_url"
+                                        <div style="margin-bottom:6px"><img :src="fixUrl(m.file_url)"
                                                 style="max-width:100%;max-height:200px;border-radius:6px;cursor:pointer"
-                                                @click="window.open(m.file_url,'_blank')"></div>
+                                                @click="openFile(m.file_url)"></div>
                                     </template>
                                     <template x-if="m.message_type === 'video' && m.file_url">
-                                        <div style="margin-bottom:6px"><video :src="m.file_url" controls
+                                        <div style="margin-bottom:6px"><video :src="fixUrl(m.file_url)" controls
                                                 style="max-width:100%;max-height:200px;border-radius:6px"></video></div>
                                     </template>
                                     <template x-if="m.message_type === 'audio' && m.file_url">
-                                        <div style="margin-bottom:6px"><audio :src="m.file_url" controls
+                                        <div style="margin-bottom:6px"><audio :src="fixUrl(m.file_url)" controls
                                                 style="max-width:100%"></audio></div>
                                     </template>
                                     <template x-if="m.message_type === 'file' && m.file_url">
@@ -1400,7 +1496,7 @@
                                             style="margin-bottom:6px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:6px">
                                             <i class="fas fa-file" style="font-size:14px;color:var(--text-muted)"></i>
                                             <div style="flex:1;min-width:0">
-                                                <a :href="m.file_url" target="_blank"
+                                                <a :href="fixUrl(m.file_url)" target="_blank"
                                                     style="font-size:11px;color:var(--accent);text-decoration:none"
                                                     x-text="m.file_name || 'File'"></a>
                                                 <div style="font-size:9px;color:var(--text-muted)"
@@ -1440,6 +1536,22 @@
         </div>
         <div class="pr-toast" :class="toastShow ? 'on' : ''"><i :class="toastIcon" :style="'color:' + toastColor"></i><span
                 x-text="toastMsg"></span></div>
+        <div x-show="showInvite" x-transition.opacity.duration.200ms style="position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px" @click.self="showInvite = false">
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,.6)" @click="showInvite = false"></div>
+            <div x-transition.scale.duration.200ms style="position:relative;z-index:1;background:var(--card);border:1px solid var(--border);border-radius:12px;width:100%;max-width:440px;padding:20px">
+                <h3 style="font-size:15px;font-weight:700;color:var(--text);margin:0 0 6px"><i class="fas fa-user-plus" style="margin-right:6px;color:var(--accent)"></i>{{ __('peer.invite_title') }}</h3>
+                <p style="font-size:12px;color:var(--text-muted);margin:0 0 12px">{{ __('peer.invite_hint') }}</p>
+                <div style="display:flex;gap:6px;align-items:center;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:6px">
+                    <code x-text="inviteLink" style="flex:1;font-family:'Courier New',monospace;font-size:11px;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></code>
+                    <button class="pr-btn pr-btn--accent" @click="copyInvite()"><i class="fas fa-copy"></i> {{ __('peer.copy') }}</button>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:12px">
+                    <code x-text="roomCode" style="flex:1;font-family:'Courier New',monospace;font-size:13px;font-weight:800;letter-spacing:2px;color:var(--text)"></code>
+                    <button class="pr-btn" @click="copyCode()"><i class="fas fa-copy"></i> {{ __('peer.copy') }}</button>
+                </div>
+                <button class="pr-btn pr-btn--accent" style="width:100%;justify-content:center" @click="showInvite = false">{{ __('peer.done') }}</button>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -1457,6 +1569,11 @@
                 newTask: { title: '', description: '', type: 'code', difficulty: 'medium', starter_code: '', language: 'python' },
                 codeContent: @json($room->code_content ?? ''), codeLang: @json($room->code_language ?? 'python'), codeSaveTimer: null,
                 toastMsg: '', toastIcon: 'fas fa-info-circle', toastColor: 'var(--accent)', toastShow: false, toastTimer: null, ended: false,
+                showInvite: false, inviteLink: window.location.origin + '/peer/' + '{{ $room->room_code }}',
+                codeRunning: false, codeOutput: '', codeError: '', codeStdin: '', codeLangTs: 0, codeInputTs: 0,
+                boardColor: '#6366f1', boardWidth: 3, boardTool: 'pen', boardGrid: true, boardEraser: false, boardStrokes: @json(json_decode($room->board_content ?? '[]', true) ?? []), boardSynced: true, boardReady: false, boardSaveTimer: null, boardLastRemote: @json($room->board_content ?? ''),
+                boardTextOpen: false, boardTextValue: '', boardTextPos: null, boardRev: @json((int)($room->board_rev ?? 0)), boardDrawing: false, boardDirty: false, boardUndo: [],
+                boardColors: ['#6366f1', '#22c55e', '#ef4444', '#eab308', '#ffffff', '#0ea5e9'],
 
                 get progressPercent() { if (!this.tasks.length) return 0; return Math.round((this.tasks.filter(t => t.status === 'done' || t.status === 'review').length / this.tasks.length) * 100) },
                 get progressText() { const d = this.tasks.filter(t => t.status === 'done' || t.status === 'review').length; return d + ' / ' + this.tasks.length + ' {{ __('peer.tasks_completed') }}' },
@@ -1468,7 +1585,7 @@
                 fmt(s) { const m = Math.floor(s / 60); return String(m).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') },
                 copyCode() { navigator.clipboard.writeText(this.roomCode).then(() => { this.toast('{{ __('peer.code_copied') }}: ' + this.roomCode, 'fas fa-copy', 'var(--success)') }).catch(() => { prompt('{{ __("peer.copy_code_prompt") }}', this.roomCode) }) },
 
-                async init() { try { this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); this.$nextTick(() => { const v = this.$refs.localVideo; if (v) v.srcObject = this.localStream }); this.camOn = true; this.setupAudioAnalyser(); this.toast('{{ __('peer.camera_mic_connected') }}', 'fas fa-check-circle', 'var(--success)') } catch (e) { this.toast('{{ __('peer.camera_mic_error') }}', 'fas fa-exclamation-triangle', 'var(--danger)') } this.tasks.forEach(t => { t._solution = ''; t._score = t.score || ''; t._feedback = t.feedback || '' }); this.startTimer(); this.startSignaling() },
+                async init() { this.showChat = window.innerWidth > 900; try { this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); this.$nextTick(() => { const v = this.$refs.localVideo; if (v) v.srcObject = this.localStream }); this.camOn = true; this.setupAudioAnalyser(); this.toast('{{ __('peer.camera_mic_connected') }}', 'fas fa-check-circle', 'var(--success)') } catch (e) { this.toast('{{ __('peer.camera_mic_error') }}', 'fas fa-exclamation-triangle', 'var(--danger)') } this.tasks.forEach(t => { t._solution = ''; t._score = t.score || ''; t._feedback = t.feedback || '' }); this.startTimer(); this.startSignaling() },
                 setupAudioAnalyser() { if (!this.localStream) return; this.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const s = this.audioCtx.createMediaStreamSource(this.localStream); this.localAnalyser = this.audioCtx.createAnalyser(); this.localAnalyser.fftSize = 256; s.connect(this.localAnalyser); this.animateAudio() },
                 animateAudio() { const loop = () => { if (this.ended) return; if (this.localAnalyser) { const d = new Uint8Array(this.localAnalyser.frequencyBinCount); this.localAnalyser.getByteFrequencyData(d); this.localAudio = Math.min(100, (d.reduce((a, b) => a + b, 0) / d.length) * 2) } this.audioAnim = requestAnimationFrame(loop) }; loop() },
                 startTimer() { const started ={{ $room->started_at ? $room->started_at->timestamp : 'Math.floor(Date.now()/1000)' }}; const elapsed = Math.floor((Date.now() / 1000) - started); this.timer = Math.max(0, 3600 - elapsed); setInterval(() => { if (this.ended) return; if (this.timer > 0) this.timer--; if (this.timer <= 0) this.end() }, 1000) },
@@ -1486,8 +1603,8 @@
                 async sendSignal(type, data) { try { await fetch('{{ route("peer.signal", $room->room_code) }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }, body: JSON.stringify({ type, data }) }) } catch (e) { console.warn('Signal send failed:', type, e) } },
 
                 startSignaling() {
-                    this._lastG = ''; this._lastH = ''; this._iceG = 0; this._iceH = 0; const poll = async () => {
-                        if (this.ended) return; try {
+                    this._lastG = ''; this._lastH = ''; this._iceG = 0; this._iceH = 0; this._pollBusy = false; const poll = async () => {
+                        if (this.ended || this._pollBusy) return; this._pollBusy = true; try {
                             const res = await fetch('{{ route("peer.signal", $room->room_code) }}?type=all', { headers: { 'Accept': 'application/json' } }); const data = await res.json();
                             if (data.status === 'ended') { this.toast('{{ __('peer.interview_ended') }}', 'fas fa-phone-slash', 'var(--danger)'); setTimeout(() => { window.location = '{{ route("peer.index") }}' }, 1500); return }
                             if (data.guest_connected) { if (!this.peerConnected) this.peerConnected = true; if (this.isHost && !this.pc) await this.createPeerConnection() }
@@ -1497,10 +1614,11 @@
                             if (this.isHost && data.guest_ice && Array.isArray(data.guest_ice)) { const n = data.guest_ice.slice(this._iceG); for (const ice of n) await this.handleRemoteIce(ice); this._iceG = data.guest_ice.length }
                             if (!this.isHost && data.host_ice && Array.isArray(data.host_ice)) { const n = data.host_ice.slice(this._iceH); for (const ice of n) await this.handleRemoteIce(ice); this._iceH = data.host_ice.length }
                             if (data.tasks) { const snap = JSON.stringify(data.tasks.map(t => t.id + '-' + t.status + '-' + t.score + '-' + t.feedback)); const cur = JSON.stringify(this.tasks.map(t => t.id + '-' + t.status + '-' + t.score + '-' + t.feedback)); if (snap !== cur) { const prevSolutions = {}; this.tasks.forEach(t => { prevSolutions[t.id] = t._solution }); this.tasks = data.tasks; this.tasks.forEach(t => { t._solution = prevSolutions[t.id] || ''; t._score = t.score || ''; t._feedback = t.feedback || '' }) } }
-                            if (data.code_content !== undefined && data.code_content !== null && data.code_content !== this.codeContent) this.codeContent = data.code_content;
-                            if (data.code_language !== undefined && data.code_language !== null) this.codeLang = data.code_language;
+                            if (data.code_content !== undefined && data.code_content !== null && data.code_content !== this.codeContent && (Date.now() - this.codeInputTs) > 2000) this.codeContent = data.code_content;
+                            if (data.code_language !== undefined && data.code_language !== null && data.code_language !== this.codeLang && (Date.now() - this.codeLangTs) > 2500) { this.codeLang = data.code_language }
+                            if (data.board_rev !== undefined && data.board_rev !== null && parseInt(data.board_rev) > this.boardRev && !this.boardDrawing && !this.boardDirty) { this.boardRev = parseInt(data.board_rev); this.boardLastRemote = data.board_content; try { this.boardStrokes = JSON.parse(data.board_content || '[]') } catch (e) { this.boardStrokes = [] } this.redrawBoard() }
                             if (data.messages && data.messages.length) { data.messages.forEach(m => { if (!this.messages.find(x => x.id === m.id)) { m.user_name = m.user ? m.user.name : 'Unknown'; this.messages.push(m) } }); this.$nextTick(() => { const b = this.$refs.chatBox; if (b) b.scrollTop = b.scrollHeight }) }
-                        } catch (e) { }
+                        } catch (e) { } finally { this._pollBusy = false }
                     }; poll(); this.signalingPollTimer = setInterval(poll, 1200)
                 },
 
@@ -1510,15 +1628,45 @@
 
                 fmtSize(bytes) { if (!bytes) return ''; if (bytes < 1024) return bytes + ' B'; if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB'; return (bytes / 1048576).toFixed(1) + ' MB'; },
 
+                fixUrl(u) { if (!u) return u; const i = u.indexOf('/storage/'); if (i >= 0) return window.location.origin + u.substring(i); return u },
+
+                openFile(u) { window.open(this.fixUrl(u), '_blank') },
+
                 linkify(text) { if (!text) return ''; var urlRe = /(https?:\/\/[^\s<]+)/g; var escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); return escaped.replace(urlRe, '<a href="$1" target="_blank" style="text-decoration:underline;color:inherit">$1</a>'); },
 
                 toggleMic() { if (!this.localStream) return; this.micOn = !this.micOn; this.localStream.getAudioTracks().forEach(t => { t.enabled = this.micOn }); this.toast(this.micOn ? '{{ __('peer.mic_on') }}' : '{{ __('peer.mic_off') }}', this.micOn ? 'fas fa-microphone' : 'fas fa-microphone-slash', this.micOn ? 'var(--success)' : 'var(--danger)') },
                 toggleCam() { if (!this.localStream) return; this.camOn = !this.camOn; this.localStream.getVideoTracks().forEach(t => { t.enabled = this.camOn }); this.toast(this.camOn ? '{{ __('peer.cam_on') }}' : '{{ __('peer.cam_off') }}', this.camOn ? 'fas fa-video' : 'fas fa-video-slash', this.camOn ? 'var(--success)' : 'var(--danger)') },
                 toggleSpeaker() { this.speakerOn = !this.speakerOn; const v = this.$refs.remoteVideo; if (v) v.muted = !this.speakerOn; this.toast(this.speakerOn ? '{{ __('peer.sound_on') }}' : '{{ __('peer.sound_off') }}', this.speakerOn ? 'fas fa-volume-up' : 'fas fa-volume-mute', this.speakerOn ? 'var(--success)' : 'var(--danger)') },
 
-                loadTaskCode(task) { this.codeContent = task.starter_code || ''; this.codeLang = task.language || 'python'; this.activeTab = 'code'; this.saveCode(); this.toast('{{ __('peer.code_loaded') }}', 'fas fa-code', 'var(--accent)') },
-                onCodeInput() { clearTimeout(this.codeSaveTimer); this.codeSaveTimer = setTimeout(() => this.saveCode(), 1000) },
-                async saveCode() { try { await fetch('{{ route("peer.code.update", $room->room_code) }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }, body: JSON.stringify({ code: this.codeContent || '', language: this.codeLang || 'python' }) }) } catch (e) { console.warn('Code save failed:', e) } },
+                loadTaskCode(task) { this.codeContent = task.starter_code || ''; this.codeLang = task.language || 'python'; this.codeLangTs = Date.now(); this.activeTab = 'code'; this.saveCode(true); this.toast('{{ __('peer.code_loaded') }}', 'fas fa-code', 'var(--accent)') },
+                onCodeInput() { this.codeInputTs = Date.now(); clearTimeout(this.codeSaveTimer); this.codeSaveTimer = setTimeout(() => this.saveCode(false), 1000) },
+                changeCodeLang() { this.codeLangTs = Date.now(); this.saveCode(true) },
+                async saveCode(withLang) { try { const body = { code: this.codeContent || '' }; if (withLang) body.language = this.codeLang || 'python'; await fetch('{{ route("peer.code.update", $room->room_code) }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }, body: JSON.stringify(body) }) } catch (e) { console.warn('Code save failed:', e) } },
+
+                copyInvite() { navigator.clipboard.writeText(this.inviteLink).then(() => { this.toast('{{ __('peer.invite_copied') }}', 'fas fa-link', 'var(--success)') }).catch(() => { prompt('{{ __("peer.copy_code_prompt") }}', this.inviteLink) }) },
+
+                async runCode() { if (this.codeRunning) return; this.codeRunning = true; this.codeOutput = ''; this.codeError = ''; try { const res = await fetch('{{ route("peer.code.run", $room->room_code) }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }, body: JSON.stringify({ code: this.codeContent || '', language: this.codeLang || 'python', stdin: this.codeStdin || '' }) }); const data = await res.json(); if (data.ok) { this.codeOutput = (data.stdout || '') + (data.stdout ? '\n[' + data.status + ' · ' + (data.time || '?') + 's]' : '[' + data.status + ']'); this.codeError = data.stderr || ''; if (!data.stdout && !data.stderr) this.codeOutput = '[' + data.status + ']'; } else { this.codeError = JSON.stringify(data.error || data); } } catch (e) { this.codeError = '{{ __('peer.network_error') }}'; } this.codeRunning = false },
+
+                initBoard() { const canvas = this.$refs.boardCanvas; if (!canvas || this.boardReady) { if (canvas && this.boardReady) this.redrawBoard(); return } this.boardReady = true; this.$nextTick(() => { this.fitBoard(); window.addEventListener('resize', () => this.fitBoard()); this.bindBoardEvents(); this.redrawBoard() }) },
+                fitBoard() { const canvas = this.$refs.boardCanvas; if (!canvas) return; const r = canvas.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1; canvas.width = Math.max(300, r.width * dpr); canvas.height = Math.max(300, (r.height || 400) * dpr); this.redrawBoard() },
+                boardPos(e) { const canvas = this.$refs.boardCanvas; const r = canvas.getBoundingClientRect(); const t = e.touches ? e.touches[0] : e; return { x: (t.clientX - r.left) / r.width, y: (t.clientY - r.top) / r.height } },
+                boardUid() { return 's' + Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36) },
+                pushUndo(a) { this.boardUndo.push(a); if (this.boardUndo.length > 50) this.boardUndo.shift() },
+                bindBoardEvents() { const canvas = this.$refs.boardCanvas; if (!canvas || canvas._bound) return; canvas._bound = true; let drawing = false; let cur = null; let p0 = null; const start = (e) => { if (this.boardTextOpen) return; e.preventDefault(); if (this.boardTool === 'text') { this.openBoardText(e); return } drawing = true; this.boardDrawing = true; p0 = this.boardPos(e); if (this.boardEraser) { const n = this.eraseAt(p0); if (n) this._eraseBuf = (this._eraseBuf || []).concat(n); return } const col = this.boardColor; const w = this.boardWidth; if (this.boardTool === 'pen') { cur = { id: this.boardUid(), kind: 'pen', c: col, w: w, u: this.currentUserId, pts: [p0] }; if (this.boardStrokes.length > 1000) this.boardStrokes.shift(); this.boardStrokes.push(cur); this.drawStroke(cur) } else { cur = { id: this.boardUid(), kind: this.boardTool, c: col, w: w, u: this.currentUserId, x1: p0.x, y1: p0.y, x2: p0.x, y2: p0.y } } }; const move = (e) => { if (!drawing) return; e.preventDefault(); const p = this.boardPos(e); if (this.boardEraser) { const n = this.eraseAt(p); if (n) this._eraseBuf = (this._eraseBuf || []).concat(n); return } if (!cur) return; if (cur.kind === 'pen') { cur.pts.push(p); this.drawStroke(cur) } else { cur.x2 = p.x; cur.y2 = p.y; this.redrawBoard(); this.drawStroke(cur) } }; const endEv = () => { if (!drawing) return; drawing = false; this.boardDrawing = false; if (this.boardEraser) { if (this._eraseBuf && this._eraseBuf.length) { this.pushUndo({ t: 'erase', items: this._eraseBuf }); this._eraseBuf = null } this.queueBoardSave(); return } if (cur && cur.kind !== 'pen') { if (Math.abs(cur.x2 - cur.x1) > 0.002 || Math.abs(cur.y2 - cur.y1) > 0.002) { if (this.boardStrokes.length > 1000) this.boardStrokes.shift(); this.boardStrokes.push(cur); this.pushUndo({ t: 'add', id: cur.id }) } this.redrawBoard() } else if (cur) { this.pushUndo({ t: 'add', id: cur.id }) } cur = null; p0 = null; this.queueBoardSave() }; canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); window.addEventListener('mouseup', endEv); canvas.addEventListener('touchstart', start, { passive: false }); canvas.addEventListener('touchmove', move, { passive: false }); canvas.addEventListener('touchend', endEv) },
+                eraseTol() { const canvas = this.$refs.boardCanvas; const r = canvas.getBoundingClientRect(); const px = (this.boardWidth * 3) / 2 + 8; return { x: px / Math.max(50, r.width), y: px / Math.max(50, r.height) } },
+                eraseAt(p) { const t = this.eraseTol(); const removed = []; for (let i = this.boardStrokes.length - 1; i >= 0; i--) { if (this.hitStroke(this.boardStrokes[i], p, t.x, t.y)) removed.push({ s: this.boardStrokes[i], i: i }) } if (!removed.length) return null; removed.forEach(r => this.boardStrokes.splice(r.i, 1)); this.redrawBoard(); return removed },
+                segDist(p, a, b) { const dx = b.x - a.x, dy = b.y - a.y; const l2 = dx * dx + dy * dy; let t = 0; if (l2 > 0) t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / l2)); const cx = a.x + t * dx, cy = a.y + t * dy; return Math.hypot(p.x - cx, p.y - cy) },
+                hitStroke(s, p, tx, ty) { const k = s.kind || 'pen'; if (k === 'pen' || k === 'erase') { return (s.pts || []).some(q => Math.abs(q.x - p.x) < tx && Math.abs(q.y - p.y) < ty) } if (k === 'line' || k === 'arrow') { return this.segDist(p, { x: s.x1, y: s.y1 }, { x: s.x2, y: s.y2 }) < Math.max(tx, ty) } if (k === 'rect') { const x0 = Math.min(s.x1, s.x2) - tx, x1 = Math.max(s.x1, s.x2) + tx, y0 = Math.min(s.y1, s.y2) - ty, y1 = Math.max(s.y1, s.y2) + ty; return p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 } if (k === 'circle') { const cx = (s.x1 + s.x2) / 2, cy = (s.y1 + s.y2) / 2, rx = Math.abs(s.x2 - s.x1) / 2 + tx, ry = Math.abs(s.y2 - s.y1) / 2 + ty; if (rx <= 0 || ry <= 0) return false; const v = ((p.x - cx) * (p.x - cx)) / (rx * rx) + ((p.y - cy) * (p.y - cy)) / (ry * ry); return v <= 1 } if (k === 'text') { const size = s.size || 0.035; const w = (s.text || '').length * size * 0.55 + tx; return p.x >= s.x - tx && p.x <= s.x + w && p.y >= s.y - size - ty && p.y <= s.y + ty } return false },
+                drawShape(s, ctx, W, H) { const x1 = s.x1 * W, y1 = s.y1 * H, x2 = s.x2 * W, y2 = s.y2 * H; ctx.beginPath(); if (s.kind === 'line' || s.kind === 'arrow') { ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); if (s.kind === 'arrow') { const ang = Math.atan2(y2 - y1, x2 - x1); const hl = Math.max(8, (s.w || 3) * 3 * (window.devicePixelRatio || 1)); ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hl * Math.cos(ang - 0.4), y2 - hl * Math.sin(ang - 0.4)); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hl * Math.cos(ang + 0.4), y2 - hl * Math.sin(ang + 0.4)); ctx.stroke() } } else if (s.kind === 'rect') { ctx.strokeRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1)) } else if (s.kind === 'circle') { ctx.ellipse((x1 + x2) / 2, (y1 + y2) / 2, Math.abs(x2 - x1) / 2, Math.abs(y2 - y1) / 2, 0, 0, Math.PI * 2); ctx.stroke() } },
+                drawStroke(s) { const canvas = this.$refs.boardCanvas; if (!canvas) return; const ctx = canvas.getContext('2d'); const W = canvas.width, H = canvas.height; ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (s.kind === 'erase') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)' } else { ctx.strokeStyle = s.c || '#6366f1'; ctx.fillStyle = s.c || '#6366f1' } ctx.lineWidth = (s.w || 3) * (window.devicePixelRatio || 1); if (!s.kind || s.kind === 'pen' || s.kind === 'erase') { ctx.beginPath(); (s.pts || []).forEach((p, i) => { const x = p.x * W, y = p.y * H; if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y) }); ctx.stroke() } else if (s.kind === 'text') { ctx.font = Math.max(8, (s.size || 0.035) * H) + 'px Inter, sans-serif'; ctx.fillText(s.text || '', (s.x || 0) * W, (s.y || 0) * H) } else { this.drawShape(s, ctx, W, H) } ctx.restore() },
+                redrawBoard() { const canvas = this.$refs.boardCanvas; if (!canvas || !this.boardReady) return; const ctx = canvas.getContext('2d'); ctx.save(); ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, canvas.width, canvas.height); if (this.boardGrid) { const dpr = window.devicePixelRatio || 1; const step = 32 * dpr; ctx.strokeStyle = 'rgba(148,163,184,.14)'; ctx.lineWidth = 1; ctx.beginPath(); for (let x = step; x < canvas.width; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height) } for (let y = step; y < canvas.height; y += step) { ctx.moveTo(0, y); ctx.lineTo(canvas.width, y) } ctx.stroke() } ctx.restore(); (this.boardStrokes || []).forEach(s => this.drawStroke(s)) },
+                openBoardText(e) { const canvas = this.$refs.boardCanvas; const r = canvas.getBoundingClientRect(); const p = this.boardPos(e); this.boardTextPos = p; this.boardTextValue = ''; this.boardTextOpen = true; this.$nextTick(() => { const inp = this.$refs.boardTextInput; inp.style.left = (p.x * r.width) + 'px'; inp.style.top = (p.y * r.height) + 'px'; inp.style.color = this.boardColor; inp.focus() }) },
+                commitBoardText() { const v = (this.boardTextValue || '').trim(); this.boardTextOpen = false; if (!v || !this.boardTextPos) return; const canvas = this.$refs.boardCanvas; const r = canvas.getBoundingClientRect(); if (this.boardStrokes.length > 1000) this.boardStrokes.shift(); const st = { id: this.boardUid(), kind: 'text', c: this.boardColor, size: 15 / Math.max(200, r.height), x: this.boardTextPos.x, y: this.boardTextPos.y, text: v.slice(0, 300), u: this.currentUserId }; this.boardStrokes.push(st); this.pushUndo({ t: 'add', id: st.id }); this.boardTextPos = null; this.boardTextValue = ''; this.redrawBoard(); this.queueBoardSave() },
+                undoBoard() { const a = this.boardUndo.pop(); if (!a) return; if (a.t === 'add') { const i = this.boardStrokes.findIndex(s => s.id === a.id); if (i >= 0) this.boardStrokes.splice(i, 1) } else if (a.t === 'erase') { const items = (a.items || []).slice().sort((x, y) => x.i - y.i); items.forEach(r => this.boardStrokes.splice(Math.min(r.i, this.boardStrokes.length), 0, r.s)) } else if (a.t === 'clear') { this.boardStrokes = (a.strokes || []).slice() } this.redrawBoard(); this.queueBoardSave() },
+                exportBoard() { const canvas = this.$refs.boardCanvas; if (!canvas) return; const off = document.createElement('canvas'); off.width = canvas.width; off.height = canvas.height; const ctx = off.getContext('2d'); ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, off.width, off.height); ctx.drawImage(canvas, 0, 0); const a = document.createElement('a'); a.download = 'board-' + this.roomCode + '.png'; a.href = off.toDataURL('image/png'); a.click(); this.toast('PNG', 'fas fa-download', 'var(--success)') },
+                queueBoardSave() { this.boardDirty = true; this.boardSynced = false; clearTimeout(this.boardSaveTimer); this.boardSaveTimer = setTimeout(() => this.saveBoard(), 800) },
+                async saveBoard() { const snapshot = JSON.stringify(this.boardStrokes || []); const rev = this.boardRev + 1; try { const res = await fetch('{{ route("peer.signal", $room->room_code) }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }, body: JSON.stringify({ type: 'board', data: snapshot, rev: rev }) }); const out = await res.json(); if (out && out.ok) { this.boardRev = out.rev || rev; this.boardLastRemote = snapshot; this.boardDirty = false; this.boardSynced = true } else if (out && out.rev !== undefined) { this.boardRev = parseInt(out.rev) || 0; this.boardLastRemote = out.board_content; try { this.boardStrokes = JSON.parse(out.board_content || '[]') } catch (e) { this.boardStrokes = [] } this.boardDirty = false; this.boardSynced = true; this.redrawBoard() } } catch (e) { } },
+                clearBoard() { if (!this.boardStrokes.length) return; this.pushUndo({ t: 'clear', strokes: this.boardStrokes.slice() }); this.boardStrokes = []; this.redrawBoard(); this.queueBoardSave() },
 
                 async addTask() { if (!this.newTask.title.trim()) return; try { const res = await fetch('{{ route("peer.task.add", $room->room_code) }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }, body: JSON.stringify(this.newTask) }); const data = await res.json(); if (data.ok) { const t = data.task; t._solution = ''; t._score = ''; t._feedback = ''; this.tasks.push(t); this.newTask = { title: '', description: '', type: 'code', difficulty: 'medium', starter_code: '', language: 'python' }; this.showAddForm = false; this.toast('{{ __('peer.task_added') }}', 'fas fa-check', 'var(--success)') } } catch (e) { this.toast('{{ __('peer.task_add_error') }}', 'fas fa-exclamation-triangle', 'var(--danger)') } },
 

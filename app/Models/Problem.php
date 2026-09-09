@@ -13,7 +13,7 @@ class Problem extends Model
         'title', 'slug', 'description', 'difficulty', 'points',
         'solved_count', 'attempt_count',
         'input_example', 'output_example', 'constraints',
-        'starter_code', 'language', 'tests_json',
+        'starter_code', 'function_name', 'language', 'tests_json',
         'time_limit', 'memory_limit', 'is_premium',
         'source', 'source_url',
     ];
@@ -64,6 +64,21 @@ class Problem extends Model
         return round(($this->solved_count / $this->attempt_count) * 100, 1);
     }
 
+    /**
+     * Имя вызываемой функции (для function-style задач).
+     * Если колонка пуста — пробуем вывести из starter_code (def name().
+     */
+    public function getFunctionNameAttribute($value): ?string
+    {
+        if (!empty($value)) {
+            return $value;
+        }
+        if (preg_match('/^\s*def\s+([A-Za-z_]\w*)\s*\(/m', $this->starter_code ?? '', $m)) {
+            return $m[1];
+        }
+        return null;
+    }
+
     public function getDifficultyColorAttribute(): string
     {
         return match($this->difficulty) {
@@ -72,11 +87,6 @@ class Problem extends Model
             'hard' => '#ef4444',
             default => '#6b7280',
         };
-    }
-
-    public function sources(): HasMany
-    {
-        return $this->hasMany(\App\Models\ProblemSource::class);
     }
 
     public function isSolvedBy(User $user): bool

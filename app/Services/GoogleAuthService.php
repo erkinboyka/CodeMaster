@@ -24,11 +24,19 @@ class GoogleAuthService
             if ($response->successful()) {
                 $payload = $response->json();
 
-                if (isset($payload['aud']) && $payload['aud'] === $this->clientId) {
-                    return $payload;
+                if (isset($payload['aud']) && $payload['aud'] !== $this->clientId) {
+                    throw new \Exception('Token audience mismatch.');
                 }
 
-                throw new \Exception('Token audience mismatch.');
+                if (isset($payload['exp']) && $payload['exp'] < time()) {
+                    throw new \Exception('Token has expired.');
+                }
+
+                if (isset($payload['iss']) && !in_array($payload['iss'], ['accounts.google.com', 'https://accounts.google.com'])) {
+                    throw new \Exception('Token issuer mismatch.');
+                }
+
+                return $payload;
             }
 
             throw new \Exception('Invalid Google token.');

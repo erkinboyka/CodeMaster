@@ -1,0 +1,341 @@
+<?php
+
+return [
+    'binary-tree-level-order-traversal' => [
+        ['input' => '[3,9,20,null,null,15,7]', 'expected' => '[[3],[9,20],[15,7]]', 'description' => 'Basic tree'],
+        ['input' => '[1]', 'expected' => '[[1]]', 'description' => 'Single node'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty tree'],
+        ['input' => '[1,2,3,4,5]', 'expected' => '[[1],[2,3],[4,5]]', 'description' => 'Full tree depth 3'],
+        ['input' => '[1,null,2,null,null,null,3]', 'expected' => '[[1],[2],[3]]', 'description' => 'Right skewed'],
+    ],
+    'validate-binary-search-tree' => [
+        ['input' => '[2,1,3]', 'expected' => 'true', 'description' => 'Valid'],
+        ['input' => '[5,1,4,null,null,3,6]', 'expected' => 'false', 'description' => 'Invalid'],
+        ['input' => '[1]', 'expected' => 'true', 'description' => 'Single node'],
+        ['input' => '[3,2,5,1,null,4,6]', 'expected' => 'true', 'description' => 'Valid with subtrees'],
+        ['input' => '[5,4,6,null,null,3,7]', 'expected' => 'false', 'description' => 'Invalid right subtree'],
+    ],
+    'binary-tree-right-side-view' => [
+        ['input' => '[1,2,3,null,5,null,4]', 'expected' => '[1,3,4]', 'description' => 'Basic case'],
+        ['input' => '[1,null,3]', 'expected' => '[1,3]', 'description' => 'Right skewed'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty tree'],
+        ['input' => '[1,2,3,4]', 'expected' => '[1,3,4]', 'description' => 'Full tree depth 3'],
+        ['input' => '[1,2]', 'expected' => '[1,2]', 'description' => 'Left child only visible'],
+    ],
+    'number-of-islands' => [
+        ['input' => '[["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]', 'expected' => '1', 'description' => 'One island'],
+        ['input' => '[["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]', 'expected' => '3', 'description' => 'Three islands'],
+        ['input' => '[["1","0","1"],["0","1","0"],["1","0","1"]]', 'expected' => '5', 'description' => 'Checkerboard'],
+        ['input' => '[["1"]]', 'expected' => '1', 'description' => 'Single cell'],
+        ['input' => '[["0"]]', 'expected' => '0', 'description' => 'No land'],
+        ['input' => '[["1","1","1"],["0","0","0"],["1","1","1"]]', 'expected' => '2', 'description' => 'Two horizontal'],
+    ],
+    'coin-change' => [
+        ['input' => '[1,2,5]\n11', 'expected' => '3', 'description' => 'Basic case'],
+        ['input' => '[2]\n3', 'expected' => '-1', 'description' => 'Impossible'],
+        ['input' => '[1]\n0', 'expected' => '0', 'description' => 'Zero amount'],
+        ['input' => '[1]\n1', 'expected' => '1', 'description' => 'Single coin'],
+        ['input' => '[1]\n2', 'expected' => '2', 'description' => 'Two coins of 1'],
+        ['input' => '[1,5,10,25]\n30', 'expected' => '2', 'description' => 'Optimal with 25'],
+        ['input' => '[1,2,5]\n100', 'expected' => '20', 'description' => 'Large amount'],
+    ],
+    'climbing-stairs' => [
+        ['input' => '2', 'expected' => '2', 'description' => '2 steps'],
+        ['input' => '3', 'expected' => '3', 'description' => '3 steps'],
+        ['input' => '1', 'expected' => '1', 'description' => '1 step'],
+        ['input' => '5', 'expected' => '8', 'description' => '5 steps'],
+        ['input' => '10', 'expected' => '89', 'description' => '10 steps'],
+        ['input' => '20', 'expected' => '10946', 'description' => '20 steps'],
+        ['input' => '30', 'expected' => '1346269', 'description' => '30 steps'],
+        ['input' => '45', 'expected' => '1836311903', 'description' => '45 steps - fib'],
+    ],
+    'fibonacci-number' => [
+        ['input' => '2', 'expected' => '1', 'description' => 'F(2)'],
+        ['input' => '3', 'expected' => '2', 'description' => 'F(3)'],
+        ['input' => '0', 'expected' => '0', 'description' => 'F(0)'],
+        ['input' => '1', 'expected' => '1', 'description' => 'F(1)'],
+        ['input' => '10', 'expected' => '55', 'description' => 'F(10)'],
+        ['input' => '20', 'expected' => '6765', 'description' => 'F(20)'],
+        ['input' => '30', 'expected' => '832040', 'description' => 'F(30)'],
+        ['input' => '37', 'expected' => '24157817', 'description' => 'F(37) max'],
+    ],
+    'power-of-two' => [
+        ['input' => '1', 'expected' => 'true', 'description' => '2^0'],
+        ['input' => '16', 'expected' => 'true', 'description' => '2^4'],
+        ['input' => '3', 'expected' => 'false', 'description' => 'Not power of 2'],
+        ['input' => '4', 'expected' => 'true', 'description' => '2^2'],
+        ['input' => '5', 'expected' => 'false', 'description' => 'Not power of 2'],
+        ['input' => '1024', 'expected' => 'true', 'description' => '2^10'],
+        ['input' => '0', 'expected' => 'false', 'description' => 'Zero'],
+        ['input' => '-16', 'expected' => 'false', 'description' => 'Negative'],
+    ],
+    'merge-two-sorted-lists' => [
+        ['input' => '[1,2,4]\n[1,3,4]', 'expected' => '[1,1,2,3,4,4]', 'description' => 'Both non-empty'],
+        ['input' => '[]\n[]', 'expected' => '[]', 'description' => 'Both empty'],
+        ['input' => '[]\n[0]', 'expected' => '[0]', 'description' => 'One empty'],
+        ['input' => '[1]\n[2]', 'expected' => '[1,2]', 'description' => 'Single elements'],
+        ['input' => '[1,3,5]\n[2,4,6]', 'expected' => '[1,2,3,4,5,6]', 'description' => 'Alternating'],
+        ['input' => '[1,1,1]\n[2,2,2]', 'expected' => '[1,1,1,2,2,2]', 'description' => 'All same within lists'],
+    ],
+    'merge-k-sorted-lists' => [
+        ['input' => '[[1,4,5],[1,3,4],[2,6]]', 'expected' => '[1,1,2,3,4,4,5,6]', 'description' => 'Three lists'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty'],
+        ['input' => '[[]]', 'expected' => '[]', 'description' => 'One empty list'],
+        ['input' => '[[1],[2],[3]]', 'expected' => '[1,2,3]', 'description' => 'Three single elements'],
+        ['input' => '[[1,2,3]]', 'expected' => '[1,2,3]', 'description' => 'Single list'],
+    ],
+    'trapping-rain-water' => [
+        ['input' => '[0,1,0,2,1,0,1,3,2,1,2,1]', 'expected' => '6', 'description' => 'Classic example'],
+        ['input' => '[4,2,0,3,2,5]', 'expected' => '9', 'description' => 'Valley'],
+        ['input' => '[1]', 'expected' => '0', 'description' => 'Single bar'],
+        ['input' => '[1,2]', 'expected' => '0', 'description' => 'Two bars'],
+        ['input' => '[3,0,0,2,0,0,4]', 'expected' => '14', 'description' => 'Wide valley'],
+        ['input' => '[1,0,1]', 'expected' => '1', 'description' => 'Simple trap'],
+    ],
+    'n-queens' => [
+        ['input' => '4', 'expected' => '2', 'description' => '4-queens'],
+        ['input' => '1', 'expected' => '1', 'description' => '1-queen'],
+        ['input' => '8', 'expected' => '92', 'description' => '8-queens'],
+        ['input' => '2', 'expected' => '0', 'description' => '2-queens impossible'],
+        ['input' => '3', 'expected' => '0', 'description' => '3-queens impossible'],
+    ],
+    'word-search' => [
+        ['input' => '[["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]\n"ABCCED"', 'expected' => 'true', 'description' => 'Found word'],
+        ['input' => '[["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]\n"SEE"', 'expected' => 'true', 'description' => 'Found SEE'],
+        ['input' => '[["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]\n"ABCB"', 'expected' => 'false', 'description' => 'Cannot revisit'],
+    ],
+    'course-schedule' => [
+        ['input' => 'numCourses = 2\nprerequisites = [[1,0]]', 'expected' => 'true', 'description' => 'Can finish'],
+        ['input' => 'numCourses = 2\nprerequisites = [[1,0],[0,1]]', 'expected' => 'false', 'description' => 'Cycle'],
+        ['input' => 'numCourses = 1\nprerequisites = []', 'expected' => 'true', 'description' => 'Single course'],
+        ['input' => 'numCourses = 3\nprerequisites = [[1,0],[2,1]]', 'expected' => 'true', 'description' => 'Chain'],
+    ],
+    'lru-cache' => [
+        ['input' => '["LRUCache","put","put","get","put","get","put","get","get","get"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]', 'expected' => '[null,null,null,1,null,-1,null,-1,3,4]', 'description' => 'Basic LRU'],
+    ],
+    'implement-trie-prefix-tree' => [
+        ['input' => '["Trie","insert","search","search","startsWith","insert","search"]\n[[],["apple"],["apple"],["app"],["app"],["app"],["app"]]', 'expected' => '[null,null,null,true,false,null,true]', 'description' => 'Basic Trie'],
+    ],
+    'binary-tree-maximum-path-sum' => [
+        ['input' => '[1,2,3]', 'expected' => '6', 'description' => 'Basic case'],
+        ['input' => '[-10,9,20,null,null,15,7]', 'expected' => '42', 'description' => 'With negatives'],
+        ['input' => '[1]', 'expected' => '1', 'description' => 'Single node'],
+        ['input' => '[-3]', 'expected' => '-3', 'description' => 'Single negative'],
+    ],
+    'serialize-and-deserialize-binary-tree' => [
+        ['input' => '[1,2,3,null,null,4,5]', 'expected' => '[1,2,3,null,null,4,5]', 'description' => 'Basic tree'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty tree'],
+        ['input' => '[1]', 'expected' => '[1]', 'description' => 'Single node'],
+    ],
+    'maximum-frequency-stack' => [
+        ['input' => '["FreqStack","push","push","push","push","push","pop","pop","pop","pop"]\n[[],[5],[7],[5],[7],[4],[],[],[],[]]', 'expected' => '[null,null,null,null,null,null,5,7,5,4]', 'description' => 'Basic FreqStack'],
+    ],
+    'alien-dictionary' => [
+        ['input' => '["wrt","wrf","er","ett","rftt"]', 'expected' => '"wertf"', 'description' => 'Basic case'],
+        ['input' => '["z","x"]', 'expected' => '"zx"', 'description' => 'Two words'],
+        ['input' => '["z","x","z"]', 'expected' => '""', 'description' => 'Cycle detected'],
+    ],
+    'word-ladder' => [
+        ['input' => 'beginWord = "hit"\nendWord = "cog"\nwordList = ["hot","dot","dog","lot","log","cog"]', 'expected' => '5', 'description' => 'Basic case'],
+        ['input' => 'beginWord = "hit"\nendWord = "cog"\nwordList = ["hot","dot","dog","lot","log"]', 'expected' => '0', 'description' => 'No path'],
+        ['input' => 'beginWord = "a"\nendWord = "c"\nwordList = ["a","b","c"]', 'expected' => '2', 'description' => 'Direct path'],
+    ],
+    'longest-increasing-path-in-a-matrix' => [
+        ['input' => '[[9,9,4],[6,6,8],[2,1,1]]', 'expected' => '4', 'description' => 'Basic case'],
+        ['input' => '[[3,4,5],[3,2,6],[2,2,1]]', 'expected' => '4', 'description' => 'Another case'],
+        ['input' => '[[1]]', 'expected' => '1', 'description' => 'Single cell'],
+    ],
+    'sliding-window-maximum' => [
+        ['input' => 'nums = [1,3,-1,-3,5,3,6,7]\nk = 3', 'expected' => '[3,3,5,5,6,7]', 'description' => 'Basic case'],
+        ['input' => 'nums = [1]\nk = 1', 'expected' => '[1]', 'description' => 'Single element'],
+        ['input' => 'nums = [1,3,1,3,5]\nk = 3', 'expected' => '[3,3,5]', 'description' => 'Repeated values'],
+        ['input' => 'nums = [7,7,7,7]\nk = 2', 'expected' => '[7,7,7]', 'description' => 'All same'],
+    ],
+    'find-median-from-data-stream' => [
+        ['input' => '["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"]\n[[],[1],[2],[],[3],[]]', 'expected' => '[null,null,null,1.5,null,2.0]', 'description' => 'Basic median'],
+    ],
+    'palindrome-pairs' => [
+        ['input' => '["abcd","dcba","lls","s","sssll"]', 'expected' => '[[0,1],[1,0],[3,2],[2,4]]', 'description' => 'Basic case'],
+        ['input' => '["bat","tab","cat"]', 'expected' => '[[0,1],[1,0]]', 'description' => 'Simple palindromes'],
+        ['input' => '["a",""]', 'expected' => '[[0,1],[1,0]]', 'description' => 'Empty string pair'],
+    ],
+    'russian-doll-envelopes' => [
+        ['input' => '[[5,4],[6,4],[6,7],[2,3]]', 'expected' => '3', 'description' => 'Basic case'],
+        ['input' => '[[1,1],[1,1],[1,1]]', 'expected' => '1', 'description' => 'All same'],
+        ['input' => '[[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]]', 'expected' => '7', 'description' => 'All fit'],
+    ],
+    'maximum-width-of-binary-tree' => [
+        ['input' => '[1,3,2,5,3,null,9]', 'expected' => '4', 'description' => 'Basic case'],
+        ['input' => '[1,3,2,5]', 'expected' => '2', 'description' => 'Two levels'],
+        ['input' => '[1,3,2,5,3,null,9,6,null,null,7]', 'expected' => '8', 'description' => 'Wide tree'],
+        ['input' => '[1]', 'expected' => '1', 'description' => 'Single node'],
+    ],
+    'lowest-common-ancestor-of-a-binary-tree' => [
+        ['input' => '[3,5,1,6,2,0,8,null,null,7,4]\n5\n1', 'expected' => '3', 'description' => 'Basic case'],
+        ['input' => '[3,5,1,6,2,0,8,null,null,7,4]\n5\n4', 'expected' => '5', 'description' => 'One is ancestor of other'],
+        ['input' => '[1,2]\n1\n2', 'expected' => '1', 'description' => 'Root is answer'],
+    ],
+    'inorder-successor-in-bst' => [
+        ['input' => '[2,1,3]\n1', 'expected' => '2', 'description' => 'Basic case'],
+        ['input' => '[5,3,6,2,4,null,null,1]\n6', 'expected' => 'null', 'description' => 'No successor'],
+        ['input' => '[15,6,18,3,7,17,20,1,4,null,13,null,null,null,null,null,null,null,null]\n3', 'expected' => '4', 'description' => 'Complex tree'],
+    ],
+    'construct-binary-tree-from-preorder-and-inorder-traversal' => [
+        ['input' => 'preorder = [3,9,20,15,7]\ninorder = [9,3,15,20,7]', 'expected' => '[3,9,20,null,null,15,7]', 'description' => 'Basic case'],
+        ['input' => 'preorder = [-1]\ninorder = [-1]', 'expected' => '[-1]', 'description' => 'Single node'],
+        ['input' => 'preorder = [1,2]\ninorder = [2,1]', 'expected' => '[1,2]', 'description' => 'Left child'],
+    ],
+    'flatten-binary-tree-to-linked-list' => [
+        ['input' => '[1,2,5,3,4,null,6]', 'expected' => '[1,null,2,null,3,null,4,null,5,null,6]', 'description' => 'Basic case'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty tree'],
+        ['input' => '[0]', 'expected' => '[0]', 'description' => 'Single node'],
+    ],
+    'populating-next-right-pointers-in-each-node' => [
+        ['input' => '[1,2,3,4,5,6,7]', 'expected' => '[1,#,2,#,3,#,4,#,5,#,6,#,7,#]', 'description' => 'Perfect tree'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty tree'],
+        ['input' => '[1]', 'expected' => '[1,#]', 'description' => 'Single node'],
+    ],
+    'binary-tree-paths' => [
+        ['input' => '[1,2,3,null,5]', 'expected' => '["1->2->5","1->3"]', 'description' => 'Basic case'],
+        ['input' => '[1]', 'expected' => '["1"]', 'description' => 'Single node'],
+        ['input' => '[1,2,3,4,5]', 'expected' => '["1->2->4","1->2->5","1->3"]', 'description' => 'Full tree depth 3'],
+    ],
+    'sum-root-to-leaf-numbers' => [
+        ['input' => '[1,2,3]', 'expected' => '25', 'description' => 'Basic case'],
+        ['input' => '[4,9,0,5,1]', 'expected' => '1026', 'description' => 'Complex tree'],
+        ['input' => '[0]', 'expected' => '0', 'description' => 'Single node zero'],
+    ],
+    'diameter-of-binary-tree' => [
+        ['input' => '[1,2,3,4,5]', 'expected' => '3', 'description' => 'Basic case'],
+        ['input' => '[1,2]', 'expected' => '1', 'description' => 'Two nodes'],
+        ['input' => '[1]', 'expected' => '0', 'description' => 'Single node'],
+        ['input' => '[1,2,3,4,5,6,7]', 'expected' => '4', 'description' => 'Full tree'],
+    ],
+    'balanced-binary-tree' => [
+        ['input' => '[3,9,20,null,null,15,7]', 'expected' => 'true', 'description' => 'Balanced'],
+        ['input' => '[1,2,2,3,3,null,null,4,4]', 'expected' => 'false', 'description' => 'Unbalanced'],
+        ['input' => '[1]', 'expected' => 'true', 'description' => 'Single node'],
+        ['input' => '[1,2,3]', 'expected' => 'true', 'description' => 'Perfect tree'],
+    ],
+    'minimum-depth-of-binary-tree' => [
+        ['input' => '[3,9,20,null,null,15,7]', 'expected' => '2', 'description' => 'Basic case'],
+        ['input' => '[2,null,3,null,null,null,4]', 'expected' => '4', 'description' => 'Right skewed'],
+        ['input' => '[1]', 'expected' => '1', 'description' => 'Single node'],
+        ['input' => '[1,2,3,4,5]', 'expected' => '2', 'description' => 'Full tree'],
+    ],
+    'path-sum' => [
+        ['input' => '[5,4,8,11,null,13,4,7,2,null,null,null,1]\n22', 'expected' => 'true', 'description' => 'Basic case'],
+        ['input' => '[1,2,3]\n5', 'expected' => 'false', 'description' => 'No path sum'],
+        ['input' => '[1]\n1', 'expected' => 'true', 'description' => 'Single node equals sum'],
+        ['input' => '[]\n0', 'expected' => 'false', 'description' => 'Empty tree'],
+    ],
+    'binary-search-tree-iterator' => [
+        ['input' => '["BSTIterator","next","next","hasNext","next","hasNext","next","hasNext","next","hasNext"]\n[[[7,3,15,null,null,9]],[],[],[],[],[],[],[],[]]', 'expected' => '[null,3,7,true,9,true,15,null,15,null]', 'description' => 'Basic iterator'],
+    ],
+    'graph-valid-tree' => [
+        ['input' => 'n = 5\nedges = [[0,1],[0,2],[0,3],[1,4]]', 'expected' => 'true', 'description' => 'Valid tree'],
+        ['input' => 'n = 5\nedges = [[0,1],[1,2],[2,3],[1,3],[1,4]]', 'expected' => 'false', 'description' => 'Has cycle'],
+        ['input' => 'n = 1\nedges = []', 'expected' => 'true', 'description' => 'Single node'],
+        ['input' => 'n = 3\nedges = [[0,1],[0,2]]', 'expected' => 'true', 'description' => 'Star graph'],
+    ],
+    'clone-graph' => [
+        ['input' => '[[2,4],[1,3],[2,4],[1,3]]', 'expected' => '[[2,4],[1,3],[2,4],[1,3]]', 'description' => 'Basic clone'],
+        ['input' => '[[]]', 'expected' => '[[]]', 'description' => 'Single node no neighbors'],
+        ['input' => '[]', 'expected' => '[]', 'description' => 'Empty graph'],
+    ],
+    'number-of-provinces' => [
+        ['input' => 'isConnected = [[1,1,0],[1,1,0],[0,0,1]]', 'expected' => '2', 'description' => 'Two provinces'],
+        ['input' => 'isConnected = [[1,0,0],[0,1,0],[0,0,1]]', 'expected' => '3', 'description' => 'All separate'],
+        ['input' => 'isConnected = [[1,1,1],[1,1,1],[1,1,1]]', 'expected' => '1', 'description' => 'All connected'],
+    ],
+    'max-area-of-island' => [
+        ['input' => '[[1,1,0,0,0],[1,1,0,0,0],[0,0,1,0,0],[0,0,0,1,1]]', 'expected' => '4', 'description' => 'Two islands'],
+        ['input' => '[[0,0,1,0,0],[0,1,0,1,0],[0,1,0,1,0]]', 'expected' => '3', 'description' => 'Cross shape'],
+        ['input' => '[[1,1],[1,1]]', 'expected' => '4', 'description' => 'Single large'],
+        ['input' => '[[0,0]]', 'expected' => '0', 'description' => 'No island'],
+    ],
+    'surrounded-regions' => [
+        ['input' => '[["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]', 'expected' => '[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]', 'description' => 'Basic case'],
+        ['input' => '[["X"]]', 'expected' => '[["X"]]', 'description' => 'Single X'],
+        ['input' => '[["O"]]', 'expected' => '[["O"]]', 'description' => 'Single O surrounded'],
+    ],
+    'rotting-oranges' => [
+        ['input' => '[[2,1,1],[1,1,0],[0,1,1]]', 'expected' => '4', 'description' => 'Basic case'],
+        ['input' => '[[2,1,1],[1,1,1],[0,0,1]]', 'expected' => '3', 'description' => 'Rotting spread'],
+        ['input' => '[[0,2]]', 'expected' => '0', 'description' => 'No fresh'],
+        ['input' => '[[1]]', 'expected' => '-1', 'description' => 'No rotten'],
+    ],
+    'all-paths-from-source-to-target' => [
+        ['input' => '[[1,2],[3],[3],[]]', 'expected' => '[[0,1,3],[0,2,3]]', 'description' => 'Basic case'],
+        ['input' => '[[4,3,1],[3,2,4],[3],[4],[]]', 'expected' => '[[0,4],[0,3,4],[0,1,3,4],[0,1,2,3,4],[0,1,4]]', 'description' => 'Complex graph'],
+        ['input' => '[[1],[]]', 'expected' => '[[0,1]]', 'description' => 'Two nodes'],
+    ],
+    'is-graph-bipartite' => [
+        ['input' => 'graph = [[1,2,3],[0,2],[0,1],[0]]', 'expected' => 'false', 'description' => 'Not bipartite'],
+        ['input' => 'graph = [[1,3],[0,2],[1,3],[0,2]]', 'expected' => 'true', 'description' => 'Bipartite'],
+        ['input' => 'graph = [[1],[0]]', 'expected' => 'true', 'description' => 'Two nodes'],
+        ['input' => 'graph = [[1,2,3],[0],[0],[0]]', 'expected' => 'true', 'description' => 'Star graph'],
+    ],
+    'evaluate-reverse-polish-notation' => [
+        ['input' => '["2","1","+","3","*"]', 'expected' => '9', 'description' => 'Basic RPN'],
+        ['input' => '["4","13","5","/","+"]', 'expected' => '6', 'description' => 'Division first'],
+        ['input' => '["10","6","9","3","+","-11","*","/","*","17","+","5","+"]', 'expected' => '22', 'description' => 'Complex expression'],
+        ['input' => '["2","1","+"]', 'expected' => '3', 'description' => 'Simple addition'],
+        ['input' => '["3","11","+","5','-"]', 'expected' => '9', 'description' => 'Add then subtract'],
+    ],
+    'daily-temperatures' => [
+        ['input' => '[73,74,75,71,69,72,76,73]', 'expected' => '[1,1,4,2,1,1,0,0]', 'description' => 'Basic case'],
+        ['input' => '[30,40,50,60]', 'expected' => '[1,1,1,0]', 'description' => 'Strictly increasing'],
+        ['input' => '[30,60,90]', 'expected' => '[1,1,0]', 'description' => 'Three increasing'],
+        ['input' => '[76,76,76]', 'expected' => '[0,0,0]', 'description' => 'All same'],
+    ],
+    'asteroid-collision' => [
+        ['input' => '[5,10,-5]', 'expected' => '[5,10]', 'description' => 'Basic case'],
+        ['input' => '[8,-8]', 'expected' => '[]', 'description' => 'Equal destroys both'],
+        ['input' => '[10,2,-5]', 'expected' => '[10]', 'description' => 'Right survives'],
+        ['input' => '[-2,-1,1,2]', 'expected' => '[-2,-1,1,2]', 'description' => 'No collision'],
+    ],
+    'decode-string' => [
+        ['input' => '"3[a2[c]]"', 'expected' => '"accaccacc"', 'description' => 'Nested brackets'],
+        ['input' => '"2[abc]3[cd]ef"', 'expected' => '"abcabccdcdcdef"', 'description' => 'Sequential groups'],
+        ['input' => '"abc3[cd]xyz"', 'expected' => '"abccdcdcdxyz"', 'description' => 'Mixed'],
+        ['input' => '"3[a]"', 'expected' => '"aaa"', 'description' => 'Simple repeat'],
+        ['input' => '"1[]"', 'expected' => '""', 'description' => 'Empty brackets'],
+    ],
+    'implement-stack-using-queues' => [
+        ['input' => '["MyStack","push","push","top","pop","empty"]\n[[],[1],[2],[],[],[]]', 'expected' => '[null,null,null,2,2,false]', 'description' => 'Basic stack ops'],
+    ],
+    'implement-queue-using-stacks' => [
+        ['input' => '["MyQueue","push","push","peek","pop","empty"]\n[[],[1],[2],[],[],[]]', 'expected' => '[null,null,null,1,1,false]', 'description' => 'Basic queue ops'],
+    ],
+    'min-stack' => [
+        ['input' => '["MinStack","push","push","push","getMin","pop","top","getMin"]\n[[],[-2],[0],[-3],[],[],[],[]]', 'expected' => '[null,null,null,null,-3,null,0,-2]', 'description' => 'Basic min stack'],
+    ],
+    'design-add-and-search-words-data-structure' => [
+        ['input' => '["WordDictionary","addWord","addWord","addWord","search","search","search","search"]\n[[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]]', 'expected' => '[null,null,null,null,false,true,true,true]', 'description' => 'Basic dictionary'],
+    ],
+    'design-hit-counter' => [
+        ['input' => '["HitCounter","hit","hit","hit","hit","getHits","hit","getHits"]\n[[],[1],[2],[3],[4],[4500],[3000],[4500]]', 'expected' => '[null,null,null,null,null,4,null,3]', 'description' => 'Basic hit counter'],
+    ],
+    'design-circular-queue' => [
+        ['input' => '["MyCircularQueue","enQueue","enQueue","enQueue","enQueue","Rear","isFull","deQueue","enQueue","Rear"]\n[[3],[1],[2],[3],[4],[],[],[],[4],[]]', 'expected' => '[null,true,true,true,false,3,true,true,true,4]', 'description' => 'Basic circular queue'],
+    ],
+    'design-twitter' => [
+        ['input' => '["Twitter","postTweet","getNewsFeed","follow","postTweet","getNewsFeed","unfollow","getNewsFeed"]\n[[],[1,5],[1],[],[2,6],[1],[],[1]]', 'expected' => '[null,null,[5],null,null,[6,5],null,[5]]', 'description' => 'Basic twitter'],
+    ],
+    'design-underground-system' => [
+        ['input' => '["UndergroundSystem","checkIn","checkIn","checkIn","checkOut","checkOut","checkOut","getAverageTime","getAverageTime","checkIn","getAverageTime","checkOut","getAverageTime"]\n[[],[45,"Leyton",3],[32,"Paradise",8],[27,"Leyton",10],[45,"Waterloo",15],[27,"Waterloo",20],[32,"Cambridge",22],["Paradise","Cambridge"],["Leyton","Waterloo"],[10,"Leyton",24],["Leyton","Waterloo"],[10,"Waterloo",38],["Leyton","Waterloo"]]', 'expected' => '[null,null,null,null,null,null,null,14.0,11.0,null,11.0,null,12.0]', 'description' => 'Basic underground system'],
+    ],
+    'snapshot-array' => [
+        ['input' => '["SnapshotArray","set","snap","set","get"]\n[[3],[0,5],[],[0,6],[0,0]]', 'expected' => '[null,null,0,null,5]', 'description' => 'Basic snapshot'],
+    ],
+    'all-oone-data-structure' => [
+        ['input' => '["AllOne","inc","inc","getMaxKey","getMinKey","inc","getMaxKey","getMinKey"]\n[[],["a"],["b"],[],[],["b"],[],[]]', 'expected' => '[null,null,null,"b","a",null,"a","b"]', 'description' => 'Basic AllOne'],
+    ],
+    'lru-cache' => [
+        ['input' => '["LRUCache","put","put","get","put","get","put","get","get","get"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]', 'expected' => '[null,null,null,1,null,-1,null,-1,3,4]', 'description' => 'Basic LRU'],
+    ],
+    'lfu-cache' => [
+        ['input' => '["LFUCache","put","put","get","put","get","get","put","get","get","get"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[3],[4,4],[1],[3],[4]]', 'expected' => '[null,null,null,1,null,-1,3,null,-1,3,4]', 'description' => 'Basic LFU'],
+    ],
+];

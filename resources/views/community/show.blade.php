@@ -53,7 +53,7 @@
 
         <template x-if="!editing">
             <div class="prose max-w-none text-gray-700 mb-8">
-                {!! $post->content !!}
+                {!! clean($post->content) !!}
             </div>
         </template>
 

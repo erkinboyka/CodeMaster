@@ -20,7 +20,7 @@ class CommunityController extends Controller
         $tagSlug = $request->get('tag');
         $problemId = $request->get('problem');
 
-        $query = CommunityPost::with(['user', 'comments.user', 'tags'])
+        $query = CommunityPost::with(['user', 'tags'])
             ->withCount('comments');
 
         if ($problemId) {
@@ -41,6 +41,11 @@ class CommunityController extends Controller
 
         $posts = $query->paginate(20)->withQueryString();
 
+        $likedIds = CommunityPostLike::where('user_id', Auth::id())
+            ->whereIn('post_id', $posts->pluck('id'))
+            ->pluck('post_id')
+            ->toArray();
+
         $popularTags = Tag::orderByDesc('posts_count')->take(10)->get();
 
         $activeTag = $tagSlug ? Tag::where('slug', $tagSlug)->first() : null;
@@ -51,7 +56,7 @@ class CommunityController extends Controller
             ->take(5)
             ->get();
 
-        return view('community.index', compact('posts', 'sort', 'popularTags', 'activeTag', 'latestNews'));
+        return view('community.index', compact('posts', 'sort', 'popularTags', 'activeTag', 'latestNews', 'likedIds'));
     }
 
     public function show($id)
@@ -76,7 +81,7 @@ class CommunityController extends Controller
                     'likes_count' => $post->likes_count,
                     'views_count' => $post->views_count,
                     'created_at' => $post->created_at->toISOString(),
-                    'user' => ['id' => $post->user->id, 'name' => $post->user->name, 'avatar' => $post->user->avatar],
+                    'user' => ['id' => $post->user?->id, 'name' => $post->user?->name, 'avatar' => $post->user?->avatar],
                     'is_owner' => Auth::id() === $post->user_id,
                     'liked' => Auth::check() ? $post->isLikedBy(Auth::id()) : false,
                     'tags' => $post->tags->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]),
@@ -84,7 +89,7 @@ class CommunityController extends Controller
                         'id' => $c->id,
                         'content' => $c->content,
                         'created_at' => $c->created_at->toISOString(),
-                        'user' => ['id' => $c->user->id, 'name' => $c->user->name, 'avatar' => $c->user->avatar],
+                        'user' => ['id' => $c->user?->id, 'name' => $c->user?->name, 'avatar' => $c->user?->avatar],
                     ]),
                 ],
             ]);
@@ -267,7 +272,7 @@ class CommunityController extends Controller
         foreach (array_diff($oldTagIds, $tagIds) as $removedId) {
             Tag::where('id', $removedId)->decrement('posts_count');
         }
-        foreach ($tagIds as $addedId) {
+        foreach (array_diff($tagIds, $oldTagIds) as $addedId) {
             Tag::where('id', $addedId)->increment('posts_count');
         }
     }
